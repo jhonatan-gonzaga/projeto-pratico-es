@@ -1,137 +1,162 @@
 <div align="justify">
 
-# PLANO DE TRABALHO - PROJETO CONECTA OBRA ITACOATIARA
-
-Este documento apresenta o planejamento estratégico e a especificação técnica para o desenvolvimento da plataforma **Conecta Obra Itacoatiara**, um diretório digital projetado para integrar o ecossistema da construção civil local.
-
----
-
-## 1. IDENTIFICAÇÃO DO PROJETO
+# PLANO DE TRABALHO
 
 | Campo | Detalhamento |
 | :--- | :--- |
-| **Nome do Projeto** | Conecta Obra Itacoatiara |
-| **Codinome** | COI-2026 |
-| **Versão** | 1.0 |
-| **Status** | Em Desenvolvimento |
-| **Número de Controle SRBR-M** | 2026.IHC.TP3.001 (Fictício para controle acadêmico) |
-| **Executor Principal** | Equipe de Engenharia de Software - Grupo IHC |
-| **Coordenador do Projeto** | Prof. Andrey Antonio de Oliveira Rodrigues |
+| **Nome do Projeto:** | **Conecta Obra Itacoatiara**<br>Codinome: COI-2026 |
+| **Versão:** | 1.0 |
+| **Status:** | Em desenvolvimento |
+| **Número de Controle SRBR-M:** | 2026.IHC.TP3.001 |
+| **Executor Principal:** | Equipe de Engenharia de Software - Grupo IHC |
+| **Coordenador do Projeto:** | Prof. Andrey Antonio de Oliveira Rodrigues |
 
 ---
 
-## 2. HISTÓRICO DE VERSÕES
+## HISTÓRICO DE VERSÕES
 
 | Versão | Descrição | Autor | Data |
 | :--- | :--- | :--- | :--- |
-| 1.0 | Elaboração inicial do Plano de Trabalho com base nos requisitos do TP3. | Grupo IHC | 31/03/2026 |
+| 1.0 | Elaboração do Plano de Trabalho | Grupo IHC | 31/03/2026 |
 
 ---
 
-## 3. INTRODUÇÃO
+## 1. INTRODUÇÃO
 
-### 3.1 Objeto
-O projeto consiste no desenvolvimento de uma plataforma digital (aplicativo móvel e web) denominada **Conecta Obra Itacoatiara**. O sistema funciona como um hub de conexão entre três pilares fundamentais da construção civil: **Clientes** (contratantes), **Profissionais** (prestadores de serviço) e **Lojistas** (fornecedores de materiais). Sua função principal é centralizar a busca por mão de obra qualificada, a cotação de insumos e a gestão de pequenos e médios reparos ou obras.
+A introdução apresenta um panorama geral do projeto, contextualizando seu propósito, justificativa e características principais.
 
-### 3.2 Motivação, Justificativa e Oportunidade
-Atualmente, moradores de Itacoatiara enfrentam dificuldades significativas para encontrar profissionais de confiança de forma ágil, dependendo quase exclusivamente de indicações informais e contatos desorganizados no WhatsApp. Por outro lado, profissionais qualificados sofrem com a inconstância de trabalho e falta de canais de divulgação, enquanto lojistas locais perdem oportunidades de venda por falta de presença digital integrada. O **Conecta Obra** resolve esses problemas ao oferecer um ambiente seguro com avaliações reais, portfólios visuais e um guia "Onde Comprar" integrado, aumentando a eficiência do mercado local e reduzindo a insegurança nas contratações.
+### 1.1 Objeto
+O projeto consiste no desenvolvimento de uma plataforma digital denominada **Conecta Obra Itacoatiara**. O sistema atua como um hub de conexão entre clientes, profissionais da construção civil e lojistas de materiais, facilitando a contratação de serviços e a aquisição de insumos de forma centralizada e segura.
 
-### 3.3 Caracterização do Projeto
+### 1.2 Motivação, Justificativa e Oportunidade
+Atualmente, moradores de Itacoatiara enfrentam dificuldades para encontrar profissionais de confiança de forma ágil, dependendo de indicações informais. Profissionais sofrem com a inconstância de trabalho e lojistas perdem vendas por falta de presença digital integrada. O sistema visa automatizar e centralizar a gestão dessas conexões, aumentando a eficiência e reduzindo falhas no mercado local.
 
-#### 3.3.1 Classe
+### 1.3 Caracterização do Projeto
+Aqui são definidos atributos que classificam o projeto em diferentes categorias.
+
+#### 1.3.1 Classe
+Indica a categoria geral do projeto, especificando suas características principais.
+
 | Classe | Detalhamento |
 | :--- | :--- |
-| **Sistema Web/Mobile** | A plataforma será acessível via navegadores e dispositivos móveis, permitindo o uso em campo por profissionais e a conveniência de busca para clientes. |
+| **Sistema Web / Mobile** | O sistema será acessível via navegador e dispositivos móveis, sem necessidade de instalação complexa para clientes finais. |
 
-#### 3.3.2 Enquadrabilidade
+#### 1.3.2 Enquadrabilidade
+A enquadrabilidade define em que contexto ou regulamento o projeto se encaixa.
+
 | Enquadrabilidade | Detalhamento |
 | :--- | :--- |
-| **Software de Impacto Social/Comercial** | O projeto se enquadra como uma solução de fomento à economia local, com viés educacional acadêmico dentro da disciplina de Interação Humano-Computador. |
+| **Software Educacional** | O sistema será utilizado no contexto acadêmico da disciplina de IHC para prática de design de interação. |
+| **Software Comercial** | A solução possui viés de marketplace para geração de oportunidades de negócio locais. |
 
-#### 3.3.3 Tipo
+#### 1.3.3 Tipo
 | Tipo | Detalhamento |
 | :--- | :--- |
-| **Diretório e Marketplace de Serviços** | Sistema focado em listagem, filtragem, reputação e intermediação de contato para prestação de serviços. |
+| **Diretório de Serviços** | Plataforma de listagem, busca e reputação de prestadores de serviço e fornecedores. |
 
 ---
 
-## 4. INFORMAÇÕES GERAIS
+## 2. INFORMAÇÕES GERAIS
 
-### 4.1 Escopo Geral
-O projeto visa entregar uma interface funcional que permita o fluxo completo de contratação: desde o anúncio de uma demanda pelo cliente, a candidatura de profissionais, a negociação via canais externos (WhatsApp) e a finalização com avaliação de desempenho.
+Esta seção define o que o projeto pretende desenvolver, suas limitações, tecnologias utilizadas e a inovação que ele traz.
 
-#### 4.1.1 Escopo Específico
-*   **Módulo de Acessibilidade:** Implementação de *Text-to-Speech* (TTS) para leitura de textos críticos, auxiliando usuários com baixa literacia digital ou deficiência visual.
-*   **Gestão de Perfis:** Cadastro diferenciado para Clientes, Profissionais (com portfólio) e Lojistas (com catálogo).
-*   **Sistema de Demandas:** Fluxo de "Anunciar Serviço" com anexação de fotos e descrição por voz.
-*   **Guia "Onde Comprar":** Listagem de lojas locais com catálogo de produtos e promoções ativas.
-*   **Mecanismo de Confiança:** Sistema de avaliação 5 estrelas e ranqueamento baseado em histórico de serviços.
+### 2.1 Escopo Geral
+O projeto visa desenvolver um sistema que conecte clientes a profissionais da construção civil, permitindo o anúncio de demandas, visualização de portfólios, cotação de materiais em lojas parceiras e avaliação mútua.
 
-#### 4.1.2 Escopo Negativo
-*   **Pagamento Nativo:** Não haverá processamento de transações financeiras dentro do app (pagamentos via PIX ou dinheiro serão feitos offline).
-*   **Chat de Negociação:** A negociação detalhada ocorrerá via WhatsApp/Telefone para simplificar o MVP.
-*   **Logística de Entrega:** O app não gerenciará o frete de materiais de construção.
+#### 2.1.1 Escopo Específico
+O escopo específico detalha as funcionalidades e requisitos que serão implementados:
+- Cadastro e gestão de perfis (Cliente, Profissional, Lojista e Suporte).
+- Módulo de acessibilidade com recurso *Text-to-Speech* (TTS).
+- Fluxo de anúncio de serviços com anexação de fotos e descrição.
+- Guia "Onde Comprar" com catálogo de produtos e promoções.
+- Sistema de ranqueamento e avaliações 5 estrelas.
 
-### 4.2 Ambiente de Desenvolvimento
+#### 2.1.2 Escopo Negativo
+O escopo negativo define o que não será desenvolvido, evitando expectativas erradas:
+- Não haverá processamento de pagamentos dentro do app (pagamentos offline).
+- Não haverá chat interno para negociação (direcionamento para WhatsApp).
+- Não haverá módulo de logística ou entrega de materiais.
+
+### 2.2 Ambiente de Desenvolvimento
+Aqui são descritas as tecnologias e ferramentas que serão utilizadas no desenvolvimento do projeto.
+
 | Componente | Tecnologia/Ferramenta |
 | :--- | :--- |
-| **Metodologia** | Scrum com Sprints semanais |
-| **Gestão de Backlog** | GitHub Projects |
+| **Metodologia** | Scrum com sprints semanais |
+| **Gerenciamento de Backlog** | GitHub Projects |
 | **Repositório de Código** | GitHub |
-| **Modelagem de Software** | Draw.io / Figma (Prototipagem de Alta Fidelidade) |
-| **Desenvolvimento Frontend** | React Native / TypeScript |
-| **Acessibilidade** | Web Speech API / Bibliotecas de TTS nativas |
+| **Modelagem de Software** | Figma e Draw.io (Diagramas MoLIC e HTA) |
+| **Desenvolvimento do MVP** | React Native / TypeScript |
 
-### 4.3 Características Inovadoras do Projeto
-*   **Foco em Acessibilidade Radical:** Uso extensivo de comandos de voz e leitura de tela para incluir profissionais que possuem dificuldades com interfaces puramente textuais.
-*   **Ecossistema Integrado:** Diferente de apps genéricos, o Conecta Obra integra o fornecedor de material no ciclo de vida do serviço, fechando o elo da construção civil.
+### 2.3 Características Inovadoras do Projeto
+O projeto destaca-se pela inclusão digital através de interfaces assistidas por voz (*Text-to-Speech*), permitindo que profissionais com baixa literacia digital gerenciem seus perfis e aceitem ofertas com facilidade. Além disso, a integração direta com o catálogo de lojistas locais cria um ecossistema único para a construção civil na região.
 
-### 4.4 Resultados Esperados
-*   Redução no tempo médio de busca por profissionais qualificados em Itacoatiara.
-*   Aumento da visibilidade digital para prestadores de serviço autônomos.
-*   Criação de uma base de dados confiável de fornecedores de materiais de construção.
-*   Interface intuitiva validada por heurísticas de usabilidade e testes com usuários.
-
----
-
-## 5. METODOLOGIA DE PROJETO
-
-### 5.1 Estrutura do Projeto
-O desenvolvimento será dividido em cinco fases iterativas:
-1.  **Imersão e Definição:** Briefing, Matriz CSD e Personas.
-2.  **Ideação e Design de Interação:** Metamensagem, HTA e MoLIC.
-3.  **Design de Interface:** Prototipagem de alta fidelidade e padrões visuais.
-4.  **Desenvolvimento do MVP:** Implementação das funcionalidades "Must-Have".
-5.  **Avaliação e Ajustes:** Testes de usabilidade e correções baseadas em heurísticas.
-
-### 5.2 Equipe de Projeto: Papéis e Responsabilidades
-| Integrante | Papel | Responsabilidades |
-| :--- | :--- | :--- |
-| **Jhonatan Gonzaga** | Líder de Projeto / Desenvolvedor | Gestão do repositório, integração de sistemas e métricas de usabilidade. |
-| **Alyce Benevides** | Designer de UX/UI | Criação de protótipos, edição de mídia e avaliação de comunicabilidade. |
-| **Oliviê Kalil** | Analista de Requisitos | Documentação técnica, aplicação de questionários UEQ e análise de dados. |
-| **Rodrigo Torres** | Desenvolvedor Frontend | Implementação de interfaces, etiquetagem MAC e edição de vídeos de teste. |
-| **Victor dos Santos** | Especialista em QA / Acessibilidade | Avaliação heurística, testes de acessibilidade (TTS) e controle de qualidade. |
+### 2.4 Resultados Esperados
+Aqui são listados os principais resultados esperados após a conclusão do projeto:
+- Plataforma funcional conectando os três pilares do setor em Itacoatiara.
+- Melhoria na reputação e visibilidade dos profissionais autônomos.
+- Facilitação do processo de compra de materiais para o cliente final.
+- Interface validada por critérios de usabilidade e comunicabilidade.
 
 ---
 
-## 6. DESPESAS E INVESTIMENTOS (ESTIMATIVA)
+## 3. METODOLOGIA DE PROJETO
 
-### 6.1 Materiais de Consumo e Equipamentos
-| Item | Descrição | Quant. | Valor Unit. (R$) | Total (R$) |
+Esta seção descreve como o projeto será conduzido, desde a concepção até a entrega do MVP, detalhando as fases, equipe e cronograma.
+
+### 3.1 Estrutura do Projeto
+O desenvolvimento do projeto será dividido em cinco fases principais, seguindo a abordagem ágil:
+1.  **Ideação:** Briefing e Matriz CSD.
+2.  **Levantamento de Requisitos:** Personas e Jornadas do Usuário.
+3.  **Projeto e Arquitetura:** Design de Interação (Metamensagem, HTA, MoLIC).
+4.  **Projeto dos Casos de Teste:** Avaliação Heurística e Planejamento de Testes.
+5.  **Desenvolvimento do MVP:** Implementação da interface de alta fidelidade e funções core.
+
+### 3.2 Equipe de Projeto: Papéis e Responsabilidades dos integrantes
+A equipe do projeto será composta por 5 alunos, com papéis definidos para otimizar o desenvolvimento.
+
+| Papel | Responsabilidades |
+| :--- | :--- |
+| **Jhonatan Gonzaga** | Liderança técnica e gestão de métricas de usabilidade. |
+| **Alyce Benevides** | Design de interface (UI) e avaliação de comunicabilidade. |
+| **Oliviê Kalil** | Análise de requisitos e documentação de inspeção. |
+| **Rodrigo Torres** | Desenvolvimento frontend e etiquetagem de rupturas. |
+| **Victor dos Santos** | Garantia de qualidade (QA) e especialista em acessibilidade. |
+
+---
+
+## 4. DESPESAS
+
+### 4.1 Dispêndios
+
+#### 4.1.1 Equipamentos e Programa de Computador
+A infraestrutura tecnológica necessária para o projeto envolve:
+- Servidores de hospedagem para a API e Banco de Dados.
+- Licenças de ferramentas de design e prototipagem.
+
+#### 4.1.2 Materiais de Consumo
+Os materiais de consumo previsto para o desenvolvimento do projeto são os seguintes:
+
+| Item | Descrição dos Equipamentos | Quant. | Valor unit (R$) | Valor Total (R$) |
 | :--- | :--- | :--- | :--- | :--- |
-| 1 | Infraestrutura de Nuvem (Hospedagem) | 1 | 500,00 | 500,00 |
-| 2 | Licenças de Software de Design | 5 | 120,00 | 600,00 |
-| 3 | Dispositivos de Teste (Mobile) | 2 | 1.200,00 | 2.400,00 |
-| **Total** | | | | **3.500,00** |
+| 1 | Hospedagem de Nuvem (Mensal) | 6 | 100,00 | 600,00 |
+| 2 | Licenças Figma Professional | 1 | 400,00 | 400,00 |
+| 3 | Materiais de escritório e prototipagem | 1 | 200,00 | 200,00 |
+| | **Total** | | | **1.200,00** |
 
-### 6.2 Resumo Financeiro
-O projeto será executado em regime acadêmico/laboratorial, com custos operacionais estimados em **R$ 3.500,00** para ferramentas e infraestrutura básica durante o período de 6 meses.
+### 4.2 Resumo Financeiro e Valor Total
+Segue o resumo financeiro dos itens anteriores:
+
+| ITEM | VALOR TOTAL | % |
+| :--- | :--- | :--- |
+| Recursos Humanos Diretos (Bolsas/Estágios) | 0,00 | 0,00% |
+| Materiais de Consumo | 1200,00 | 100,00% |
+| **TOTAL** | **R$ 1.200,00** | **100%** |
 
 ---
 
 <p align="center">
-  <b>Documento gerado para fins acadêmicos - Disciplina de Interação Humano-Computador</b><br>
+  <b>Documento gerado conforme especificações da disciplina de IHC</b><br>
   Engenharia de Software - 2026
 </p>
 
