@@ -8,8 +8,36 @@
 | **Versão:** | 1.0 |
 | **Status:** | Em desenvolvimento |
 | **Número de Controle SRBR-M:** | 2026.IHC.TP3.001 |
-| **Executor Principal:** | JHONATAN GONZAGA GALDINO  |
+| **Executor Principal:** | JHONATAN GONZAGA GALDINO |
 | **Coordenador do Projeto:** | Prof. Andrey Antonio de Oliveira Rodrigues |
+
+---
+
+## SUMÁRIO
+
+1. [HISTÓRICO DE VERSÕES](#histórico-de-versões)
+2. [1. INTRODUÇÃO](#1-introdução)
+    - [1.1 Objeto](#11-objeto)
+    - [1.2 Motivação, Justificativa e Oportunidade](#12-motivação-justificativa-e-oportunidade)
+    - [1.3 Caracterização do Projeto](#13-caracterização-do-projeto)
+        - [1.3.1 Classe](#131-classe)
+        - [1.3.2 Enquadrabilidade](#132-enquadrabilidade)
+3. [2. INFORMAÇÕES GERAIS](#2-informações-gerais)
+    - [2.1 Escopo Geral](#21-escopo-geral)
+        - [2.1.1 Escopo Específico](#211-escopo-específico)
+        - [2.1.2 Escopo Negativo](#212-escopo-negativo)
+    - [2.2 Ambiente de Desenvolvimento](#22-ambiente-de-desenvolvimento)
+    - [2.3 Características Inovadoras do Projeto](#23-características-inovadoras-do-projeto)
+    - [2.4 Resultados Esperados](#24-resultados-esperados)
+4. [3. METODOLOGIA DE PROJETO](#3-metodologia-de-projeto)
+    - [3.1 Estrutura do Projeto](#31-estrutura-do-projeto)
+    - [3.2 Equipe de Projeto: Papéis e Responsabilidades dos integrantes](#32-equipe-de-projeto-papéis-e-responsabilidades-dos-integrantes)
+5. [4. DESPESAS](#4-despesas)
+    - [4.1 Dispêndios](#41-dispêndios)
+        - [4.1.1 Equipamentos e Programa de Computador](#411-equipamentos-e-programa-de-computador)
+        - [4.1.2 Materiais de Consumo](#412-materiais-de-consumo)
+        - [4.1.3 Treinamento](#413-treinamento)
+    - [4.2 Resumo Financeiro e Valor Total](#42-resumo-financeiro-e-valor-total)
 
 ---
 
@@ -17,7 +45,7 @@
 
 | Versão | Descrição | Autor | Data |
 | :--- | :--- | :--- | :--- |
-| 1.0 | Elaboração do Plano de Trabalho | JHONATAN GONZAGA GALDINO| 31/03/2026 |
+| 1.0 | Elaboração do Plano de Trabalho | JHONATAN GONZAGA GALDINO | 31/03/2026 |
 
 ---
 
@@ -47,7 +75,6 @@ A enquadrabilidade define em que contexto ou regulamento o projeto se encaixa.
 | Enquadrabilidade | Detalhamento |
 | :--- | :--- |
 | **Software Comercial** | A solução possui viés de marketplace para geração de oportunidades de negócio locais. |
-
 
 ---
 
@@ -100,10 +127,10 @@ Esta seção descreve como o projeto será conduzido, desde a concepção até a
 
 ### 3.1 Estrutura do Projeto
 O desenvolvimento do projeto será dividido em cinco fases principais, seguindo a abordagem ágil:
-1.  **Ideação** 
-2.  **Levantamento de Requisitos** 
-3.  **Projeto e Arquitetura** 
-4.  **Projeto dos Casos de Teste** 
+1.  **Ideação**
+2.  **Levantamento de Requisitos**
+3.  **Projeto e Arquitetura**
+4.  **Projeto dos Casos de Teste**
 5.  **Desenvolvimento do MVP**
 
 ### 3.2 Equipe de Projeto: Papéis e Responsabilidades dos integrantes
@@ -139,8 +166,7 @@ Os materiais de consumo previsto para o desenvolvimento do projeto são os segui
 | | **Total** | | | **1.200,00** |
 
 #### 4.1.3 Treinamento
-Treinamentos não serão necessários ao projeto, pois já estão inclusos nas licenças dos
-software descritos no item 4.1.1.
+Treinamentos não serão necessários ao projeto, pois já estão inclusos nas licenças dos software descritos no item 4.1.1.
 
 ### 4.2 Resumo Financeiro e Valor Total
 Segue o resumo financeiro dos itens anteriores:
