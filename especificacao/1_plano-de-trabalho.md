@@ -8,7 +8,7 @@
 | **Versão:** | 1.0 |
 | **Status:** | Em desenvolvimento |
 | **Número de Controle SRBR-M:** | 2026.IHC.TP3.001 |
-| **Executor Principal:** | Equipe de Engenharia de Software - Grupo IHC |
+| **Executor Principal:** | JHONATAN GONZAGA GALDINO  |
 | **Coordenador do Projeto:** | Prof. Andrey Antonio de Oliveira Rodrigues |
 
 ---
@@ -17,7 +17,7 @@
 
 | Versão | Descrição | Autor | Data |
 | :--- | :--- | :--- | :--- |
-| 1.0 | Elaboração do Plano de Trabalho | Grupo IHC | 31/03/2026 |
+| 1.0 | Elaboração do Plano de Trabalho | JHONATAN GONZAGA GALDINO| 31/03/2026 |
 
 ---
 
@@ -46,13 +46,8 @@ A enquadrabilidade define em que contexto ou regulamento o projeto se encaixa.
 
 | Enquadrabilidade | Detalhamento |
 | :--- | :--- |
-| **Software Educacional** | O sistema será utilizado no contexto acadêmico da disciplina de IHC para prática de design de interação. |
 | **Software Comercial** | A solução possui viés de marketplace para geração de oportunidades de negócio locais. |
 
-#### 1.3.3 Tipo
-| Tipo | Detalhamento |
-| :--- | :--- |
-| **Diretório de Serviços** | Plataforma de listagem, busca e reputação de prestadores de serviço e fornecedores. |
 
 ---
 
@@ -74,7 +69,6 @@ O escopo específico detalha as funcionalidades e requisitos que serão implemen
 #### 2.1.2 Escopo Negativo
 O escopo negativo define o que não será desenvolvido, evitando expectativas erradas:
 - Não haverá processamento de pagamentos dentro do app (pagamentos offline).
-- Não haverá chat interno para negociação (direcionamento para WhatsApp).
 - Não haverá módulo de logística ou entrega de materiais.
 
 ### 2.2 Ambiente de Desenvolvimento
@@ -106,11 +100,11 @@ Esta seção descreve como o projeto será conduzido, desde a concepção até a
 
 ### 3.1 Estrutura do Projeto
 O desenvolvimento do projeto será dividido em cinco fases principais, seguindo a abordagem ágil:
-1.  **Ideação:** Briefing e Matriz CSD.
-2.  **Levantamento de Requisitos:** Personas e Jornadas do Usuário.
-3.  **Projeto e Arquitetura:** Design de Interação (Metamensagem, HTA, MoLIC).
-4.  **Projeto dos Casos de Teste:** Avaliação Heurística e Planejamento de Testes.
-5.  **Desenvolvimento do MVP:** Implementação da interface de alta fidelidade e funções core.
+1.  **Ideação** 
+2.  **Levantamento de Requisitos** 
+3.  **Projeto e Arquitetura** 
+4.  **Projeto dos Casos de Teste** 
+5.  **Desenvolvimento do MVP**
 
 ### 3.2 Equipe de Projeto: Papéis e Responsabilidades dos integrantes
 A equipe do projeto será composta por 5 alunos, com papéis definidos para otimizar o desenvolvimento.
@@ -144,6 +138,10 @@ Os materiais de consumo previsto para o desenvolvimento do projeto são os segui
 | 3 | Materiais de escritório e prototipagem | 1 | 200,00 | 200,00 |
 | | **Total** | | | **1.200,00** |
 
+#### 4.1.3 Treinamento
+Treinamentos não serão necessários ao projeto, pois já estão inclusos nas licenças dos
+software descritos no item 4.1.1.
+
 ### 4.2 Resumo Financeiro e Valor Total
 Segue o resumo financeiro dos itens anteriores:
 
@@ -156,7 +154,6 @@ Segue o resumo financeiro dos itens anteriores:
 ---
 
 <p align="center">
-  <b>Documento gerado conforme especificações da disciplina de IHC</b><br>
   Engenharia de Software - 2026
 </p>
 
