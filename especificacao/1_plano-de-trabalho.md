@@ -39,7 +39,7 @@ Indica a categoria geral do projeto, especificando suas características princip
 
 | Classe | Detalhamento |
 | :--- | :--- |
-| **Sistema Web / Mobile** | O sistema será acessível via navegador e dispositivos móveis, sem necessidade de instalação complexa para clientes finais. |
+| **Aplicativo Móvel** | O sistema será acessível via dispositivos móveis, sem necessidade de instalação complexa para clientes finais. |
 
 #### 1.3.2 Enquadrabilidade
 A enquadrabilidade define em que contexto ou regulamento o projeto se encaixa.
