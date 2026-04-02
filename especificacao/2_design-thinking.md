@@ -1,5 +1,17 @@
 <div align="justify">
 
+## 1. Enquadramento do Problema – Golden Circle
+O Golden Circle é uma técnica desenvolvida por Simon Sinek que ajuda a alinhar propósito e proposta de valor de uma empresa ou, neste caso, um aplicativo. É dividido em três partes: Por quê? (Why?), Como? (How?) e O quê? (What?).
+
+### 1.1 Por quê? (Why?)
+Profissionais autônomos, como pintores ou pedreiros, possuem dificuldades em arranjar emprego de maneira consistente na cidade de Itacoatiara. Isso comumente acontece pelo fato do profissional depender de indicações "boca a boca" para seu trabalho ser apresentado a mais pessoas, e consequentemente, gerando mais clientes contratantes. Tendo isso em mente, queremos prover aos trabalhadores autônomos da cidade de Itacoatiara no estado do Amazonas um canal de comunicação digital para auxiliá-los em seus trabalhos por meio da aproximação do cliente ao profissional, assim garantindo mais oportunidades e estabilidade.
+
+### 1.2 Como? (How?)
+Pelo aplicativo **Conecta Obra Itacoatiara**, na qual facilita a comunicação entre o cliente profissional, sendo utilizado mecanismos de buscas (como filtros), avaliações, portfólios dos profissionais e mesmo contato direto com o cliente.
+
+### 1.3 O quê? (What?)
+Um aplicativo onde profissionais podem organizar suas informações através de um portfólio, divulgar os seus trabalhos e contatar clientes interessados, e clientes que podem avaliar, buscar, filtrar e contratar profissionais autônomos.
+
 ---
 
 ## 3. Conhecendo o usuário – Persona
