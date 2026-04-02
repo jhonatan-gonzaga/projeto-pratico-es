@@ -1,21 +1,17 @@
 <div align="justify">
 
-# DESIGN THINKING
-
-O Design Thinking é uma abordagem centrada no ser humano para a inovação, que utiliza o conjunto de ferramentas do designer para integrar as necessidades das pessoas, as possibilidades da tecnologia e os requisitos para o sucesso do negócio. Nesta seção, detalhamos as personas identificadas para o projeto **Conecta Obra Itacoatiara**.
-
 ---
 
-## PERSONAS
+## 3. Conhecendo o usuário – Persona
 
 As personas representam os usuários típicos do sistema, ajudando a equipe a compreender suas necessidades, comportamentos e objetivos. Foram identificados quatro perfis principais: Profissional (Acessibilidade), Cliente, Suporte e Dono de Loja.
 
-### 1. Persona de Profissional (Acessibilidade)
+### 3.1. Persona de Profissional (Acessibilidade)
 
 Esta persona representa profissionais autônomos (como pintores ou eletricistas) que buscam trabalho de forma facilitada. É também o perfil de foco para acessibilidade, utilizando recursos de *Text-to-Speech* para superar limitações de visão ou literacia digital.
 
 <div align="center">
-  <img width="400" src="https://github.com/user-attachments/assets/11c1bc30-b076-44e9-aa3b-23b5faba855b" alt="Persona João - Profissional" />
+  <img width="800" src="https://github.com/user-attachments/assets/11c1bc30-b076-44e9-aa3b-23b5faba855b" alt="Persona João - Profissional" />
 </div>
 
 | Atributo | Detalhamento |
@@ -35,12 +31,12 @@ Esta persona representa profissionais autônomos (como pintores ou eletricistas)
 
 ---
 
-### 2. Persona de Cliente
+### 3.2. Persona de Cliente
 
 O Cliente é o contratante que busca profissionais capacitados e confiáveis para a realização de serviços específicos em sua residência ou empresa.
 
 <div align="center">
-  <img width="400" src="https://github.com/user-attachments/assets/901a7e5f-f9a3-4953-a0a2-58e7874e8576" alt="Persona Ana - Cliente" />
+  <img width="800" src="https://github.com/user-attachments/assets/901a7e5f-f9a3-4953-a0a2-58e7874e8576" alt="Persona Ana - Cliente" />
 </div>
 
 | Atributo | Detalhamento |
@@ -60,12 +56,12 @@ O Cliente é o contratante que busca profissionais capacitados e confiáveis par
 
 ---
 
-### 3. Persona de Suporte
+### 3.3. Persona de Suporte
 
 O Suporte Técnico atua como mediador e auxiliador, garantindo que todos os usuários consigam utilizar a plataforma sem impedimentos técnicos.
 
 <div align="center">
-  <img width="400" src="https://github.com/user-attachments/assets/a15a3e8c-2436-4a9f-839e-2c9e4537b846" alt="Persona Marcelo - Suporte" />
+  <img width="800" src="https://github.com/user-attachments/assets/a15a3e8c-2436-4a9f-839e-2c9e4537b846" alt="Persona Marcelo - Suporte" />
 </div>
 
 | Atributo | Detalhamento |
@@ -83,12 +79,12 @@ O Suporte Técnico atua como mediador e auxiliador, garantindo que todos os usu�
 
 ---
 
-### 4. Persona de Dono de Loja de Materiais de Construção
+### 3.4. Persona de Dono de Loja de Materiais de Construção
 
 Representa o empresário local que deseja aumentar sua visibilidade e vendas através da presença digital integrada ao ecossistema da construção civil.
 
 <div align="center">
-  <img width="400" src="https://github.com/user-attachments/assets/278ed959-e58f-462a-ae50-33ef9b4f2b51" alt="Persona Eric - Lojista" />
+  <img width="800" src="https://github.com/user-attachments/assets/278ed959-e58f-462a-ae50-33ef9b4f2b51" alt="Persona Eric - Lojista" />
 </div>
 
 | Atributo | Detalhamento |
