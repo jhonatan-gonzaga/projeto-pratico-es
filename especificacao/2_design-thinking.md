@@ -133,3 +133,23 @@ A análise SWOT tem como objetivo identificar os pontos fortes, pontos fracos, o
   <img width="800" src="https://github.com/user-attachments/assets/550d345f-27f8-4292-a28a-d65f37ac4081" alt="Análise SWOT - Conecta Obra Itacoatiara" />
   <p>Figura 2 - Análise SWOT do sistema.</p>
 </div>
+
+#### 💪 Forças (Strengths)
+- **Fluxo simples de contratação**: O sistema foi projetado para ser direto, permitindo que usuários encontrem e contratem profissionais com poucos passos.
+- **Solução personalizada para o mercado local**: Atende especificamente às necessidades da cidade de Itacoatiara, aumentando sua relevância.
+- **Aplicativo rápido e funcional**: Foco em desempenho e usabilidade, garantindo uma boa experiência ao usuário.
+
+#### ⚠️ Fraquezas (Weaknesses)
+- **Falta de validação e confiança inicial**: Por ser uma plataforma nova, pode haver resistência dos usuários no início.
+- **Processos lentos**: Algumas interações podem depender de respostas manuais, reduzindo a agilidade.
+- **Dependência do WhatsApp**: Parte da comunicação ocorre fora da plataforma, o que pode limitar o controle e a experiência do usuário.
+
+#### 🚀 Oportunidades (Opportunities)
+- **Crescimento da digitalização**: Cada vez mais pessoas buscam serviços online, favorecendo a adoção do app.
+- **Expansão de serviços**: Possibilidade de incluir novas categorias como elétrica, limpeza e manutenção.
+- **Parcerias estratégicas**: Integração com lojas de materiais pode gerar valor adicional ao ecossistema.
+
+#### ⚡ Ameaças (Threats)
+- **Baixa adesão inicial**: Dificuldade em atrair usuários no começo pode impactar o crescimento.
+- **Concorrência com métodos tradicionais**: Indicações boca a boca ainda são muito fortes na região.
+- **Dependência de marketing**: Necessidade de investimento contínuo para atrair e manter usuários.
