@@ -120,8 +120,16 @@ Representa o empresário local que deseja aumentar sua visibilidade e vendas atr
 
 ---
 
-<p align="center">
-  Engenharia de Software - 2026
-</p>
+</div>
 
+## 2. Exploração do Mercado
+Nesta seção, a equipe realiza uma análise do ambiente no qual a solução será inserida, considerando fatores internos e externos que possam impactar seu desenvolvimento, implementação e desempenho. O objetivo é identificar oportunidades, riscos e limitações, garantindo que a solução esteja alinhada ao contexto em que será aplicada.
+
+### A) Análise SWOT
+
+A análise SWOT tem como objetivo identificar os pontos fortes, pontos fracos, oportunidades e ameaças relacionadas ao aplicativo **Conecta Obra Itacoatiara**, considerando seu contexto de mercado e público-alvo.
+
+<div align="center">
+  <img width="800" src="https://github.com/user-attachments/assets/550d345f-27f8-4292-a28a-d65f37ac4081" alt="Análise SWOT - Conecta Obra Itacoatiara" />
+  <p>Figura 2 - Análise SWOT do sistema.</p>
 </div>
