@@ -75,6 +75,13 @@ Antes da construção do quadro comparativo, a equipe deve pesquisar pelo menos 
 
 **Público Alvo:** Clientes residenciais no estado de São Paulo que buscam serviços de reforma, manutenção ou pequenos reparos com praticidade e agilidade, e profissionais autônomos que desejam divulgar seus serviços gratuitamente e conquistar novos clientes na região.
 
+---
+
+<div align="center">
+  <img width="200" src="https://image.winudf.com/v2/image1/Y29tLnRyaWlkZXIucHJvX3NjcmVlbl8wXzE2OTY1Mzk4ODhfMDY4/screen-0.jpg?fakeurl=1&type=.jpg" alt="Triider" />
+</div>
+
+
 
 
 ## 3. Conhecendo o usuário – Persona
