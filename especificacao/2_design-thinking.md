@@ -63,6 +63,8 @@ Antes da construção do quadro comparativo, a equipe deve pesquisar pelo menos 
 
 **Público Alvo:** Profissionais de diversas áreas como eletricistas, encanadores, diaristas, pintores, professores particulares, técnicos, consultores, entre outros, que desejam divulgar seus serviços e conquistar novos clientes.  
 
+---
+
 <div align="center">
   <img width="200" src="https://play-lh.googleusercontent.com/VYQl2TUdqjyZrF2CRFVcav0leh5zXyMIhUHSCqAhl20Fw-cibuQ43Y2xGbJ-fzF0aA=w2560-h1440-rw" alt="Reforma Fácil" />
 </div>
