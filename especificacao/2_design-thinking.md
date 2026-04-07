@@ -69,6 +69,14 @@ Antes da construção do quadro comparativo, a equipe deve pesquisar pelo menos 
   <img width="200" src="https://play-lh.googleusercontent.com/VYQl2TUdqjyZrF2CRFVcav0leh5zXyMIhUHSCqAhl20Fw-cibuQ43Y2xGbJ-fzF0aA=w2560-h1440-rw" alt="Reforma Fácil" />
 </div>
 
+**Aplicativo:** Reforma Fácil
+
+**Descrição:**  Aplicativo projetado para planejar e gerenciar projetos de construção e reforma. Ajuda a encontrar e orçar materiais, contratar profissionais e, em alguns casos, acompanhar o andamento da obra 
+
+**Público Alvo:** Clientes residenciais no estado de São Paulo que buscam serviços de reforma, manutenção ou pequenos reparos com praticidade e agilidade, e profissionais autônomos que desejam divulgar seus serviços gratuitamente e conquistar novos clientes na região.
+
+
+
 ## 3. Conhecendo o usuário – Persona
 
 As personas representam os usuários típicos do sistema, ajudando a equipe a compreender suas necessidades, comportamentos e objetivos. Foram identificados quatro perfis principais: Profissional (Acessibilidade), Cliente, Suporte e Dono de Loja.
