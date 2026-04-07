@@ -50,8 +50,8 @@ A análise SWOT tem como objetivo identificar os pontos fortes, pontos fracos, o
 - **Dependência de marketing**: Necessidade de investimento contínuo para atrair e manter usuários.
 
 ---
-# 3. Identificações Visuais de Soluções Existentes
-## Aplicativo: GetNinjas
+### 3. Identificações Visuais de Soluções Existentes
+Antes da construção do quadro comparativo, a equipe deve pesquisar pelo menos três soluções (apps, plataformas, sites) que abordam o mesmo problema ou se aproximam dele. Incluam capturas de tela ou fotos dos apps/plataformas encontradas, acompanhadas de uma breve descrição (nome do app, público-alvo e funcionalidade principal).
 
 ## 3. Conhecendo o usuário – Persona
 
