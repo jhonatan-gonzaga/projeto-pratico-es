@@ -53,6 +53,11 @@ A análise SWOT tem como objetivo identificar os pontos fortes, pontos fracos, o
 ### 3. Identificações Visuais de Soluções Existentes
 Antes da construção do quadro comparativo, a equipe deve pesquisar pelo menos três soluções (apps, plataformas, sites) que abordam o mesmo problema ou se aproximam dele. Incluam capturas de tela ou fotos dos apps/plataformas encontradas, acompanhadas de uma breve descrição (nome do app, público-alvo e funcionalidade principal).
 
+<div align="right">
+  <img width="800" src="https://images.sftcdn.net/images/t_app-cover-l,f_auto/p/1de89ffe-b6bb-4f89-a861-b80553d37ec1/1739641281/getninjas-encontre-servicos-screenshot.png" alt="GetNinjas - Encontre Serviços" />
+</div>
+
+
 ## 3. Conhecendo o usuário – Persona
 
 As personas representam os usuários típicos do sistema, ajudando a equipe a compreender suas necessidades, comportamentos e objetivos. Foram identificados quatro perfis principais: Profissional (Acessibilidade), Cliente, Suporte e Dono de Loja.
