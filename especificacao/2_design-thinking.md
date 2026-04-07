@@ -50,7 +50,8 @@ A análise SWOT tem como objetivo identificar os pontos fortes, pontos fracos, o
 - **Dependência de marketing**: Necessidade de investimento contínuo para atrair e manter usuários.
 
 ---
-
+## 3. Identificações Visuais de Soluções Existentes
+# Aplicativo: GetNinjas 
 ## 3. Conhecendo o usuário – Persona
 
 As personas representam os usuários típicos do sistema, ajudando a equipe a compreender suas necessidades, comportamentos e objetivos. Foram identificados quatro perfis principais: Profissional (Acessibilidade), Cliente, Suporte e Dono de Loja.
