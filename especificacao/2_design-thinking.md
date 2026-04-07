@@ -56,7 +56,7 @@ Antes da construção do quadro comparativo, a equipe deve pesquisar pelo menos 
 <div align="center">
   <img width="200" src="https://images.sftcdn.net/images/t_app-cover-l,f_auto/p/1de89ffe-b6bb-4f89-a861-b80553d37ec1/1739641281/getninjas-encontre-servicos-screenshot.png" alt="GetNinjas - Encontre Serviços" />
 </div>
-**Aplicativo:** GetNinjas  
+ **Aplicativo:** GetNinjas  
 
 **Descrição:** Plataforma de marketplace que conecta clientes a milhares de prestadores de serviços em mais de 500 tipos de categorias, desde serviços domésticos e reformas até assistência técnica e consultoria.  
 
