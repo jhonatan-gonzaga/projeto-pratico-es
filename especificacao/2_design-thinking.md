@@ -81,8 +81,14 @@ Antes da construção do quadro comparativo, a equipe deve pesquisar pelo menos 
   <img width="200" src="https://image.winudf.com/v2/image1/Y29tLnRyaWlkZXIucHJvX3NjcmVlbl8wXzE2OTY1Mzk4ODhfMDY4/screen-0.jpg?fakeurl=1&type=.jpg" alt="Triider" />
 </div>
 
+**Aplicativo:** Triider
+
+**Descrição:**  Aplicativo focado exclusivamente em serviços para casa e pequenos reparos.
 
 
+**Público Alvo:** Eletricista, encanador, marido de aluguel e montagem de móveis, garantindo profissionais verificados e com preço fechado.
+
+---
 
 ## 3. Conhecendo o usuário – Persona
 
