@@ -50,11 +50,13 @@ A análise SWOT tem como objetivo identificar os pontos fortes, pontos fracos, o
 - **Dependência de marketing**: Necessidade de investimento contínuo para atrair e manter usuários.
 
 ---
-### 3. Identificações Visuais de Soluções Existentes
+## 2.2 Identificações Visuais de Soluções Existentes
 Antes da construção do quadro comparativo, a equipe deve pesquisar pelo menos três soluções (apps, plataformas, sites) que abordam o mesmo problema ou se aproximam dele. Incluam capturas de tela ou fotos dos apps/plataformas encontradas, acompanhadas de uma breve descrição (nome do app, público-alvo e funcionalidade principal).
 
+### 2.2.1 GetNinjas
 <div align="center">
   <img width="200" src="https://images.sftcdn.net/images/t_app-cover-l,f_auto/p/1de89ffe-b6bb-4f89-a861-b80553d37ec1/1739641281/getninjas-encontre-servicos-screenshot.png" alt="GetNinjas - Encontre Serviços" />
+  <p>Figura 3 - tela do GetNinjas</p>
 </div>
 
 **Aplicativo:** GetNinjas   
@@ -64,9 +66,10 @@ Antes da construção do quadro comparativo, a equipe deve pesquisar pelo menos 
 **Público Alvo:** Profissionais de diversas áreas como eletricistas, encanadores, diaristas, pintores, professores particulares, técnicos, consultores, entre outros, que desejam divulgar seus serviços e conquistar novos clientes.  
 
 ---
-
+### 2.2.2 Reforma Fácil
 <div align="center">
   <img width="200" src="https://play-lh.googleusercontent.com/VYQl2TUdqjyZrF2CRFVcav0leh5zXyMIhUHSCqAhl20Fw-cibuQ43Y2xGbJ-fzF0aA=w2560-h1440-rw" alt="Reforma Fácil" />
+  <p>Figura 3 - tela de home do Reforma fácil</p>
 </div>
 
 **Aplicativo:** Reforma Fácil
@@ -76,9 +79,10 @@ Antes da construção do quadro comparativo, a equipe deve pesquisar pelo menos 
 **Público Alvo:** Clientes residenciais no estado de São Paulo que buscam serviços de reforma, manutenção ou pequenos reparos com praticidade e agilidade, e profissionais autônomos que desejam divulgar seus serviços gratuitamente e conquistar novos clientes na região.
 
 ---
-
+### 2.2.3 Triider
 <div align="center">
   <img width="200" src="https://image.winudf.com/v2/image1/Y29tLnRyaWlkZXIucHJvX3NjcmVlbl8wXzE2OTY1Mzk4ODhfMDY4/screen-0.jpg?fakeurl=1&type=.jpg" alt="Triider" />
+  <p>Figura 3 - tela do Triider</p>
 </div>
 
 **Aplicativo:** Triider
