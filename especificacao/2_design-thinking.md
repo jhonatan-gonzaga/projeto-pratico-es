@@ -50,6 +50,45 @@ A análise SWOT tem como objetivo identificar os pontos fortes, pontos fracos, o
 - **Dependência de marketing**: Necessidade de investimento contínuo para atrair e manter usuários.
 
 ---
+### 3. Identificações Visuais de Soluções Existentes
+Antes da construção do quadro comparativo, a equipe deve pesquisar pelo menos três soluções (apps, plataformas, sites) que abordam o mesmo problema ou se aproximam dele. Incluam capturas de tela ou fotos dos apps/plataformas encontradas, acompanhadas de uma breve descrição (nome do app, público-alvo e funcionalidade principal).
+
+<div align="center">
+  <img width="200" src="https://images.sftcdn.net/images/t_app-cover-l,f_auto/p/1de89ffe-b6bb-4f89-a861-b80553d37ec1/1739641281/getninjas-encontre-servicos-screenshot.png" alt="GetNinjas - Encontre Serviços" />
+</div>
+
+**Aplicativo:** GetNinjas   
+
+**Descrição:** Plataforma de marketplace que conecta clientes a milhares de prestadores de serviços em mais de 500 tipos de categorias, desde serviços domésticos e reformas até assistência técnica e consultoria.  
+
+**Público Alvo:** Profissionais de diversas áreas como eletricistas, encanadores, diaristas, pintores, professores particulares, técnicos, consultores, entre outros, que desejam divulgar seus serviços e conquistar novos clientes.  
+
+---
+
+<div align="center">
+  <img width="200" src="https://play-lh.googleusercontent.com/VYQl2TUdqjyZrF2CRFVcav0leh5zXyMIhUHSCqAhl20Fw-cibuQ43Y2xGbJ-fzF0aA=w2560-h1440-rw" alt="Reforma Fácil" />
+</div>
+
+**Aplicativo:** Reforma Fácil
+
+**Descrição:**  Aplicativo projetado para planejar e gerenciar projetos de construção e reforma. Ajuda a encontrar e orçar materiais, contratar profissionais e, em alguns casos, acompanhar o andamento da obra 
+
+**Público Alvo:** Clientes residenciais no estado de São Paulo que buscam serviços de reforma, manutenção ou pequenos reparos com praticidade e agilidade, e profissionais autônomos que desejam divulgar seus serviços gratuitamente e conquistar novos clientes na região.
+
+---
+
+<div align="center">
+  <img width="200" src="https://image.winudf.com/v2/image1/Y29tLnRyaWlkZXIucHJvX3NjcmVlbl8wXzE2OTY1Mzk4ODhfMDY4/screen-0.jpg?fakeurl=1&type=.jpg" alt="Triider" />
+</div>
+
+**Aplicativo:** Triider
+
+**Descrição:**  Aplicativo focado exclusivamente em serviços para casa e pequenos reparos.
+
+
+**Público Alvo:** Eletricista, encanador, marido de aluguel e montagem de móveis, garantindo profissionais verificados e com preço fechado.
+
+---
 
 ## 3. Conhecendo o usuário – Persona
 
