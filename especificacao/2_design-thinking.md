@@ -51,8 +51,18 @@ A análise SWOT tem como objetivo identificar os pontos fortes, pontos fracos, o
 
 ---
 ### 3. Identificações Visuais de Soluções Existentes
-Antes da construção do quadro comparativo, a equipe deve pesquisar pelo menos três soluções (apps, plataformas, sites) que abordam o mesmo problema ou se aproximam dele. Incluam capturas de tela ou fotos dos apps/plataformas encontradas, acompanhadas de uma breve descrição (nome do app, público-alvo e funcionalidade principal).
+Antes da construção do quadro comparativo, é necessário levantar pelo menos três soluções digitais (como aplicativos, plataformas ou sites) que enfrentem o mesmo problema ou que se aproximem dele.
+Cada solução deve ser apresentada com:
 
+- **Captura de tela ou foto** do app/plataforma/site.
+
+ **Breve descrição** contendo:
+
+- Nome da solução
+
+- Público-alvo principal
+
+- Funcionalidade central
 <div align="center">
   <img width="200" src="https://images.sftcdn.net/images/t_app-cover-l,f_auto/p/1de89ffe-b6bb-4f89-a861-b80553d37ec1/1739641281/getninjas-encontre-servicos-screenshot.png" alt="GetNinjas - Encontre Serviços" />
 </div>
