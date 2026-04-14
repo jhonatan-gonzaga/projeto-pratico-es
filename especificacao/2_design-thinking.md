@@ -94,6 +94,18 @@ Antes da construção do quadro comparativo, a equipe deve pesquisar pelo menos 
 
 ---
 
+## 2.2 Quadro Comparativo de Soluções Existentes
+
+| **Critérios / Soluções**       | **Solução A (GetNinjas)**                                                                | **Solução B (Reforma Fácil)**                                                   | **Solução C (Triider)**                                                                         | **Nossa Solução (Conecta Obra Itacoatiara)**                                                                              |
+|--------------------------------|------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------|
+| **Modelo de negócio**          | Plataforma de marketplace abrangente para conexão de serviços.                           | Marketplace com foco em divulgação gratuita para profissionais.                 | Marketplace de nicho focado em serviços com "preço fechado".                                    | Marketplace local para geração de oportunidades (sem taxas ou pagamentos in-app).                                         |
+| **Tecnologia utilizada**       | Aplicativo Mobile e Plataforma Web.                                                      | Aplicativo Mobile.                                                              | Aplicativo Mobile.                                                                              | App Mobile (React Native/TypeScript) com recurso de acessibilidade Text-to-Speech (TTS).                                  |
+| **Público-alvo**               | Público geral e profissionais de mais de 500 áreas de atuação.                           | Clientes residenciais e profissionais autônomos focados no estado de São Paulo. | Clientes e profissionais de pequenos reparos (encanadores, eletricistas, etc.).                 | Clientes, profissionais da construção civil e donos de lojas de materiais de Itacoatiara-AM.                              |
+| **Pontos fortes**              | Alta base de usuários e grande variedade de categorias de serviço.                       | Foco em planejamento de projetos e orçamento de materiais.                      | Segurança através de profissionais verificados e previsibilidade com preço fechado.             | Inclusão digital de profissionais (TTS), integração direta com catálogo de lojistas locais e foco regional.               |
+| **Pontos fracos / limitações** | Genérico demais, sem funcionalidades exclusivas ou direcionadas para a construção civil. | Restrito geograficamente ao estado de São Paulo.                                | Limitado a pequenos reparos residenciais, não abrangendo obras maiores ou integração com lojas. | Dependência do WhatsApp para comunicação, falta de pagamentos no app e dependência de validação inicial do mercado local. |
+
+---
+
 ## 3. Conhecendo o usuário – Persona
 
 As personas representam os usuários típicos do sistema, ajudando a equipe a compreender suas necessidades, comportamentos e objetivos. Foram identificados quatro perfis principais: Profissional (Acessibilidade), Cliente, Suporte e Dono de Loja.
