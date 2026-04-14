@@ -94,7 +94,7 @@ Antes da construção do quadro comparativo, a equipe deve pesquisar pelo menos 
 
 ---
 
-## 2.2 Quadro Comparativo de Soluções Existentes
+## 2.3 Quadro Comparativo de Soluções Existentes
 
 | **Critérios / Soluções**       | **Solução A (GetNinjas)**                                                                | **Solução B (Reforma Fácil)**                                                   | **Solução C (Triider)**                                                                         | **Nossa Solução (Conecta Obra Itacoatiara)**                                                                              |
 |--------------------------------|------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------|
