@@ -204,7 +204,30 @@ Representa o empresário local que deseja aumentar sua visibilidade e vendas atr
 - Interface de gerenciamento de catálogo e produtos.
 - Visualização de histórico de pedidos e avaliações de clientes.
 - Criação de promoções em itens específicos.
-
 ---
+
+## 4. Ideação
+
+Nesta etapa, o foco foi a geração de ideias inovadoras para solucionar os problemas identificados nas fases anteriores. Através de técnicas de criatividade, a equipe explorou diversas possibilidades para agregar valor às personas e diferenciar o **Conecta Obra Itacoatiara** no mercado local.
+
+### 4.1 Importância do Brainstorming
+O brainstorming foi essencial para este projeto, pois permitiu a divergência de ideias sem restrições iniciais, promovendo um ambiente colaborativo onde todos os membros da equipe puderam contribuir com diferentes perspectivas. Essa técnica ajudou a identificar soluções que vão além do óbvio, como recursos de acessibilidade e integração direta com lojistas, garantindo que o produto final seja verdadeiramente centrado no usuário.
+
+### 4.2 O que foi feito
+A equipe realizou sessões de ideação focadas em resolver as dores das personas (João, Ana, Marcelo e Eric). Foram levantadas diversas propostas, que passaram por um processo de votação e priorização. As ideias foram avaliadas com base em seu impacto para o usuário e viabilidade de implementação, resultando na seleção das funcionalidades mais promissoras.
+
+### 4.3 Resultados
+As ideias selecionadas (com 4 ou mais votos) foram organizadas em eixos estratégicos para formar uma solução robusta:
+
+| Eixo Estratégico | Funcionalidades Integradas |
+| :--- | :--- |
+| **Eficiência Comercial** | Sistema de Orçamento Multi-Loja, Gerador de Pré-Orçamento e Painel de Ofertas Relâmpago. |
+| **Confiança e Segurança** | Incentivo a Avaliações Cruzadas, Sistema de Favoritos e Sistema de Bloqueio. |
+| **Suporte e Confiabilidade** | Botão SOS de Contexto e Ajuda Contextual. |
+| **Acessibilidade (UX)** | Fonte Grande e interface assistida. |
+
+### 4.4 Link para o Notion
+Para visualizar o detalhamento completo de cada ideia, a contagem de votos e o refinamento das propostas, acesse a documentação oficial no Notion:
+[Resultado Detalhado da Ideação](https://www.notion.so/33a60f8e67b3811198b7d8cd2fd17e5c)
 
 </div>
