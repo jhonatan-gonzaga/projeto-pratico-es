@@ -69,7 +69,7 @@ Antes da construção do quadro comparativo, a equipe deve pesquisar pelo menos 
 ### 2.2.2 Reforma Fácil
 <div align="center">
   <img width="200" src="https://play-lh.googleusercontent.com/VYQl2TUdqjyZrF2CRFVcav0leh5zXyMIhUHSCqAhl20Fw-cibuQ43Y2xGbJ-fzF0aA=w2560-h1440-rw" alt="Reforma Fácil" />
-  <p>Figura 3 - tela de home do Reforma fácil</p>
+  <p>Figura 4 - tela de home do Reforma fácil</p>
 </div>
 
 **Aplicativo:** Reforma Fácil
@@ -82,7 +82,7 @@ Antes da construção do quadro comparativo, a equipe deve pesquisar pelo menos 
 ### 2.2.3 Triider
 <div align="center">
   <img width="200" src="https://image.winudf.com/v2/image1/Y29tLnRyaWlkZXIucHJvX3NjcmVlbl8wXzE2OTY1Mzk4ODhfMDY4/screen-0.jpg?fakeurl=1&type=.jpg" alt="Triider" />
-  <p>Figura 3 - tela do Triider</p>
+  <p>Figura 5 - tela do Triider</p>
 </div>
 
 **Aplicativo:** Triider
@@ -116,6 +116,7 @@ Esta persona representa profissionais autônomos (como pintores ou eletricistas)
 
 <div align="center">
   <img width="800" src="https://github.com/user-attachments/assets/11c1bc30-b076-44e9-aa3b-23b5faba855b" alt="Persona João - Profissional" />
+  <p>Figura 6 - Persona de Profissional</p>
 </div>
 
 | Atributo | Detalhamento |
@@ -141,6 +142,7 @@ O Cliente é o contratante que busca profissionais capacitados e confiáveis par
 
 <div align="center">
   <img width="800" src="https://github.com/user-attachments/assets/901a7e5f-f9a3-4953-a0a2-58e7874e8576" alt="Persona Ana - Cliente" />
+  <p>Figura 7 - Persona de Cliente</p>
 </div>
 
 | Atributo | Detalhamento |
@@ -166,6 +168,8 @@ O Suporte Técnico atua como mediador e auxiliador, garantindo que todos os usu�
 
 <div align="center">
   <img width="800" src="https://github.com/user-attachments/assets/a15a3e8c-2436-4a9f-839e-2c9e4537b846" alt="Persona Marcelo - Suporte" />
+  <p>Figura 8 - Persona de Suporte</p>
+  
 </div>
 
 | Atributo | Detalhamento |
@@ -189,6 +193,8 @@ Representa o empresário local que deseja aumentar sua visibilidade e vendas atr
 
 <div align="center">
   <img width="800" src="https://github.com/user-attachments/assets/278ed959-e58f-462a-ae50-33ef9b4f2b51" alt="Persona Eric - Lojista" />
+  <p>Figura 9 - Persona de Dono de Loja de Materiais de Construção</p>
+  
 </div>
 
 | Atributo | Detalhamento |
