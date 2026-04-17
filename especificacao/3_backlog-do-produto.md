@@ -40,7 +40,6 @@ O backlog foi estruturado utilizando a ferramenta **GitHub Projects** no modo *B
 Para garantir a robustez do planejamento, foram aplicados os seguintes critérios:
 
 *   **Priorização:** Cada história recebeu um nível de prioridade (Alta, Média ou Baixa), refletindo seu impacto para o ecossistema de construção civil local.
-*   **Detalhamento:** No mínimo 10 histórias foram profundamente especificadas com critérios de aceitação claros.
 *   **Rastreabilidade:** Todas as histórias estão vinculadas a pelo menos uma persona, garantindo que o desenvolvimento esteja alinhado às dores reais dos usuários de Itacoatiara.
 *   **Colaboração:** A especificação contou com a participação ativa de múltiplos integrantes da equipe, evidenciada pelas atribuições (*Assignees*) no GitHub.
 
