@@ -45,4 +45,4 @@ Para garantir a robustez do planejamento, foram aplicados os seguintes critério
 *   **Colaboração:** A especificação contou com a participação ativa de múltiplos integrantes da equipe, evidenciada pelas atribuições (*Assignees*) no GitHub.
 
 ---
-> **Nota:** O acompanhamento em tempo real das histórias de usuário e seu estado atual de desenvolvimento pode ser visualizado diretamente na aba [Projects](https://github.com/jhonatan-gonzaga/projeto-pratico-es/projects) deste repositório.
+> **Nota:** O acompanhamento em tempo real das histórias de usuário e seu estado atual de desenvolvimento pode ser visualizado diretamente na aba [Projects](https://github.com/users/jhonatan-gonzaga/projects/2) deste repositório.
