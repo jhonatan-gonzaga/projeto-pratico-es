@@ -14,7 +14,7 @@ A principal função do Backlog do Sprint é fornecer uma visão detalhada e em 
 
 O Backlog do Sprint do projeto **Conecta Obra Itacoatiara** foi construído de forma integrada entre duas ferramentas principais: **GitHub Projects** e **Notion**.
 
-### 2.1. O Papel do Notion (Daily Scrum)
+### 2.1. O Papel do Notion (Daily)
 O [Notion](https://www.notion.so/4b4f2e04b56a48aa895c4082f9f65424?v=039de6463eb8436abf9746d426406901) é utilizado para o registro das **Dailys**. A coluna "numero da tarefa" no Notion é diretamente associada às tarefas do Backlog do Sprint no GitHub Projects, garantindo a rastreabilidade entre o relato diário e a execução técnica. Nele, cada integrante responde diariamente às três perguntas fundamentais:
 1.  O que fiz ontem?
 2.  O que vou fazer hoje?
