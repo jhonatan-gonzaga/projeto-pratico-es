@@ -7,7 +7,7 @@
 | **Nome do Projeto:** | **Conecta Obra Itacoatiara**<br>Codinome: COI-2026 |
 | **Versão:** | 1.0 |
 | **Status:** | Em desenvolvimento |
-| **Número de Controle SRBR-M:** | 2026.IHC.TP3.001 |
+| **Número de Controle SRBR-M:** | COI-2026.001 |
 | **Executor Principal:** | JHONATAN GONZAGA GALDINO |
 | **Coordenador do Projeto:** | Prof. Andrey Antonio de Oliveira Rodrigues |
 
