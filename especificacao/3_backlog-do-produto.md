@@ -7,7 +7,7 @@ O **Backlog do Produto** é um artefato fundamental no desenvolvimento ágil, se
 A importância do Backlog do Produto reside na sua capacidade de fornecer uma visão clara e compartilhada do que deve ser construído. Ele permite que a equipe:
 
 *   **Mantenha o Foco no Valor:** Ao priorizar as histórias de usuário, garantimos que as funcionalidades mais críticas para os trabalhadores de Itacoatiara sejam desenvolvidas primeiro.
-*   **Promova a Transparência:** Todos os envolvidos (stakeholders e equipe) podem visualizar o progresso e o que ainda está por vir.
+*   **Promova a Transparência:** Todos os envolvidos  podem visualizar o progresso e o que ainda está por vir.
 *   **Facilite a Adaptação:** Como uma lista viva, o backlog pode ser refinado à medida que novos aprendizados sobre o mercado local e as necessidades dos usuários surgem.
 
 ## 2. Para que serve?
