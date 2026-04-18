@@ -1,7 +1,5 @@
 # Projeto Prático I - Engenharia de Software I
 
-Este repositório contém os artefatos desenvolvidos para o Projeto Prático I da disciplina de Engenharia de Software I, da Universidade Federal do Amazonas (UFAM). O objetivo principal desta etapa é transformar ideias iniciais em artefatos concretos de planejamento do desenvolvimento, aplicando conceitos fundamentais da engenharia de software.
-
 ## Visão Geral do Projeto: Conecta Obra Itacoatiara
 
 O projeto **Conecta Obra Itacoatiara** visa criar uma plataforma para conectar profissionais autônomos da construção civil na cidade de Itacoatiara, Amazonas, com clientes que necessitam de seus serviços. A iniciativa busca resolver a dificuldade de profissionais em encontrar trabalho consistente e a dependência de indicações "boca a boca", promovendo um canal digital para mais oportunidades e estabilidade.
