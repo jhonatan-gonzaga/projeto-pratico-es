@@ -13,8 +13,7 @@ Os seguintes documentos e quadros foram elaborados como parte da especificação
 
 *   **Design Thinking:** Apresenta as fases de Inspiração e Ideação, incluindo Golden Circle, Análise SWOT, Identificação Visual de Soluções Existentes, Quadro Comparativo e Personas.
     *   [2_design-thinking.md](especificacao/2_design-thinking.md)
-    *   [Fase de Ideação (Resultado Final)](IDEACAO.md)
-    *   [Página de Ideação no Notion](https://www.notion.so/33a60f8e67b3811198b7d8cd2fd17e5c)
+    *   [Página de Ideação no Notion](https://www.notion.so/65b60f8e67b38370a2fc017a6494238f?v=dc660f8e67b3839da45208090716da37)
 
 *   **Backlog do Produto:** Lista priorizada de funcionalidades desejadas para o sistema, escritas na forma de histórias de usuário, guiando o desenvolvimento incremental.
     *   [3_backlog-do-produto.md](especificacao/3_backlog-do-produto.md)
