@@ -88,10 +88,24 @@ O projeto visa desenvolver um sistema que conecte clientes a profissionais da co
 #### 2.1.1 Escopo Específico
 O escopo específico detalha as funcionalidades e requisitos que serão implementados:
 - Cadastro e gestão de perfis (Cliente, Profissional, Lojista e Suporte).
-- Módulo de acessibilidade com recurso *Text-to-Speech* (TTS).
-- Fluxo de anúncio de serviços com anexação de fotos e descrição.
-- Guia "Onde Comprar" com catálogo de produtos e promoções.
-- Sistema de ranqueamento e avaliações 5 estrelas.
+- Módulo de acessibilidade com recurso *Text-to-Speech* (TTS) para navegação assistida.
+- Fluxo de anúncio de serviços com anexação de fotos e descrição, permitindo a criação de vagas para serviços.
+- Guia "Onde Comprar" com catálogo de produtos e promoções, e acesso a informações de lojas de materiais de construção.
+- Sistema de ranqueamento e avaliações 5 estrelas para profissionais e serviços.
+- Pesquisa de profissionais via barra de busca e visualização detalhada de seus perfis.
+- Contratação direta de profissionais.
+- Interface dedicada para atendimento a clientes com dificuldades (Suporte).
+- Sistema de registro de atendimentos (Logs) para o perfil de Suporte.
+- Alternância entre meios de comunicação (Texto para Áudio) e canais (WhatsApp para Aplicativo) para o perfil de Suporte.
+- Cadastro e exibição de informações da loja (horário, telefone, endereço) para lojistas.
+- Canal direto para dúvidas de clientes sobre produtos para lojistas.
+- Interface de gerenciamento de catálogo e produtos para lojistas.
+- Visualização de histórico de pedidos e avaliações de clientes para lojistas.
+- Criação de promoções em itens específicos para lojistas.
+- Recebimento de notificações de anúncios de trabalho para profissionais.
+- Edição de portfólio no perfil pessoal para profissionais.
+- Aceitação de propostas de anúncios de trabalho para profissionais.
+- Marcação de trabalhos como concluídos após a finalização para profissionais.
 
 #### 2.1.2 Escopo Negativo
 O escopo negativo define o que não será desenvolvido, evitando expectativas erradas:
