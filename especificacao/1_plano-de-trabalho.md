@@ -51,7 +51,7 @@
 
 ## 1. INTRODUÇÃO
 
-A introdução apresenta um panorama geral do projeto, contextualizando seu propósito, justificativa e características principais.
+O projeto Conecta Obra Itacoatiara visa criar uma plataforma digital inovadora para conectar clientes, profissionais da construção civil e lojistas de materiais na cidade de Itacoatiara. Atualmente, a região enfrenta desafios na contratação de serviços e aquisição de insumos, com dificuldades para encontrar profissionais qualificados e inconsistência de trabalho para os mesmos. Esta plataforma surge como uma solução para automatizar e centralizar a gestão dessas conexões, facilitando a contratação de serviços, a cotação de materiais e a promoção da inclusão digital através de interfaces assistidas por voz, otimizando o mercado local e gerando novas oportunidades.
 
 ### 1.1 Objeto
 O projeto consiste no desenvolvimento de uma plataforma digital denominada **Conecta Obra Itacoatiara**. O sistema atua como um hub de conexão entre clientes, profissionais da construção civil e lojistas de materiais, facilitando a contratação de serviços e a aquisição de insumos de forma centralizada e segura.
