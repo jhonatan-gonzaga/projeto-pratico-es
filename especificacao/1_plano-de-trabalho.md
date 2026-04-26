@@ -120,7 +120,7 @@ Aqui são descritas as tecnologias e ferramentas que serão utilizadas no desenv
 | **Metodologia** | Scrum com sprints semanais |
 | **Gerenciamento de Backlog** | GitHub Projects |
 | **Repositório de Código** | GitHub |
-| **Modelagem de Software** | Figma e Draw.io (Diagramas MoLIC e HTA) |
+| **Modelagem de Software** | Figma, Draw.io e visual paradigma|
 | **Desenvolvimento do MVP** | React Native / TypeScript |
 
 ### 2.3 Características Inovadoras do Projeto
