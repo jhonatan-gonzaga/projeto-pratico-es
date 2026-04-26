@@ -238,6 +238,6 @@ As ideias selecionadas (com 4 ou mais votos) foram organizadas em eixos estraté
 
 ### 4.4 Link para o Notion
 Para visualizar o detalhamento completo de cada ideia, a contagem de votos e o refinamento das propostas, acesse a documentação oficial no Notion:
-[Resultado Detalhado da Ideação](https://www.notion.so/33a60f8e67b3811198b7d8cd2fd17e5c)
+[Resultado Detalhado da Ideação](https://www.notion.so/65b60f8e67b38370a2fc017a6494238f?v=dc660f8e67b3839da45208090716da37&source=copy_link)
 
 </div>
