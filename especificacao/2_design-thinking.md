@@ -1,5 +1,9 @@
 <div align="justify">
 
+  # Visão Geral do Documento
+
+Este documento apresenta a aplicação da metodologia Design Thinking ao projeto "Conecta Obra Itacoatiara", um aplicativo mobile que conecta profissionais autônomos da construção civil com clientes que necessitam de serviços de reparo e reforma na cidade de Itacoatiara. O documento percorre quatro etapas fundamentais: (1) enquadramento do problema através do Golden Circle, (2) análise exploratória do mercado, (3) definição das personas de usuário e (4) ideação de funcionalidades. O resultado é uma base sólida para o desenvolvimento de um aplicativo centrado nas necessidades reais dos usuários.
+
 ## 1. Enquadramento do Problema – Golden Circle
 O Golden Circle é uma técnica desenvolvida por Simon Sinek que ajuda a alinhar propósito e proposta de valor de uma empresa ou, neste caso, um aplicativo. É dividido em três partes: Por quê? (Why?), Como? (How?) e O quê? (What?).
 
