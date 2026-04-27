@@ -37,7 +37,7 @@ O backlog foi estruturado utilizando a ferramenta **GitHub Projects** no modo *B
 | **Implementação** | Funcionalidades prontas para serem desenvolvidas. |
 
 ### 3.3. Critérios de Qualidade e Rastreabilidade
-Para garantir a robustez do planejamento, foram aplicados los seguintes critérios:
+Para garantir a robustez do planejamento, foram aplicados os seguintes critérios:
 
 *   **Priorização:** Cada história recebeu um nível de prioridade (Alta, Média ou Baixa), refletindo seu impacto para o ecossistema de construção civil local.
 *   **Rastreabilidade:** Todas as histórias estão vinculadas a pelo menos uma persona, garantindo que o desenvolvimento esteja alinhado às dores reais dos usuários de Itacoatiara.
@@ -48,18 +48,33 @@ Para garantir a robustez do planejamento, foram aplicados los seguintes critéri
 
 ## 4. Itens para Implementação
 
-Esta seção apresenta as Histórias de Usuário que estão atualmente na coluna **Implementação** do GitHub Projects, detalhando seus requisitos fundamentais para o desenvolvimento.
+Esta seção detalha as Histórias de Usuário que estão atualmente na coluna **Implementação** do GitHub Projects, organizadas por persona. Todas as histórias listadas abaixo possuem **Prioridade Alta**, sendo consideradas críticas para o MVP do sistema.
 
-| ID | User Story | Critérios de Aceitação | Regras de Negócio | Prioridade | Persona |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **US01** (#24) | Enquanto Dono de Loja, desejo cadastrar produtos com nome, descrição, preço e fotos, para que os clientes visualizem meu catálogo. | - Inserção de nome, descrição e preço.<br>- Upload de pelo menos uma foto.<br>- Visibilidade no catálogo após cadastro. | - Preço deve ser positivo.<br>- Nome do produto é obrigatório. | Alta | Dono de Loja |
-| **US02** (#25) | Enquanto Dono de Loja, desejo atualizar o preço dos produtos rapidamente, para manter as informações corretas. | - Edição do preço de produto existente.<br>- Atualização instantânea no catálogo. | - Somente o dono da loja pode alterar os preços. | Alta | Dono de Loja |
-| **US03** (#26) | Enquanto Dono de Loja, desejo compartilhar produtos pelo WhatsApp, para divulgar rapidamente para meus clientes. | - Botão "Compartilhar no WhatsApp" em cada produto.<br>- Link direto para a página do produto. | - O link deve ser válido e acessível publicamente. | Alta | Dono de Loja |
-| **US04** (#42) | Enquanto Dono de Loja, desejo marcar produtos como promoção com destaque visual e preço promocional, para aumentar as vendas. | - Definição de preço promocional ou % de desconto.<br>- Selo de "Promoção" visível no card. | - Preço promocional deve ser menor que o original. | Alta | Dono de Loja |
-| **US05** (#43) | Enquanto Dono de Loja, desejo cadastrar o endereço e horários da loja, para informar facilmente aos clientes. | - Campos para endereço completo.<br>- Seletor de horários por dia da semana. | - Endereço deve ser validado (campos obrigatórios). | Alta | Dono de Loja |
-| **US06** (#27) | Enquanto profissional, desejo validar acesso por código SMS/TTS, para entrar de forma rápida e segura sem senha. | - Envio de código de 6 dígitos via SMS.<br>- Botão para ouvir código via TTS.<br>- Acesso após código correto. | - Código expira em 5 minutos.<br>- Máximo de 3 tentativas por código. | Alta | Profissional |
-| **US07** (#28) | Enquanto profissional, desejo criar perfil com informações, serviços e fotos, para me tornar visível na plataforma. | - Preenchimento de nome, especialidade e descrição.<br>- Upload de fotos de trabalhos.<br>- Instruções via TTS. | - Perfil ativo apenas após campos obrigatórios. | Alta | Profissional |
-| **US08** (#29) | Enquanto profissional, desejo visualizar e aceitar ofertas de serviço, para me candidatar a oportunidades compatíveis. | - Listagem de serviços na região.<br>- Botão para "Aceitar" ou "Candidatar-se". | - Apenas ofertas compatíveis com especialidades. | Alta | Profissional |
-| **US09** (#30) | Enquanto profissional, desejo confirmar acordo com o cliente no app, para iniciar o serviço com registro oficial. | - Opção para marcar como "Acordado".<br>- Notificação de confirmação para o cliente. | - Status muda para "Em andamento" após ambos confirmarem. | Alta | Profissional |
-| **US10** (#31) | Enquanto profissional, desejo finalizar o serviço e permitir avaliação, para melhorar minha reputação. | - Botão para "Finalizar Serviço".<br>- Formulário de avaliação (estrelas e comentário). | - Avaliação disponível apenas após finalização. | Alta | Profissional |
-| **US11** (#20) | Enquanto suporte, desejo trocar de canal do chat para Whatsapp, para melhor atendimento ao cliente. | - Opção de migrar conversa para WhatsApp.<br>- Captura automática do número do cliente. | - Migração requer consentimento do cliente. | Alta | Suporte |
+### 4.1. Persona: Dono de Loja
+> **Prioridade:** Alta
+
+| ID | User Story | Critérios de Aceitação | Regras de Negócio |
+| :--- | :--- | :--- | :--- |
+| **US01** (#24) | Enquanto Dono de Loja, desejo cadastrar produtos com nome, descrição, preço e fotos, para que os clientes visualizem meu catálogo. | - Inserção de nome, descrição e preço.<br>- Upload de pelo menos uma foto.<br>- Visibilidade no catálogo após cadastro. | - Preço deve ser positivo.<br>- Nome do produto é obrigatório. |
+| **US02** (#25) | Enquanto Dono de Loja, desejo atualizar o preço dos produtos rapidamente, para manter as informações corretas. | - Edição do preço de produto existente.<br>- Atualização instantânea no catálogo. | - Somente o dono da loja pode alterar os preços. |
+| **US03** (#26) | Enquanto Dono de Loja, desejo compartilhar produtos pelo WhatsApp, para divulgar rapidamente para meus clientes. | - Botão "Compartilhar no WhatsApp" em cada produto.<br>- Link direto para a página do produto. | - O link deve ser válido e acessível publicamente. |
+| **US04** (#42) | Enquanto Dono de Loja, desejo marcar produtos como promoção com destaque visual e preço promocional, para aumentar as vendas. | - Definição de preço promocional ou % de desconto.<br>- Selo de "Promoção" visível no card. | - Preço promocional deve ser menor que o original. |
+| **US05** (#43) | Enquanto Dono de Loja, desejo cadastrar o endereço e horários da loja, para informar facilmente aos clientes. | - Campos para endereço completo.<br>- Seletor de horários por dia da semana. | - Endereço deve ser validado (campos obrigatórios). |
+
+### 4.2. Persona: Profissional
+> **Prioridade:** Alta
+
+| ID | User Story | Critérios de Aceitação | Regras de Negócio |
+| :--- | :--- | :--- | :--- |
+| **US06** (#27) | Enquanto profissional, desejo validar acesso por código SMS/TTS, para entrar de forma rápida e segura sem senha. | - Envio de código de 6 dígitos via SMS.<br>- Botão para ouvir código via áudio (TTS).<br>- Acesso após código correto. | - Código expira em 5 minutos.<br>- Máximo de 3 tentativas por código. |
+| **US07** (#28) | Enquanto profissional, desejo criar perfil com informações, serviços e fotos, para me tornar visível na plataforma. | - Preenchimento de nome, especialidade e descrição.<br>- Upload de fotos de trabalhos.<br>- Instruções via TTS. | - Perfil ativo apenas após campos obrigatórios. |
+| **US08** (#29) | Enquanto profissional, desejo visualizar e aceitar ofertas de serviço, para me candidatar a oportunidades compatíveis. | - Listagem de serviços na região.<br>- Botão para "Aceitar" ou "Candidatar-se". | - Apenas ofertas compatíveis com especialidades. |
+| **US09** (#30) | Enquanto profissional, desejo confirmar acordo com o cliente no app, para iniciar o serviço com registro oficial. | - Opção para marcar como "Acordado".<br>- Notificação de confirmação para o cliente. | - Status muda para "Em andamento" após ambos confirmarem. |
+| **US10** (#31) | Enquanto profissional, desejo finalizar o serviço e permitir avaliação, para melhorar minha reputação. | - Botão para "Finalizar Serviço".<br>- Formulário de avaliação (estrelas e comentário). | - Avaliação disponível apenas após finalização. |
+
+### 4.3. Persona: Suporte
+> **Prioridade:** Alta
+
+| ID | User Story | Critérios de Aceitação | Regras de Negócio |
+| :--- | :--- | :--- | :--- |
+| **US11** (#20) | Enquanto suporte, desejo trocar de canal do chat para Whatsapp, para melhor atendimento ao cliente. | - Opção de migrar conversa para WhatsApp.<br>- Captura automática do número do cliente. | - Migração requer consentimento do cliente. |
