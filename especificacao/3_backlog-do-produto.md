@@ -48,16 +48,16 @@ Para garantir a robustez do planejamento, foram aplicados os seguintes critério
 
 ## 4. Itens para Implementação
 
-Esta seção detalha as Histórias de Usuário que estão atualmente na coluna **Implementação** do GitHub Projects, seguindo o padrão de especificação detalhada.
+Esta seção detalha as Histórias de Usuário que estão atualmente na coluna **Implementação** do GitHub Projects.
 
 ### 4.1. Persona: Dono de Loja
 
-#### US01 - Enquanto Dono de Loja de Materiais de Construção, ...
+#### US01 - Enquanto Dono de Loja de Materiais de Construção, desejo cadastrar produtos com foto, preço, adicionar descrição do produto e estoque para enviar rapidamente aos clientes pelo celular.
 
 | Campo | Descrição |
 | :--- | :--- |
 | **ID** | US01 |
-| **Título** | Enquanto Dono de Loja de Materiais de Construção, ... |
+| **Título** | Enquanto Dono de Loja de Materiais de Construção, desejo cadastrar produtos com foto, preço, adicionar descrição do produto e estoque para enviar rapidamente aos clientes pelo celular. |
 | **Status** | Implementar |
 | **Link da Issue** | #24 |
 
@@ -69,30 +69,13 @@ Enquanto Dono de Loja de Materiais de Construção, desejo cadastrar produtos co
 
 | # | Critério |
 | :--- | :--- |
-| 1 | O sistema deve permitir adicionar foto do produto nos formatos JPG ou PNG, limitando o tamanho com no máximo 5MB. |
-| 2 | O sistema deve permitir editar e excluir produtos cadastrados. |
-| 3 | O sistema deve limitar a descrição do produto a no máximo 6 linhas. |
-| 4 | O sistema deve permitir definir a visibilidade do produto por meio da opção "Disponível para venda". |
-| 5 | O sistema deve exibir o produto para o cliente somente quando a opção "Disponível para venda" estiver ativada. |
-| 6 | O sistema deve sinalizar os campos obrigatórios com " |
-| 7 | " (Nome do produto, Preço |
-| 8 | , Estoque |
-| 9 | , Categoria |
-| 10 | ). |
-| 11 | O sistema deve exibir mensagem de sucesso após salvar o produto. |
+| 1 | N/A |
 
 ##### Regra de Negócios
 
 | # | Regra |
 | :--- | :--- |
-| 1 | O produto só pode ser salvo com as informações obrigatórias preenchidas: Nome do produto |
-| 2 | , Preço |
-| 3 | , Estoque |
-| 4 | e Categoria |
-| 5 | . |
-| 6 | O estoque do produto não pode ser negativo. |
-| 7 | Se a quantidade do estoque for igual a 0, o produto deve ficar automaticamente com a visibilidade desativada (off) e não deve aparecer para o cliente. |
-| 8 | Apenas produtos com a opção "Disponível para venda" ativada podem ser exibidos no catálogo para o cliente. |
+| 1 | N/A |
 
 ##### Estimativa
 
@@ -117,18 +100,13 @@ Enquanto Dono de Loja de Materiais de Construção, desejo atualizar o preço do
 
 | # | Critério |
 | :--- | :--- |
-| 1 | Deve permitir editar apenas o preço |
-| 2 | A atualização deve ser salva imediatamente |
-| 3 | O novo preço deve aparecer no catálogo |
+| 1 | N/A |
 
 ##### Regra de Negócios
 
 | # | Regra |
 | :--- | :--- |
-| 1 | O preço não pode ser negativo |
-| 2 | O preço deve aceitar apenas números |
-| 3 | O sistema deve registrar a última atualização |
-| 4 | As informações deve ser revisadas pelo sistema para verificar se há erros |
+| 1 | N/A |
 
 ##### Estimativa
 
@@ -153,17 +131,13 @@ Enquanto Dono de Loja de Materiais de Construção, desejo compartilhar produtos
 
 | # | Critério |
 | :--- | :--- |
-| 1 | O sistema deve permitir compartilhar um produto pelo WhatsApp a partir da página de detalhes do produto ou da lista de produtos. |
-| 2 | Ao tocar em “Compartilhar no WhatsApp”, o sistema deve abrir o WhatsApp com uma mensagem pronta contendo o nome do produto, preço e link da página. |
-| 3 | Se o produto estiver indisponível, o sistema deve informar isso na mensagem ou bloquear o envio. |
-| 4 | O compartilhamento deve funcionar em dispositivos com WhatsApp instalado. |
+| 1 | N/A |
 
 ##### Regra de Negócios
 
 | # | Regra |
 | :--- | :--- |
-| 1 | A mensagem deve conter informações mínimas obrigatórias |
-| 2 | O compartilhamento deve utilizar dados atualizados do produto |
+| 1 | N/A |
 
 ##### Estimativa
 
@@ -188,21 +162,13 @@ Enquanto Dono de Loja de Materiais de Construção, desejo marcar produtos como 
 
 | # | Critério |
 | :--- | :--- |
-| 1 | O sistema deve permitir marcar um produto como "em promoção". |
-| 2 | O sistema deve permitir informar um preço promocional para o produto. |
-| 3 | O produto marcado como promoção deve aparecer com destaque visual na lista de produtos. |
-| 4 | O sistema deve ter uma aba com a opção de ativar e desativar promoção. |
-| 5 | O produto deve ter um valor final após o desconto adicionado. |
+| 1 | N/A |
 
 ##### Regra de Negócios
 
 | # | Regra |
 | :--- | :--- |
-| 1 | O preço promocional deve ser menor que o preço original. |
-| 2 | Somente produtos com visibilidade ativa em estoque podem ser marcados como promoção. |
-| 3 | A promoção deve estar vinculada a um único produto por vez, tendo seu próprio preço promocional independente. |
-| 4 | O sistema deve ter uma opção de ativar e desativar promoção do produto. |
-| 5 | A promoção deve ter uma data de inicio e uma data de término. |
+| 1 | N/A |
 
 ##### Estimativa
 
@@ -227,18 +193,13 @@ Enquanto Dono de Loja de Materiais de Construção, desejo cadastrar o endereço
 
 | # | Critério |
 | :--- | :--- |
-| 1 | O sistema deve permitir cadastrar o endereço completo da loja (rua, número, bairro, cidade). |
-| 2 | O sistema deve permitir cadastrar o horário de funcionamento da loja. |
-| 3 | O lojista deve conseguir editar o endereço e o horário depois de cadastrados. |
-| 4 | O sistema deve exibir as informações salvas na área de perfil da loja. |
-| 5 | As informações de endereço e horário devem estar disponíveis para compartilhamento com clientes. |
+| 1 | N/A |
 
 ##### Regra de Negócios
 
 | # | Regra |
 | :--- | :--- |
-| 1 | O endereço da loja é obrigatório para salvar o cadastro e o sistema não deve permitir salvar sem informar pelo menos rua e cidade. |
-| 2 | O horário de funcionamento deve seguir um formato válido. |
+| 1 | N/A |
 
 ##### Estimativa
 
@@ -265,29 +226,13 @@ Enquanto profissional, desejo validar meu acesso por código enviado ao celular,
 
 | # | Critério |
 | :--- | :--- |
-| 1 | O profissional deve informar seu número de celular. |
-| 2 | O sistema deve enviar automaticamente um código de verificação (OTP). |
-| 3 | O código deve conter entre 4 a 6 dígitos numéricos. |
-| 4 | O usuário deve conseguir inserir o código manualmente. |
-| 5 | O aplicativo deve oferecer a opção de ouvir o código via TTS. |
-| 6 | O sistema deve validar o código corretamente. |
-| 7 | Deve existir opção de reenviar o código. |
-| 8 | O sistema deve exibir erro para código inválido ou expirado. |
-| 9 | O acesso deve ocorrer sem uso de senha. |
+| 1 | N/A |
 
 ##### Regra de Negócios
 
 | # | Regra |
 | :--- | :--- |
-| 1 | O código expira em tempo definido de 5 minutos. |
-| 2 | O número de tentativas é limitado, somente 5 tentativas. |
-| 3 | Após limite excedido, o acesso é bloqueado temporariamente durante 30 minutos. |
-| 4 | O número de celular deve ser único por conta. |
-| 5 | O sistema deve mascarar o número exibido. |
-| 6 | O TTS é opcional. |
-| 7 | Deve haver controle de envio de código (anti |
-| 8 | spam). |
-| 9 | O login cria sessão autenticada no dispositivo. |
+| 1 | N/A |
 
 ##### Estimativa
 
@@ -312,24 +257,13 @@ Enquanto profissional, desejo criar meu perfil com informações, serviços e fo
 
 | # | Critério |
 | :--- | :--- |
-| 1 | O profissional deve preencher nome (mín. 3 caracteres), categoria (obrigatória) e descrição (mín. 20 caracteres). |
-| 2 | O sistema deve permitir adicionar até 5 fotos de serviços realizados (portfólio de trabalhos do profissional). |
-| 3 | Cada foto deve ter no máximo 5MB, estar nos formatos JPG ou PNG e representar serviços executados pelo profissional. |
-| 4 | O sistema deve permitir edição do perfil a qualquer momento. |
-| 5 | O app deve oferecer leitura via TTS das instruções, podendo ser ativada ou desativada pelo usuário. |
-| 6 | O perfil é considerado salvo quando todos os campos obrigatórios forem válidos e o sistema exibir a mensagem “Perfil salvo com sucesso”. |
-| 7 | O perfil é considerado completo quando nome, categoria e descrição forem válidos e houver pelo menos 1 foto válida no portfólio. |
-| 8 | O profissional só poderá receber ofertas quando o perfil estiver completo, caso contrário o sistema deve bloquear e exibir “Complete seu perfil para receber ofertas”. |
+| 1 | N/A |
 
 ##### Regra de Negócios
 
 | # | Regra |
 | :--- | :--- |
-| 1 | Nome, categoria e descrição são obrigatórios com validações mínimas definidas. |
-| 2 | Perfis incompletos não são exibidos para clientes e não recebem ofertas. |
-| 3 | O portfólio permite no máximo 5 fotos, cada uma com até 5MB, nos formatos JPG ou PNG e relacionadas aos serviços do profissional. |
-| 4 | O profissional pode editar o perfil a qualquer momento. |
-| 5 | O TTS é opcional e pode ser ativado ou desativado. |
+| 1 | N/A |
 
 ##### Estimativa
 
@@ -337,12 +271,12 @@ Complexidade: **Alta**
 
 ---
 
-#### US08 - Enquanto profissional, desejo visualizar e aceitar...
+#### US08 - Enquanto profissional, desejo visualizar e aceitar ofertas de serviço disponíveis para me candidatar rapidamente a oportunidades de trabalho compatíveis com minha área.
 
 | Campo | Descrição |
 | :--- | :--- |
 | **ID** | US08 |
-| **Título** | Enquanto profissional, desejo visualizar e aceitar... |
+| **Título** | Enquanto profissional, desejo visualizar e aceitar ofertas de serviço disponíveis para me candidatar rapidamente a oportunidades de trabalho compatíveis com minha área. |
 | **Status** | Implementar |
 | **Link da Issue** | #29 |
 
@@ -354,25 +288,13 @@ Enquanto profissional, desejo visualizar e aceitar ofertas de serviço disponív
 
 | # | Critério |
 | :--- | :--- |
-| 1 | O sistema deve notificar o profissional sobre novas ofertas. |
-| 2 | O profissional deve visualizar a lista de ofertas com nome do serviço, cliente, valor, data, horário e endereço. |
-| 3 | O profissional deve visualizar na tela de detalhes do serviço as informações completas contendo nome do serviço, nome do cliente, status do serviço |
-| 4 | O status do serviço exibido nos detalhes deve assumir os valores “Aguardando aprovação”, “Em andamento” ou “Concluído”, permitindo ações como cancelar ou reabrir quando aplicável. |
-| 5 | O botão “Aceitar Oferta” deve estar disponível diretamente no card da oferta na lista principal. |
-| 6 | Deve existir o botão “Cancelar” disponível após a candidatura, permitindo desistir quando aplicável. |
-| 7 | Ao aceitar a oferta, o profissional deve ser incluído na lista de candidatos. |
-| 8 | O sistema deve exibir a mensagem “Candidatura registrada com sucesso”. |
+| 1 | N/A |
 
 ##### Regra de Negócios
 
 | # | Regra |
 | :--- | :--- |
-| 1 | Apenas profissionais com perfil completo podem aceitar ofertas. |
-| 2 | Um profissional não pode ter mais de uma candidatura ativa para a mesma oferta, podendo cancelar a candidatura e se candidatar novamente enquanto o status estiver “Aguardando aprovação”. |
-| 3 | Após aceitar a oferta, o botão deve ser desabilitado ou alterado para indicar o novo status. |
-| 4 | A ação “Cancelar” não deve gerar nova candidatura e deve apenas alterar o estado atual quando permitido. |
-| 5 | A lista de candidatos deve ser atualizada imediatamente após a candidatura. |
-| 6 | O status “Aguardando aprovação” permanece até a decisão do cliente. |
+| 1 | N/A |
 
 ##### Estimativa
 
@@ -397,22 +319,13 @@ Enquanto profissional, desejo confirmar no aplicativo que fechei um acordo com o
 
 | # | Critério |
 | :--- | :--- |
-| 1 | O botão “Acordo Fechado! Iniciar Serviço” deve estar disponível após contratação. |
-| 2 | Ao clicar, o sistema deve notificar o cliente. |
-| 3 | O cliente deve confirmar o início do serviço. |
-| 4 | O app deve oferecer leitura via TTS dos termos do acordo. |
-| 5 | O serviço deve ser iniciado apenas após confirmação do cliente. |
-| 6 | O status deve mudar para “Andamento”. |
+| 1 | N/A |
 
 ##### Regra de Negócios
 
 | # | Regra |
 | :--- | :--- |
-| 1 | O contato inicial deve ocorrer por meio de chat interno disponível no aplicativo. |
-| 2 | O serviço só inicia com confirmação dupla (profissional + cliente). |
-| 3 | O sistema registra data/hora de início. |
-| 4 | Sem confirmação do cliente, o serviço não é formalizado. |
-| 5 | O TTS deve ser opcional. |
+| 1 | N/A |
 
 ##### Estimativa
 
@@ -437,23 +350,13 @@ Enquanto profissional, desejo finalizar o serviço no aplicativo e permitir a av
 
 | # | Critério |
 | :--- | :--- |
-| 1 | Deve existir opção “Detalhe do Serviço” para visualizar informações completas do serviço. |
-| 2 | Deve existir botão “Finalizar Serviço”. |
-| 3 | Ao finalizar, o status deve mudar para “Concluído”. |
-| 4 | O sistema deve solicitar avaliação ao cliente após a finalização. |
-| 5 | O app deve oferecer TTS opcional para leitura das instruções de avaliação. |
-| 6 | O profissional deve poder adicionar fotos do serviço realizado. |
-| 7 | A avaliação deve ser registrada no sistema. |
+| 1 | N/A |
 
 ##### Regra de Negócios
 
 | # | Regra |
 | :--- | :--- |
-| 1 | A avaliação está vinculada ao serviço concluído. |
-| 2 | A reputação é baseada nas avaliações recebidas. |
-| 3 | Fotos podem ser exibidas no perfil do profissional. |
-| 4 | Um serviço só pode ser finalizado uma vez. |
-| 5 | O sistema agenda a avaliação para o cliente caso ele não responda imediatamente. |
+| 1 | N/A |
 
 ##### Estimativa
 
@@ -480,16 +383,13 @@ Enquanto suporte, desejo receber e enviar prints nos chats de suporte, para perm
 
 | # | Critério |
 | :--- | :--- |
-| 1 | O usuário de suporte pode enviar imagens de prints do aplicativo no chat utilizando o botão "enviar imagem". |
-| 2 | O usuário de suporte pode clicar na imagem para ver com um maior zoom, preenchendo toda a tela. |
-| 3 | O usuário de suporte não pode enviar texto e imagem na mesma mensagem. |
+| 1 | N/A |
 
 ##### Regra de Negócios
 
 | # | Regra |
 | :--- | :--- |
-| 1 | Não deve ser possível enviar mais do que duas imagens por minuto. Fazer tal ação exibe um alerta. |
-| 2 | O sistema deve armazenar as imagens enviadas de ambas as partes por um prazo de 60 dias. |
+| 1 | N/A |
 
 ##### Estimativa
 
@@ -514,16 +414,13 @@ Enquanto Suporte, desejo ter um sistema de registro de atendimentos (Logs), na q
 
 | # | Critério |
 | :--- | :--- |
-| 1 | O usuário de suporte pode registrar novos logs utilizando o sistema de logs. |
-| 2 | O usuário de suporte pode excluir logs, contanto que disponha uma justificativa para tal. |
-| 3 | O usuário de suporte pode editar logs passados. |
-| 4 | O usuário pode fazer um link com um chat de suporte específico no log, contanto que tal chat já estaja com status de finalizado. |
+| 1 | N/A |
 
 ##### Regra de Negócios
 
 | # | Regra |
 | :--- | :--- |
-| 1 | Todos os chats de suporte que foram excluídos devem ser armazenados em forma de backup. |
+| 1 | N/A |
 
 ##### Estimativa
 
@@ -531,12 +428,12 @@ Complexidade: **Alta**
 
 ---
 
-#### US13 - Enquanto Suporte, desejo enviar áudio no chat de s...
+#### US13 - Enquanto Suporte, desejo enviar áudio no chat de suporte para melhor comunicação com o cliente sobre seu problema.
 
 | Campo | Descrição |
 | :--- | :--- |
 | **ID** | US13 |
-| **Título** | Enquanto Suporte, desejo enviar áudio no chat de s... |
+| **Título** | Enquanto Suporte, desejo enviar áudio no chat de suporte para melhor comunicação com o cliente sobre seu problema. |
 | **Status** | Implementar |
 | **Link da Issue** | #22 |
 
@@ -548,19 +445,13 @@ Enquanto Suporte, desejo enviar áudio no chat de suporte para melhor comunicaç
 
 | # | Critério |
 | :--- | :--- |
-| 1 | : |
-| 2 | O usuário de suporte clica no ícone de "mandar áudio", mantém pressionado para gravar e solta para enviar quando satisfeito. |
-| 3 | O usuário de suporte pode enviar quantos áudios quiser. |
-| 4 | O usuário de suporte cancela a gravação deslizando o botão para cima. |
-| 5 | Áudios têm no máximo 2 minutos. Gravações que excedem esse limite são rejeitadas com alerta. |
-| 6 | O usuário de suporte pode clicar para ouvir o próprio áudio enviado no chat. |
+| 1 | N/A |
 
 ##### Regra de Negócios
 
 | # | Regra |
 | :--- | :--- |
-| 1 | : |
-| 2 | Áudios enviados podem ter, no máximo, dois minutos. |
+| 1 | N/A |
 
 ##### Estimativa
 
@@ -568,12 +459,12 @@ Complexidade: **Alta**
 
 ---
 
-#### US14 - Enquanto Suporte, desejo um chat de suporte exclus...
+#### US14 - Enquanto Suporte, desejo um chat de suporte exclusivo para entrar em contato com clientes que precisam de ajuda, auxiliando de forma fácil, prática e rápida.
 
 | Campo | Descrição |
 | :--- | :--- |
 | **ID** | US14 |
-| **Título** | Enquanto Suporte, desejo um chat de suporte exclus... |
+| **Título** | Enquanto Suporte, desejo um chat de suporte exclusivo para entrar em contato com clientes que precisam de ajuda, auxiliando de forma fácil, prática e rápida. |
 | **Status** | Implementar |
 | **Link da Issue** | #21 |
 
@@ -585,19 +476,13 @@ Enquanto Suporte, desejo um chat de suporte exclusivo para entrar em contato com
 
 | # | Critério |
 | :--- | :--- |
-| 1 | : |
-| 2 | O sistema conecta o suporte e cliente automaticamente via chat. |
-| 3 | O suporte define um chat como "problema resolvido" após o término. |
-| 4 | O status do chat "problema resolvido" só é permitido após no mínimo 1 minuto de conversa ativa. |
-| 5 | O suporte transita entre até quatro chats simultâneos livremente. |
+| 1 | N/A |
 
 ##### Regra de Negócios
 
 | # | Regra |
 | :--- | :--- |
-| 1 | : |
-| 2 | Máximo de 4 chats simultâneos por suporte. |
-| 3 | Toda nova conversa envia uma mensagem automática ao cliente explicando o funcionamento do suporte e os valores da empresa com o cliente. |
+| 1 | N/A |
 
 ##### Estimativa
 
@@ -622,17 +507,13 @@ Enquanto suporte, desejo trocar de canal do chat de suporte para Whatsapp, para 
 
 | # | Critério |
 | :--- | :--- |
-| 1 | : |
-| 2 | O usuário pode trocar o canal de comunicação para o Whatsapp ao pressionar a opção "Alternar canal de comunicação". |
-| 3 | O usuário poderá colocar o chat como "problema resolvido" sem nenhum impedimento após a troca de canal. |
-| 4 | O máximo de quatro chats também vale para o chat com canal no Whatsapp, enquanto não estiver com o status de "problema resolvido". |
+| 1 | N/A |
 
 ##### Regra de Negócios
 
 | # | Regra |
 | :--- | :--- |
-| 1 | : |
-| 2 | O Suporte deverá pedir permissão do cliente para poder trocar de canal. |
+| 1 | N/A |
 
 ##### Estimativa
 
@@ -659,16 +540,13 @@ Enquanto Cliente com dificuldades de leitura, desejo acionar a funcionalidade de
 
 | # | Critério |
 | :--- | :--- |
-| 1 | falante ao lado de um campo durante o preenchimento.
-O sistema deve permitir a interrupção instantânea da reprodução ao clicar novamente no ícone de alto |
-| 2 | falante enquanto um áudio está sendo reproduzido.
-O sistema deve permitir a exibição de uma notificação em texto sugerindo o aumento do volume do dispositivo ao clicar em "Ouvir" com o volume no mudo. |
+| 1 | N/A |
 
 ##### Regra de Negócios
 
 | # | Regra |
 | :--- | :--- |
-| 1 | BR). |
+| 1 | N/A |
 
 ##### Estimativa
 
@@ -693,15 +571,13 @@ Enquanto Cliente, desejo enviar e receber mensagens de texto em tempo real com u
 
 | # | Critério |
 | :--- | :--- |
-| 1 | O sistema deve permitir que a mensagem digitada surja na tela imediatamente com um marcador de "Enviado" ao tocar em enviar na interface de chat.
-O sistema deve permitir a visualização da marcação de leitura ("Lida") ao lado da mensagem enviada após o profissional visualizar a conversa.
-O sistema deve permitir a exibição de um balão automático de aviso de segurança após processar o envio de uma mensagem contendo uma string formatada como número de celular. |
+| 1 | N/A |
 
 ##### Regra de Negócios
 
 | # | Regra |
 | :--- | :--- |
-| 1 | Varredura de padrões (RegEx) para identificação de números telefônicos e links, visando disparar alertas de educação e segurança da plataforma. |
+| 1 | N/A |
 
 ##### Estimativa
 
