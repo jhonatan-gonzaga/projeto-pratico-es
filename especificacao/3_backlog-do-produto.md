@@ -37,7 +37,7 @@ O backlog foi estruturado utilizando a ferramenta **GitHub Projects** no modo *B
 | **Implementação** | Funcionalidades prontas para serem desenvolvidas. |
 
 ### 3.3. Critérios de Qualidade e Rastreabilidade
-Para garantir a robustez do planejamento, foram aplicados os seguintes critérios:
+Para garantir a robustez do planejamento, foram aplicados los seguintes critérios:
 
 *   **Priorização:** Cada história recebeu um nível de prioridade (Alta, Média ou Baixa), refletindo seu impacto para o ecossistema de construção civil local.
 *   **Rastreabilidade:** Todas as histórias estão vinculadas a pelo menos uma persona, garantindo que o desenvolvimento esteja alinhado às dores reais dos usuários de Itacoatiara.
@@ -48,125 +48,18 @@ Para garantir a robustez do planejamento, foram aplicados os seguintes critério
 
 ## 4. Itens para Implementação
 
-Esta seção detalha as Histórias de Usuário que estão atualmente na coluna **Implementação** do GitHub Projects, incluindo seus critérios de aceitação, regras de negócio, prioridade e a persona associada.
+Esta seção apresenta as Histórias de Usuário que estão atualmente na coluna **Implementação** do GitHub Projects, detalhando seus requisitos fundamentais para o desenvolvimento.
 
-### 4.1. Gestão de Produtos e Loja (Dono de Loja)
-
-#### US01 - Cadastro de Produtos (#24)
-*   **User Story:** Enquanto Dono de Loja de Materiais de Construção, desejo cadastrar meus produtos com nome, descrição, preço e fotos, para que os clientes possam visualizar meu catálogo.
-*   **Critérios de Aceitação:**
-    *   O sistema deve permitir a inserção de nome, descrição e preço.
-    *   O sistema deve permitir o upload de pelo menos uma foto por produto.
-    *   O produto cadastrado deve ficar visível no catálogo da loja.
-*   **Regras de Negócio:**
-    *   O preço deve ser um valor positivo.
-    *   O nome do produto é obrigatório.
-*   **Prioridade:** Alta
-*   **Persona:** Dono de Loja
-
-#### US02 - Atualização de Preços (#25)
-*   **User Story:** Enquanto Dono de Loja de Materiais de Construção, desejo atualizar o preço dos produtos rapidamente, para manter as informações corretas para meus clientes.
-*   **Critérios de Aceitação:**
-    *   O sistema deve permitir a edição do preço de um produto existente.
-    *   A atualização deve ser refletida instantaneamente no catálogo.
-*   **Regras de Negócio:**
-    *   Somente o dono da loja pode alterar os preços de seus produtos.
-*   **Prioridade:** Alta
-*   **Persona:** Dono de Loja
-
-#### US03 - Compartilhamento via WhatsApp (#26)
-*   **User Story:** Enquanto Dono de Loja de Materiais de Construção, desejo compartilhar produtos pelo WhatsApp, para divulgar rapidamente para meus clientes.
-*   **Critérios de Aceitação:**
-    *   Deve haver um botão de "Compartilhar no WhatsApp" em cada produto.
-    *   O link compartilhado deve levar diretamente à página do produto.
-*   **Regras de Negócio:**
-    *   O link deve ser válido e acessível publicamente.
-*   **Prioridade:** Alta
-*   **Persona:** Dono de Loja
-
-#### US04 - Promoções e Descontos (#42)
-*   **User Story:** Enquanto Dono de Loja de Materiais de Construção, desejo marcar produtos como promoção com destaque visual e preço promocional, com opção de adicionar desconto, para divulgar ofertas rapidamente aos meus clientes e aumentar as vendas.
-*   **Critérios de Aceitação:**
-    *   Opção de definir um "Preço Promocional" ou "% de Desconto".
-    *   Selo de "Promoção" visível no card do produto.
-*   **Regras de Negócio:**
-    *   O preço promocional deve ser menor que o preço original.
-*   **Prioridade:** Alta
-*   **Persona:** Dono de Loja
-
-#### US05 - Cadastro de Endereço e Horários (#43)
-*   **User Story:** Enquanto Dono de Loja de Materiais de Construção, desejo cadastrar o endereço completo da loja e os horários de funcionamento por dia da semana, para enviar facilmente essas informações aos clientes quando solicitarem.
-*   **Critérios de Aceitação:**
-    *   Campos para Rua, Número, Bairro e Cidade.
-    *   Seletor de horários para cada dia da semana (Seg-Dom).
-*   **Regras de Negócio:**
-    *   O endereço deve ser validado (campos obrigatórios).
-*   **Prioridade:** Alta
-*   **Persona:** Dono de Loja
-
-### 4.2. Fluxo do Profissional (Profissional)
-
-#### US06 - Acesso via Código SMS/TTS (#27)
-*   **User Story:** Enquanto profissional, desejo validar meu acesso por código enviado ao celular, com opção de ouvir via TTS, para entrar de forma rápida, segura e sem precisar de senha, mesmo em ambiente de trabalho.
-*   **Critérios de Aceitação:**
-    *   O sistema deve enviar um código de 6 dígitos via SMS.
-    *   Deve haver um botão para ouvir o código via áudio (TTS).
-    *   O acesso deve ser concedido após a inserção do código correto.
-*   **Regras de Negócio:**
-    *   O código deve expirar em 5 minutos.
-    *   Máximo de 3 tentativas de inserção por código.
-*   **Prioridade:** Alta
-*   **Persona:** Profissional
-
-#### US07 - Criação de Perfil Profissional (#28)
-*   **User Story:** Enquanto profissional, desejo criar meu perfil com informações, serviços e fotos, com apoio de TTS, para me tornar visível na plataforma e aumentar minhas chances de conseguir trabalho.
-*   **Critérios de Aceitação:**
-    *   O sistema deve permitir preencher nome, especialidade e descrição.
-    *   Deve permitir o upload de fotos de trabalhos anteriores.
-    *   Opção de ouvir as instruções de preenchimento via TTS.
-*   **Regras de Negócio:**
-    *   O perfil só fica ativo após o preenchimento dos campos obrigatórios.
-*   **Prioridade:** Alta
-*   **Persona:** Profissional
-
-#### US08 - Visualização e Aceite de Ofertas (#29)
-*   **User Story:** Enquanto profissional, desejo visualizar e aceitar ofertas de serviço disponíveis para me candidatar rapidamente a oportunidades de trabalho compatíveis com minha área.
-*   **Critérios de Aceitação:**
-    *   O sistema deve listar serviços abertos na região do profissional.
-    *   Deve haver um botão para "Aceitar" ou "Candidatar-se".
-*   **Regras de Negócio:**
-    *   O profissional só pode ver ofertas compatíveis com suas especialidades cadastradas.
-*   **Prioridade:** Alta
-*   **Persona:** Profissional
-
-#### US09 - Confirmação de Acordo (#30)
-*   **User Story:** Enquanto profissional, desejo confirmar no aplicativo que fechei um acordo com o cliente após contato externo, para iniciar o serviço oficialmente com segurança e registro na plataforma.
-*   **Critérios de Aceitação:**
-    *   Deve haver uma opção para marcar o serviço como "Acordado".
-    *   O cliente deve receber uma notificação para confirmar o acordo.
-*   **Regras de Negócio:**
-    *   O status do serviço muda para "Em andamento" após a confirmação de ambas as partes.
-*   **Prioridade:** Alta
-*   **Persona:** Profissional
-
-#### US10 - Finalização e Avaliação (#31)
-*   **User Story:** Enquanto profissional, desejo finalizar o serviço no aplicativo e permitir a avaliação do cliente, para registrar minha entrega e melhorar minha reputação na plataforma.
-*   **Critérios de Aceitação:**
-    *   Botão para "Finalizar Serviço".
-    *   Formulário de avaliação para o cliente (estrelas e comentário).
-*   **Regras de Negócio:**
-    *   A avaliação só pode ser feita após a finalização do serviço pelo profissional.
-*   **Prioridade:** Alta
-*   **Persona:** Profissional
-
-### 4.3. Suporte e Atendimento (Suporte)
-
-#### US11 - Migração para WhatsApp (#20)
-*   **User Story:** Enquanto suporte, desejo trocar de canal do chat de suporte para Whatsapp, para ter um ambiente melhor para o cliente.
-*   **Critérios de Aceitação:**
-    *   O sistema deve oferecer a opção de migrar a conversa para o WhatsApp.
-    *   O número do cliente deve ser capturado automaticamente se disponível.
-*   **Regras de Negócio:**
-    *   A migração só pode ocorrer com o consentimento do cliente.
-*   **Prioridade:** Alta
-*   **Persona:** Suporte
+| ID | User Story | Critérios de Aceitação | Regras de Negócio | Prioridade | Persona |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **US01** (#24) | Enquanto Dono de Loja, desejo cadastrar produtos com nome, descrição, preço e fotos, para que os clientes visualizem meu catálogo. | - Inserção de nome, descrição e preço.<br>- Upload de pelo menos uma foto.<br>- Visibilidade no catálogo após cadastro. | - Preço deve ser positivo.<br>- Nome do produto é obrigatório. | Alta | Dono de Loja |
+| **US02** (#25) | Enquanto Dono de Loja, desejo atualizar o preço dos produtos rapidamente, para manter as informações corretas. | - Edição do preço de produto existente.<br>- Atualização instantânea no catálogo. | - Somente o dono da loja pode alterar os preços. | Alta | Dono de Loja |
+| **US03** (#26) | Enquanto Dono de Loja, desejo compartilhar produtos pelo WhatsApp, para divulgar rapidamente para meus clientes. | - Botão "Compartilhar no WhatsApp" em cada produto.<br>- Link direto para a página do produto. | - O link deve ser válido e acessível publicamente. | Alta | Dono de Loja |
+| **US04** (#42) | Enquanto Dono de Loja, desejo marcar produtos como promoção com destaque visual e preço promocional, para aumentar as vendas. | - Definição de preço promocional ou % de desconto.<br>- Selo de "Promoção" visível no card. | - Preço promocional deve ser menor que o original. | Alta | Dono de Loja |
+| **US05** (#43) | Enquanto Dono de Loja, desejo cadastrar o endereço e horários da loja, para informar facilmente aos clientes. | - Campos para endereço completo.<br>- Seletor de horários por dia da semana. | - Endereço deve ser validado (campos obrigatórios). | Alta | Dono de Loja |
+| **US06** (#27) | Enquanto profissional, desejo validar acesso por código SMS/TTS, para entrar de forma rápida e segura sem senha. | - Envio de código de 6 dígitos via SMS.<br>- Botão para ouvir código via TTS.<br>- Acesso após código correto. | - Código expira em 5 minutos.<br>- Máximo de 3 tentativas por código. | Alta | Profissional |
+| **US07** (#28) | Enquanto profissional, desejo criar perfil com informações, serviços e fotos, para me tornar visível na plataforma. | - Preenchimento de nome, especialidade e descrição.<br>- Upload de fotos de trabalhos.<br>- Instruções via TTS. | - Perfil ativo apenas após campos obrigatórios. | Alta | Profissional |
+| **US08** (#29) | Enquanto profissional, desejo visualizar e aceitar ofertas de serviço, para me candidatar a oportunidades compatíveis. | - Listagem de serviços na região.<br>- Botão para "Aceitar" ou "Candidatar-se". | - Apenas ofertas compatíveis com especialidades. | Alta | Profissional |
+| **US09** (#30) | Enquanto profissional, desejo confirmar acordo com o cliente no app, para iniciar o serviço com registro oficial. | - Opção para marcar como "Acordado".<br>- Notificação de confirmação para o cliente. | - Status muda para "Em andamento" após ambos confirmarem. | Alta | Profissional |
+| **US10** (#31) | Enquanto profissional, desejo finalizar o serviço e permitir avaliação, para melhorar minha reputação. | - Botão para "Finalizar Serviço".<br>- Formulário de avaliação (estrelas e comentário). | - Avaliação disponível apenas após finalização. | Alta | Profissional |
+| **US11** (#20) | Enquanto suporte, desejo trocar de canal do chat para Whatsapp, para melhor atendimento ao cliente. | - Opção de migrar conversa para WhatsApp.<br>- Captura automática do número do cliente. | - Migração requer consentimento do cliente. | Alta | Suporte |
