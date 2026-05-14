@@ -32,3 +32,5 @@ Responsável pela infraestrutura e comunicação externa.
 ### 1.2.2: Justificar a testabilidade.
 
 ### 1.2.3: Justificar a independência de frameworks e UI.
+
+### 1.2.4: Atendimento aos requisitos não funcionais.
