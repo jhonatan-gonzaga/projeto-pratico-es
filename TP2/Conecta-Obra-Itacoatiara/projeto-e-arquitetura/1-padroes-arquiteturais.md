@@ -34,6 +34,7 @@ Conexão com o projeto:
 
 ### 1.2.2: Justificar a testabilidade.
 Ação:
+
 Conexão com o projeto:
 
 ### 1.2.3: Justificar a independência de frameworks e UI.
