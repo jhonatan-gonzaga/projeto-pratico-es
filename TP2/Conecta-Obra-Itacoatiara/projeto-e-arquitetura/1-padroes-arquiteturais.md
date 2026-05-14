@@ -23,3 +23,6 @@ Responsável pela infraestrutura e comunicação externa.
 - Mapeamento de Dados: Os dados brutos provenientes dessas fontes são convertidos através de Mappers para o formato de Entidades aceito pelo Domínio.
 - Persistência de Dados: O sistema utiliza o banco de dados relacional PostgreSQL para o armazenamento permanente e estruturado das informações do projeto.
 
+---
+
+## 1.2. Justificativa da Escolha
