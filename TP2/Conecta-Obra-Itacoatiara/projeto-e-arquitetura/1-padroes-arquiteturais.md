@@ -29,20 +29,16 @@ Responsável pela infraestrutura e comunicação externa.
 
 ### 1.2.1: Justificar a escalabilidade e manutenção.
 Ação:
-
 Conexão com o projeto:
 
 ### 1.2.2: Justificar a testabilidade.
 Ação:
-
 Conexão com o projeto:
 
 ### 1.2.3: Justificar a independência de frameworks e UI.
 Ação:
-
 Conexão com o projeto:
 
 ### 1.2.4: Atendimento aos requisitos não funcionais.
 Ação:
-
 Conexão com o projeto:
