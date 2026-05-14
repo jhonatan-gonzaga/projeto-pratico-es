@@ -30,3 +30,5 @@ Responsável pela infraestrutura e comunicação externa.
 ### 1.2.1: Justificar a escalabilidade e manutenção.
 
 ### 1.2.2: Justificar a testabilidade.
+
+### 1.2.3: Justificar a independência de frameworks e UI.
