@@ -69,21 +69,21 @@ Responsável pela infraestrutura e comunicação externa.
 ## 1.2. Justificativa da Escolha
 
 ### 1.2.1: Justificar a escalabilidade e manutenção.
-Ação:
+Ação: Utilizar a Clean Architecture para separar o sistema em camadas independentes, onde cada uma possui responsabilidades específicas. A camada de apresentação (MVVM) fica responsável pela interface e interação com o usuário, a camada Domain concentra as regras de negócio e a camada Data gerencia o banco de dados e as integrações externas. Essa separação reduz o acoplamento entre os componentes e evita que mudanças em uma camada afetem diretamente as demais.
 
-Conexão com o projeto:
+Conexão com o projeto: No Conecta Obra Itacoatiara, essa organização contribui para a escalabilidade do sistema, permitindo adicionar novos perfis de usuário e funcionalidades de forma mais simples e segura. Caso seja necessário criar novos módulos ou integrações, isso pode ser feito sem modificar toda a estrutura do sistema. Além disso, a arquitetura facilita a manutenção do código a longo prazo, pois a equipe consegue identificar problemas, atualizar funcionalidades e trabalhar simultaneamente em diferentes partes do projeto com mais organização, produtividade e menor risco de conflitos.
 
 ### 1.2.2: Justificar a testabilidade.
-Ação:
+Ação: A independência da lógica de negócios e a separação da interface no padrão MVVM tornam o sistema mais fácil de testar, pois cada camada pode ser validada individualmente. Os Casos de Uso da camada Domain podem ser testados sem depender da interface gráfica ou do banco de dados, enquanto os ViewModels podem ser verificados separadamente para garantir o correto funcionamento das interações da aplicação. Além disso, a utilização de testes unitários ajuda a identificar falhas rapidamente, garantindo maior robustez, estabilidade e confiabilidade ao sistema.
 
-Conexão com o projeto:
+Conexão com o projeto: No Conecta Obra Itacoatiara, a testabilidade é essencial para assegurar a qualidade do software, principalmente por se tratar de um sistema comercial com diferentes tipos de usuários e funcionalidades. A realização de testes nos Casos de Uso e ViewModels contribui para evitar erros em processos importantes, como autenticação, comunicação entre usuários, notificações e gerenciamento de serviços, aumentando a segurança e a confiabilidade da plataforma.
 
 ### 1.2.3: Justificar a independência de frameworks e UI.
-Ação:
+Ação: A Clean Architecture garante que a lógica de negócios permaneça independente de frameworks e tecnologias externas, como React Native, Firebase ou bancos de dados. Isso significa que mudanças na interface ou na tecnologia utilizada não afetam diretamente as regras principais do sistema. Além disso, o padrão MVVM separa a lógica de apresentação da View, facilitando alterações na interface sem comprometer o funcionamento da aplicação. Essa independência torna o sistema mais flexível, reutilizável e preparado para futuras evoluções tecnológicas.
 
-Conexão com o projeto:
+Conexão com o projeto: No Conecta Obra Itacoatiara, essa organização permite que a plataforma acompanhe mudanças tecnológicas e futuras adaptações com maior facilidade. Caso seja necessário atualizar o framework da interface, trocar serviços externos ou modificar o banco de dados, as regras de negócio continuarão preservadas. Isso aumenta a longevidade do sistema, reduz custos de manutenção e garante maior estabilidade para a evolução contínua da plataforma.
 
 ### 1.2.4: Atendimento aos requisitos não funcionais.
-Ação:
+Ação: A escolha da Clean Architecture e do padrão MVVM contribui diretamente para o atendimento dos requisitos não funcionais do sistema. A separação das regras de negócio em camadas independentes permite otimizar o desempenho da aplicação, reduzindo impactos entre funcionalidades e facilitando a manutenção. O MVVM melhora a usabilidade ao organizar a interface de forma mais estruturada, tornando o desenvolvimento da UI mais eficiente e intuitivo. Além disso, recursos de acessibilidade, como o Text-to-Speech (TTS), podem ser implementados como serviços na camada de infraestrutura, mantendo o sistema organizado e modular.
 
-Conexão com o projeto:
+Conexão com o projeto: No Conecta Obra Itacoatiara, essa arquitetura fortalece a experiência do usuário para diferentes perfis da plataforma, como clientes, profissionais e lojistas. O módulo de acessibilidade com suporte a Text-to-Speech amplia a inclusão e facilita o uso do sistema por pessoas com dificuldades visuais ou de leitura. Dessa forma, a arquitetura adotada contribui para um sistema mais eficiente, acessível, organizado e preparado para atender às necessidades dos usuários.
