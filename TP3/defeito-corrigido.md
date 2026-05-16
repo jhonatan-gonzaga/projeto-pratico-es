@@ -1,79 +1,116 @@
-# Correção de Defeitos - TP3
+# Relatório de Correção de Defeitos - Trabalho Prático III
 
-Este documento registra a etapa de **Correção dos Defeitos** do Trabalho Prático III. Após o processo de inspeção (Detecção, Coleção e Discriminação), os defeitos validados foram documentados e corrigidos para garantir a qualidade e a consistência das User Stories do backlog. Cada item abaixo descreve o problema identificado e a respectiva solução aplicada.
-
----
-
-## Detalhamento das Correções
-
-numero da US: 01
-numero do defeito: 1
-tipo de defeito: Inconsistência
-Descrição do Problema: A Regra de Negócio estabelece que uma promoção deve obrigatoriamente possuir uma data de início e uma data de término. No entanto, os Critérios de Aceitação atuais omitiram essa validação. Não há instruções sobre a obrigatoriedade desses campos ao salvar a promoção, nem sobre o comportamento esperado do sistema (como a desativação automática do destaque visual e do preço promocional) assim que a data de término for atingida.
-solução: Foram adicionados novos Critérios de Aceitação na User Story para garantir que o sistema valide o preenchimento obrigatório dos campos de data de início e término no momento do cadastro e execute a desativação automática do status de promoção e do destaque visual assim que o período de vigência expirar.
+Este documento detalha o processo de **Correção dos Defeitos** identificados durante a inspeção de requisitos do Trabalho Prático III. O objetivo é apresentar as análises realizadas, os problemas encontrados e as soluções implementadas para aprimorar a qualidade e a clareza das User Stories (US) do backlog do projeto.
 
 ---
 
-numero da US: 01
-numero do defeito: 2
-tipo de defeito: Omissão
-Descrição do Problema: Existe uma contradição entre as Regras de Negócio (RN) e os Critérios de Aceitação (CA). A RN obriga a existência de um período de vigência (início e término), mas os CAs não preveem a validação desses campos no salvamento, permitindo que o usuário crie promoções incompletas. Além disso, não há definição sobre o comportamento do sistema quando o prazo expira.
-solução: Inserção de critérios de aceitação específicos que forçam a validação das datas no momento do cadastro (impedindo campos vazios) e definem a automação do sistema para encerrar a promoção de forma autônoma ao fim do período estipulado.
+## 📋 Sumário Executivo dos Defeitos Corrigidos
+
+A tabela a seguir apresenta um resumo conciso dos defeitos abordados neste relatório, categorizados por User Story, tipo de defeito e uma breve descrição do problema central.
+
+| ID do Defeito | US Afetada | Tipo de Defeito | Descrição Sumária do Problema |
+| :------------ | :--------- | :-------------- | :---------------------------- |
+| 1             | US 01      | Inconsistência  | Ausência de validação obrigatória para datas de início e término de promoções nos Critérios de Aceitação (CA). |
+| 2             | US 01      | Omissão         | Contradição entre Regra de Negócio (RN) e CA sobre a obrigatoriedade e comportamento do sistema para o período de vigência de promoções. |
+| 3             | US 02      | Ambiguidade     | Falta de especificação do canal de compartilhamento de informações de endereço e horário, e inconsistência nos campos obrigatórios de endereço. |
+| 4             | US 02      | Inconsistência  | Ambiguidade no formato de horário e ausência de detalhamento da interface para inserção de horários por dia da semana. |
+| 5             | US 06      | Inconsistência  | Conflito entre a menção de "contato externo" na US e a obrigatoriedade de "chat interno" na RN para formalização de acordos. |
+| 6             | US 04      | Omissão         | Indefinição de prazos e mecanismos para o agendamento automático de avaliações de clientes. |
+| 7             | US 14      | Omissão         | Ausência de regras claras de governança, acesso e gestão de concorrência para o chat de suporte. |
+| 8             | US 08      | Inconsistência  | Perda de rastreabilidade e auditoria ao migrar atendimentos para o WhatsApp, e falha na liberação de slots de atendente. |
+| 9             | US 15      | Ambiguidade     | Falta de especificação do escopo de leitura do Text-to-Speech (TTS) para elementos de formulário e inconsistências de usabilidade. |
 
 ---
 
-numero da US: 02
-numero do defeito: 3
-tipo de defeito: Ambiguidade
-Descrição do Problema: O Critério de Aceitação menciona que as informações devem estar disponíveis para compartilhamento com os clientes, mas não especifica através de qual canal ou ferramenta isso deve acontecer. Como o projeto contará com um chat interno, o requisito precisa deixar explícito se o compartilhamento será integrado diretamente a essa ferramenta de conversação ou se haverá suporte para canais externos. Há também uma inconsistência entre o primeiro CA (exige endereço completo) e a primeira RN (permite salvar apenas com rua e cidade).
-solução: Especificado no Critério de Aceitação que o compartilhamento das informações de endereço e horário deve ser feito de forma direta e integrada dentro do próprio chat interno do sistema (opção WhatsApp). O critério de preenchimento do endereço foi ajustado para refletir a Regra de Negócio (obrigatoriedade apenas de rua e cidade).
+## 🛠️ Detalhamento das Correções Implementadas
+
+Cada seção a seguir apresenta o detalhamento de cada defeito, sua descrição, a solução aplicada e, quando aplicável, as User Stories ajustadas.
+
+### Defeito 1 & 2: Inconsistência e Omissão em US 01
+
+**Número da US:** 01
+**Número do Defeito:** 1 e 2
+**Tipo de Defeito:** Inconsistência e Omissão
+
+**Descrição do Problema:**
+> A Regra de Negócio estabelece que uma promoção deve obrigatoriamente possuir uma data de início e uma data de término. No entanto, os Critérios de Aceitação (CA) originais omitiram essa validação, permitindo a criação de promoções incompletas. Adicionalmente, não havia instruções claras sobre o comportamento esperado do sistema (como a desativação automática do destaque visual e do preço promocional) assim que a data de término fosse atingida, gerando uma contradição entre a RN e os CAs.
+
+**Solução:**
+> Foram adicionados novos Critérios de Aceitação na User Story para garantir a validação obrigatória dos campos de data de início e término no momento do cadastro. Além disso, foi especificado que o sistema deve executar a desativação automática do status de promoção e do destaque visual assim que o período de vigência expirar, assegurando a integridade dos preços exibidos aos clientes.
+
+### Defeito 3 & 4: Ambiguidade e Inconsistência em US 02
+
+**Número da US:** 02
+**Número do Defeito:** 3 e 4
+**Tipo de Defeito:** Ambiguidade e Inconsistência
+
+**Descrição do Problema:**
+> O Critério de Aceitação original mencionava o compartilhamento de informações com clientes, mas de forma ambígua, sem especificar o canal (interno ou externo). O projeto conta com um chat interno, e o requisito precisava deixar explícito se o compartilhamento seria integrado a essa ferramenta. Havia também uma inconsistência entre o primeiro CA (que exigia endereço completo) e a primeira Regra de Negócio (que permitia salvar apenas com rua e cidade). Por fim, a RN era ambígua ao exigir um "formato válido" para o horário de funcionamento sem especificar o padrão técnico (ex: 24h), e os CAs não detalhavam a interação do usuário para inserção desses horários.
+
+**Solução:**
+> Foi especificado no Critério de Aceitação que o compartilhamento das informações de endereço e horário deve ser feito de forma direta e integrada dentro do próprio chat interno do sistema, com uma opção dedicada ao WhatsApp. O critério de preenchimento do endereço foi ajustado para refletir a Regra de Negócio, exigindo apenas rua e cidade para o salvamento. Na Regra de Negócio, o formato oficial de horário foi especificado como 24 horas (HH:MM às HH:MM). Um novo CA foi adicionado para detalhar que a interface deve fornecer campos separados para abertura e fechamento por dia da semana, incluindo a opção para marcar o dia como "Fechado".
+
+### Defeito 5: Inconsistência em US 06
+
+**Número da US:** 06
+**Número do Defeito:** 5
+**Tipo de Defeito:** Inconsistência
+
+**Descrição do Problema:**
+> O texto principal da US 06 afirmava que o acordo era fechado "após contato externo", o que contradizia a primeira Regra de Negócio que determinava obrigatoriamente que o "contato inicial deve ocorrer por meio de chat interno". Além disso, o título original da US era "Finalizar Serviço e Permitir Avaliação", mas o escopo real tratava exclusivamente do início/formalização do serviço.
+
+**Solução:**
+> O texto descritivo da US 06 foi corrigido para remover a menção a "contato externo", alinhando-a à regra de que a interação ocorre no chat interno. O título da US foi ajustado para "Formalizar Acordo e Iniciar Serviço" para refletir seu real propósito. Adicionalmente, um Critério de Aceitação foi incluído para especificar que o gatilho para iniciar o acordo deve estar acessível dentro da própria tela do chat interno com o cliente.
+
+### Defeito 6: Omissão em US 04
+
+**Número da US:** 04
+**Número do Defeito:** 6
+**Tipo de Defeito:** Omissão
+
+**Descrição do Problema:**
+> A Regra de Negócio mencionava um mecanismo de contingência crítico: o agendamento automático da avaliação caso o cliente não responda de imediato. No entanto, os Critérios de Aceitação deixavam uma lacuna técnica e de negócio ao não definir o que significa "imediatamente", qual o prazo limite para a resposta direta, como o sistema agendaria essa tarefa em segundo plano e qual canal de notificação seria usado para alertar o cliente posteriormente. O CA original também não especificava o canal da solicitação inicial.
+
+**Solução:**
+> Foram adicionados Critérios de Aceitação que estipulam o prazo de tolerância de 24 horas para a resposta imediata. Foi definido o comportamento do agendamento (envio de lembretes periódicos via notificação push) e o prazo limite final de 7 dias para que a avaliação seja computada. Além disso, foi especificado que a solicitação inicial de avaliação ocorre dentro do chat interno assim que o profissional finaliza o serviço.
+
+### Defeito 7: Omissão em US 14
+
+**Número da US:** 14
+**Número do Defeito:** 7
+**Tipo de Defeito:** Omissão
+
+**Descrição do Problema:**
+> O requisito falhava ao não estabelecer as regras de governança, restrições de acesso e políticas de concorrência do chat de suporte. Não estava claro o gatilho que permite ao cliente abrir esse canal (se qualquer usuário pode iniciar a qualquer momento ou apenas quem possui um serviço ativo/recente), se havia limitação por horário de atendimento e como o sistema gerenciava a fila de espera quando múltiplos atendentes e clientes estavam online simultaneamente.
+
+**Solução:**
+> Foram adicionados Critérios de Aceitação que definem a existência de uma fila de atendimento e o gatilho de abertura do chat (acesso através de uma central de ajuda vinculada a um perfil ou pedido, para clientes com conta ativa). Foi detalhado o comportamento do sistema para lidar com a inatividade do cliente, permitindo liberar o slot do atendente após 5 minutos. Nas Regras de Negócio, foi especificado o horário de funcionamento (08:00 às 18:00) e as mensagens de indisponibilidade fora desse período.
+
+### Defeito 8: Inconsistência em US 08
+
+**Número da US:** 08
+**Número do Defeito:** 8
+**Tipo de Defeito:** Inconsistência
+
+**Descrição do Problema:**
+> O requisito criava uma quebra no fluxo de auditoria e governança do sistema ao migrar o atendimento para um ambiente externo (WhatsApp), perdendo a rastreabilidade da conversa. O critério original permitia encerrar o chamado como "problema resolvido" imediatamente após a migração, sem prova de solução. Havia também um erro de concorrência, pois manter o atendimento externo preso ao limite de slots do atendente no app era inviável, já que o sistema não detectava o término da conversa no WhatsApp.
+
+**Solução:**
+> O direcionamento para o WhatsApp foi redefinido como uma ação de transbordo. O sistema agora deve registrar um log contendo o motivo da transferência e o consentimento do cliente antes de redirecionar. A sessão no aplicativo não é mais marcada como "resolvida"; em vez disso, o status muda para "Transferido para o WhatsApp" ou "Em atendimento externo", liberando o slot do atendente para que a fila interna continue. O encerramento definitivo e a avaliação do suporte de chamados transferidos serão disparados de forma assíncrona por e-mail ou central de notificações após 24 horas da transferência.
+
+### Defeito 9: Ambiguidade em US 15
+
+**Número da US:** 15
+**Número do Defeito:** 9
+**Tipo de Defeito:** Ambiguidade
+
+**Descrição do Problema:**
+> O requisito era ambíguo ao não especificar quais elementos de interface faziam parte do escopo de leitura do Text-to-Speech (TTS), gerando dúvidas se cobriria apenas o rótulo do campo ou também textos de ajuda e mensagens de erro. Havia uma falha de usabilidade e acessibilidade nos Critérios de Aceitação, com inconsistência na nomenclatura do componente de acionamento (ícone de alto-falante vs "Ouvir") e uma abordagem inadequada para detecção de volume de hardware.
+
+**Solução:**
+> Foi delimitado explicitamente no escopo da User Story e nos Critérios de Aceitação que o TTS cobrirá o rótulo principal, a descrição de ajuda e as mensagens de erro associadas ao campo, seguindo a ordem: Rótulo do campo → Texto de ajuda/instrução (se houver) → Mensagem de erro ativa (se houver). A nomenclatura do componente de acionamento foi padronizada para "ícone de alto-falante". O critério de volume foi ajustado para focar em uma indicação visual simples e acessível na interface (animação de ondas sonoras) e um aviso textual/visual sugerindo a ativação do som caso o sistema detecte que a saída de áudio está silenciada. Uma nova Regra de Negócio foi adicionada para que o TTS leia as opções de campos de seleção (combobox, checkbox e radio button) de forma individualizada. 
 
 ---
 
-numero da US: 02
-numero do defeito: 4
-tipo de defeito: Inconsistência
-Descrição do Problema: A Regra de Negócio é ambígua ao exigir um "formato válido" para o horário sem especificar o padrão técnico (ex: 24h). Os CAs não detalham a interação para inserção desses horários (campos de abertura/fechamento ou opção "fechado"). Mantém-se a inconsistência entre o primeiro CA e a primeira RN quanto aos campos obrigatórios do endereço.
-solução: Especificado na Regra de Negócio o formato oficial (24 horas: HH:MM às HH:MM). Adicionado CA para detalhar que a interface deve fornecer campos separados para abertura e fechamento por dia da semana, incluindo a opção "Fechado". A validação do endereço no primeiro critério foi ajustada para concordar com a RN (rua e cidade).
-
----
-
-numero da US: 06
-numero do defeito: 5
-tipo de defeito: Inconsistência
-Descrição do Problema: O texto da US afirma que o acordo é fechado "após contato externo", mas a RN determina que o "contato inicial deve ocorrer por meio de chat interno". Além disso, o título original mencionava "Finalizar Serviço", enquanto o escopo tratava de "Iniciar Serviço".
-solução: Texto descritivo da US corrigido para remover a menção a "contato externo". Título da US ajustado para "Formalizar Acordo e Iniciar Serviço". Adicionado CA especificando que o gatilho para iniciar o acordo deve estar acessível dentro da tela do chat interno.
-
----
-
-numero da US: 04
-numero do defeito: 6
-tipo de defeito: Omissão
-Descrição do Problema: A RN menciona o agendamento automático da avaliação caso o cliente não responda, mas os CAs não definem o prazo de tolerância ("imediatamente"), como o sistema agenda em segundo plano ou qual canal de notificação será usado. O CA original não especificava o canal da solicitação inicial.
-solução: Adicionados CAs estipulando prazo de 24h para resposta imediata e agendamento de lembrete via notificação push. Definido que o link para avaliação fica disponível por 7 dias. Especificado que a solicitação inicial ocorre via chat interno após a finalização do serviço.
-
----
-
-numero da US: 14
-numero do defeito: 7
-tipo de defeito: Omissão
-Descrição do Problema: O requisito falha ao não estabelecer regras de governança, restrições de acesso e políticas de concorrência do chat de suporte (gatilho de abertura, limitação de horário, gestão de fila).
-solução: Adicionados CAs que definem a existência de uma fila de atendimento e o gatilho de abertura (central de ajuda ou detalhes de serviço). Detalhado o comportamento para inatividade (5 min) e especificado o horário comercial (08:00 às 18:00) nas Regras de Negócio.
-
----
-
-numero da US: 08
-numero do defeito: 8
-tipo de defeito: Inconsistência
-Descrição do Problema: Ao migrar o atendimento para o WhatsApp, a plataforma perde a rastreabilidade e auditoria. O critério permitia encerrar como "resolvido" sem validação. Há erro de concorrência ao manter o slot do atendente preso a uma conversa externa que o sistema não consegue monitorar.
-solução: O redirecionamento agora exige consentimento do cliente e registra um log. O status muda para "Transferido para o WhatsApp", liberando imediatamente o slot do atendente. A avaliação final é disparada de forma assíncrona após 24h.
-
----
-
-numero da US: 15
-numero do defeito: 9
-tipo de defeito: Ambiguidade
-Descrição do Problema: Não especifica quais elementos de interface o TTS deve ler (apenas rótulos ou também placeholders e erros). Há falha de usabilidade no acionamento (ícone de alto-falante vs botão "Ouvir") e na tentativa de detectar volume de hardware.
-solução: Delimitado que o TTS cobrirá rótulo, instrução de ajuda e mensagens de erro. Padronizado o ícone de alto-falante. Ajustado o critério de volume para focar em indicação visual de ondas sonoras e aviso de silenciamento no perfil.
-
----
+**Autor:** Manus AI
+**Data:** 15 de maio de 2026
