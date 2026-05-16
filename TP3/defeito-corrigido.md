@@ -4,7 +4,7 @@ Este documento detalha o processo de **Correção dos Defeitos** identificados d
 
 ---
 
-## 📋 Sumário Executivo dos Defeitos Corrigidos
+##  Sumário Executivo dos Defeitos Corrigidos
 
 A tabela a seguir apresenta um resumo conciso dos defeitos abordados neste relatório, categorizados por User Story, tipo de defeito e uma breve descrição do problema central.
 
@@ -22,7 +22,7 @@ A tabela a seguir apresenta um resumo conciso dos defeitos abordados neste relat
 
 ---
 
-## 🛠️ Detalhamento das Correções Implementadas
+##  Detalhamento das Correções Implementadas
 
 Cada seção a seguir apresenta o detalhamento de cada defeito, sua descrição, a solução aplicada e, quando aplicável, as User Stories ajustadas.
 
@@ -37,7 +37,7 @@ Cada seção a seguir apresenta o detalhamento de cada defeito, sua descrição,
 
 **Solução:**
 > Foram adicionados novos Critérios de Aceitação na User Story para garantir a validação obrigatória dos campos de data de início e término no momento do cadastro. Além disso, foi especificado que o sistema deve executar a desativação automática do status de promoção e do destaque visual assim que o período de vigência expirar, assegurando a integridade dos preços exibidos aos clientes.
-
+---
 ### Defeito 3 & 4: Ambiguidade e Inconsistência em US 02
 
 **Número da US:** 02
@@ -49,7 +49,7 @@ Cada seção a seguir apresenta o detalhamento de cada defeito, sua descrição,
 
 **Solução:**
 > Foi especificado no Critério de Aceitação que o compartilhamento das informações de endereço e horário deve ser feito de forma direta e integrada dentro do próprio chat interno do sistema, com uma opção dedicada ao WhatsApp. O critério de preenchimento do endereço foi ajustado para refletir a Regra de Negócio, exigindo apenas rua e cidade para o salvamento. Na Regra de Negócio, o formato oficial de horário foi especificado como 24 horas (HH:MM às HH:MM). Um novo CA foi adicionado para detalhar que a interface deve fornecer campos separados para abertura e fechamento por dia da semana, incluindo a opção para marcar o dia como "Fechado".
-
+---
 ### Defeito 5: Inconsistência em US 06
 
 **Número da US:** 06
@@ -61,7 +61,7 @@ Cada seção a seguir apresenta o detalhamento de cada defeito, sua descrição,
 
 **Solução:**
 > O texto descritivo da US 06 foi corrigido para remover a menção a "contato externo", alinhando-a à regra de que a interação ocorre no chat interno. O título da US foi ajustado para "Formalizar Acordo e Iniciar Serviço" para refletir seu real propósito. Adicionalmente, um Critério de Aceitação foi incluído para especificar que o gatilho para iniciar o acordo deve estar acessível dentro da própria tela do chat interno com o cliente.
-
+---
 ### Defeito 6: Omissão em US 04
 
 **Número da US:** 04
@@ -73,7 +73,7 @@ Cada seção a seguir apresenta o detalhamento de cada defeito, sua descrição,
 
 **Solução:**
 > Foram adicionados Critérios de Aceitação que estipulam o prazo de tolerância de 24 horas para a resposta imediata. Foi definido o comportamento do agendamento (envio de lembretes periódicos via notificação push) e o prazo limite final de 7 dias para que a avaliação seja computada. Além disso, foi especificado que a solicitação inicial de avaliação ocorre dentro do chat interno assim que o profissional finaliza o serviço.
-
+---
 ### Defeito 7: Omissão em US 14
 
 **Número da US:** 14
@@ -85,7 +85,7 @@ Cada seção a seguir apresenta o detalhamento de cada defeito, sua descrição,
 
 **Solução:**
 > Foram adicionados Critérios de Aceitação que definem a existência de uma fila de atendimento e o gatilho de abertura do chat (acesso através de uma central de ajuda vinculada a um perfil ou pedido, para clientes com conta ativa). Foi detalhado o comportamento do sistema para lidar com a inatividade do cliente, permitindo liberar o slot do atendente após 5 minutos. Nas Regras de Negócio, foi especificado o horário de funcionamento (08:00 às 18:00) e as mensagens de indisponibilidade fora desse período.
-
+---
 ### Defeito 8: Inconsistência em US 08
 
 **Número da US:** 08
@@ -97,7 +97,7 @@ Cada seção a seguir apresenta o detalhamento de cada defeito, sua descrição,
 
 **Solução:**
 > O direcionamento para o WhatsApp foi redefinido como uma ação de transbordo. O sistema agora deve registrar um log contendo o motivo da transferência e o consentimento do cliente antes de redirecionar. A sessão no aplicativo não é mais marcada como "resolvida"; em vez disso, o status muda para "Transferido para o WhatsApp" ou "Em atendimento externo", liberando o slot do atendente para que a fila interna continue. O encerramento definitivo e a avaliação do suporte de chamados transferidos serão disparados de forma assíncrona por e-mail ou central de notificações após 24 horas da transferência.
-
+---
 ### Defeito 9: Ambiguidade em US 15
 
 **Número da US:** 15
@@ -111,6 +111,3 @@ Cada seção a seguir apresenta o detalhamento de cada defeito, sua descrição,
 > Foi delimitado explicitamente no escopo da User Story e nos Critérios de Aceitação que o TTS cobrirá o rótulo principal, a descrição de ajuda e as mensagens de erro associadas ao campo, seguindo a ordem: Rótulo do campo → Texto de ajuda/instrução (se houver) → Mensagem de erro ativa (se houver). A nomenclatura do componente de acionamento foi padronizada para "ícone de alto-falante". O critério de volume foi ajustado para focar em uma indicação visual simples e acessível na interface (animação de ondas sonoras) e um aviso textual/visual sugerindo a ativação do som caso o sistema detecte que a saída de áudio está silenciada. Uma nova Regra de Negócio foi adicionada para que o TTS leia as opções de campos de seleção (combobox, checkbox e radio button) de forma individualizada. 
 
 ---
-
-**Autor:** Manus AI
-**Data:** 15 de maio de 2026
