@@ -4,24 +4,6 @@ Este documento detalha o processo de **Correção dos Defeitos** identificados d
 
 ---
 
-##  Sumário Executivo dos Defeitos Corrigidos
-
-A tabela a seguir apresenta um resumo conciso dos defeitos abordados neste relatório, categorizados por User Story, tipo de defeito e uma breve descrição do problema central.
-
-| ID do Defeito | US Afetada | Tipo de Defeito | Descrição Sumária do Problema |
-| :------------ | :--------- | :-------------- | :---------------------------- |
-| 1             | US 01      | Inconsistência  | Ausência de validação obrigatória para datas de início e término de promoções nos Critérios de Aceitação (CA). |
-| 2             | US 01      | Omissão         | Contradição entre Regra de Negócio (RN) e CA sobre a obrigatoriedade e comportamento do sistema para o período de vigência de promoções. |
-| 3             | US 02      | Ambiguidade     | Falta de especificação do canal de compartilhamento de informações de endereço e horário, e inconsistência nos campos obrigatórios de endereço. |
-| 4             | US 02      | Inconsistência  | Ambiguidade no formato de horário e ausência de detalhamento da interface para inserção de horários por dia da semana. |
-| 5             | US 06      | Inconsistência  | Conflito entre a menção de "contato externo" na US e a obrigatoriedade de "chat interno" na RN para formalização de acordos. |
-| 6             | US 04      | Omissão         | Indefinição de prazos e mecanismos para o agendamento automático de avaliações de clientes. |
-| 7             | US 14      | Omissão         | Ausência de regras claras de governança, acesso e gestão de concorrência para o chat de suporte. |
-| 8             | US 08      | Inconsistência  | Perda de rastreabilidade e auditoria ao migrar atendimentos para o WhatsApp, e falha na liberação de slots de atendente. |
-| 9             | US 15      | Ambiguidade     | Falta de especificação do escopo de leitura do Text-to-Speech (TTS) para elementos de formulário e inconsistências de usabilidade. |
-
----
-
 ##  Detalhamento das Correções Implementadas
 
 Cada seção a seguir apresenta o detalhamento de cada defeito, sua descrição, a solução aplicada e, quando aplicável, as User Stories ajustadas.
