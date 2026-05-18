@@ -87,3 +87,45 @@ Responsável pela infraestrutura e comunicação externa.
 **Ação:** A escolha da Clean Architecture e do padrão MVVM contribui diretamente para o atendimento dos requisitos não funcionais do sistema. A separação das regras de negócio em camadas independentes permite otimizar o desempenho da aplicação, reduzindo impactos entre funcionalidades e facilitando a manutenção. O MVVM melhora a usabilidade ao organizar a interface de forma mais estruturada, tornando o desenvolvimento da UI mais eficiente e intuitivo. Além disso, recursos de acessibilidade, como o Text-to-Speech (TTS), podem ser implementados como serviços na camada de infraestrutura, mantendo o sistema organizado e modular.
 
 **Conexão com o projeto:** No Conecta Obra Itacoatiara, essa arquitetura fortalece a experiência do usuário para diferentes perfis da plataforma, como clientes, profissionais e lojistas. O módulo de acessibilidade com suporte a Text-to-Speech amplia a inclusão e facilita o uso do sistema por pessoas com dificuldades visuais ou de leitura. Dessa forma, a arquitetura adotada contribui para um sistema mais eficiente, acessível, organizado e preparado para atender às necessidades dos usuários.
+
+## 1.3. Aplicação no Sistema
+
+### 1.3.1. Mapeamento das Camadas da Clean Architecture no Projeto
+
+A arquitetura do **Conecta Obra Itacoatiara** será estruturada para garantir a separação de responsabilidades, facilitando a manutenção e a escalabilidade do sistema. As camadas da Clean Architecture se manifestarão na seguinte estrutura de pastas e módulos:
+
+* **Camada de Domínio (`domain/`):** Representa o núcleo do sistema, contendo as regras de negócio puras e as entidades fundamentais, independentes de qualquer framework externo.
+    * **Entidades:** Classes que representam os objetos de negócio. No contexto do projeto, teremos entidades como `Produto`, `Profissional`, `Cliente`, `Loja` e `Servico`.
+    * **Casos de Uso (`usecases/`):** Encapsulam e implementam as regras de negócio específicas descritas no backlog. Por exemplo, para atender à US01, teremos o `CadastrarProdutoUseCase`. Para a US04, implementaremos o `MarcarProdutoPromocaoUseCase`.
+* **Camada de Aplicação (`application/`):** Atua como mediadora entre o domínio e as camadas externas, contendo a lógica de orquestração.
+    * **Portas/Interfaces (`interfaces/`):** Define os contratos (interfaces) para os repositórios (ex: `IProdutoRepository`) e serviços externos (ex: `IWhatsAppService` para a US03), garantindo que o domínio não dependa de implementações concretas.
+* **Camada de Apresentação (`presentation/`):** Responsável pela interface com o usuário, desenvolvida em React Native e TypeScript.
+    * **Views (`views/` ou `screens/`):** Os componentes visuais e telas do aplicativo mobile (ex: `ProductListScreen`, `CadastroProdutoScreen`).
+    * **ViewModels (`viewmodels/`):** Gerenciam o estado da tela e a lógica de apresentação, conectando as Views aos Casos de Uso.
+* **Camada de Infraestrutura (`infrastructure/`):** Contém os detalhes técnicos, frameworks e implementações concretas das interfaces definidas na camada de aplicação.
+    * **Repositórios (`repositories/`):** Implementações reais de acesso a dados (banco de dados local ou remoto).
+    * **Serviços Externos (`services/`):** Integrações com bibliotecas de terceiros, como o mecanismo de Text-to-Speech (TTS) ou APIs de comunicação.
+
+### 1.3.2. Aplicação do MVVM na Camada de Apresentação
+
+O padrão **Model-View-ViewModel (MVVM)** será empregado para separar a lógica da interface gráfica da lógica de negócios, promovendo um código mais limpo e testável no ecossistema React Native.
+
+* **A View (Componentes React Native):** As telas do aplicativo atuarão como "Views puras". Elas são responsáveis apenas por renderizar a interface e capturar as interações do usuário (toques, digitação). A View não contém regras de validação ou lógica de negócio; ela apenas observa os dados fornecidos pelo ViewModel e notifica o ViewModel sobre as ações do usuário.
+* **O ViewModel (Hooks Personalizados):** Em React Native, os ViewModels serão preferencialmente implementados como *Custom Hooks* (ex: `useProductListViewModel`, `useCadastrarProdutoViewModel`). O ViewModel expõe estados (como dados carregados, mensagens de erro ou *loading*) que a View consumirá.
+* **Comunicação com o Domínio:** Quando a View registra uma ação (ex: Lojista clica em "Salvar Produto"), ela aciona um método no ViewModel. O ViewModel, por sua vez, prepara os dados e invoca o respectivo Caso de Uso na camada de Domínio (ex: `CadastrarProdutoUseCase`).
+
+**Exemplo prático de Telas:**
+Para a exibição do catálogo, teremos a tela `ProductListScreen` (View) que consumirá o `ProductListViewModel`. O ViewModel buscará a lista de produtos ativos através de um caso de uso e controlará o estado visual. Se a opção "Disponível para venda" estiver ativada, o produto será exibido na interface do cliente.
+
+### 1.3.3. Fluxo de Funcionalidade: US01 - Cadastrar produtos
+
+Abaixo, detalhamos o fluxo arquitetural completo para a História de Usuário **US01**, onde o Dono de Loja cadastra produtos para enviar aos clientes pelo celular.
+
+1.  **Interação na View (`CadastrarProdutoScreen`):** O usuário lojista (Persona Eric) preenche o formulário com foto (JPG/PNG, máx 5MB), nome, preço, descrição, estoque e categoria. Ao clicar em salvar, a View repassa esses dados brutos para o `CadastrarProdutoViewModel`.
+2.  **Tratamento no ViewModel (`CadastrarProdutoViewModel`):** O ViewModel recebe os dados e pode realizar validações superficiais de apresentação (ex: verificar se os campos obrigatórios marcados com "*" estão vazios). Estando corretos, o ViewModel formata o objeto e aciona a injeção de dependência para chamar o `CadastrarProdutoUseCase`.
+3.  **Regras de Negócio no Caso de Uso (`CadastrarProdutoUseCase`):** O Caso de Uso (Camada de Domínio) recebe a requisição e aplica as regras de negócio estritas:
+    * Verifica se o estoque é um valor negativo.
+    * Aplica a regra de que, se a quantidade do estoque for igual a 0, a visibilidade deve ser automaticamente desativada (off).
+    * Cria a entidade `Produto` validada.
+4.  **Persistência na Infraestrutura (`ProdutoRepository`):** O Caso de Uso invoca a interface do repositório (Camada de Aplicação) para salvar os dados. A implementação concreta na Infraestrutura realiza a gravação no banco de dados.
+5.  **Retorno para a View:** O Repositório confirma a gravação para o Caso de Uso, que retorna um sucesso para o ViewModel. O ViewModel atualiza seu estado, fazendo com que a View (`CadastrarProdutoScreen`) exiba a mensagem de sucesso exigida pelos critérios de aceitação: "Produto salvo com sucesso".
