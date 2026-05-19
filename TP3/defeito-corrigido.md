@@ -218,6 +218,22 @@ Especificar na RN informações realmente complementares, como a necessidade de 
 Especificar que a plataforma apenas realizará o redirecionamento da comunicação para aplicativos externos, como o WhatsApp, sem armazenamento ou gerenciamento de mensagens dentro do sistema.
 Atualizar os Critérios de Aceitação e as Regras de Negócio para deixar claro o fluxo de comunicação permitido, evitando interpretações conflitantes durante a implementação.
 
+---
+
+### Defeito 17: Inconsistência em US
+
+**Número do Defeito:** 17
+
+**Tipo de Defeito:** Inconsistência
+
+**Descrição do Problema:**
+> Esta User Story especifica um chat em tempo real entre cliente e profissional com funcionalidades de marcação de leitura e varredura de mensagens, contradizendo diretamente o escopo negativo do projeto, que veda o chat interno e redireciona a comunicação para o WhatsApp.
+
+
+**Solução:**
+> Revisar a User Story para garantir consistência com o escopo negativo definido no projeto.
+Remover referências a chat interno, mensagens em tempo real e funcionalidades de leitura ou gerenciamento de mensagens dentro da plataforma.
+Especificar nos requisitos que a comunicação entre cliente e profissional será realizada exclusivamente por meio de redirecionamento para o WhatsApp ou outro canal externo autorizado.
 
 
 ---
