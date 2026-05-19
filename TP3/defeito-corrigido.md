@@ -114,7 +114,7 @@ Descrever de forma mais clara quais dados podem ser incluídos em “informaçõ
 
 ---
 
-### Defeito 11: Ambiguidade em US (#107)
+### Defeito 11: Ambiguidade em US 
 
 **Número do Defeito:** 11
 
@@ -146,6 +146,24 @@ Detalhar explicitamente quais restrições se aplicam a cada estado do perfil, e
 > Definir no requisito como o sistema irá registrar e validar a confirmação do acordo realizado externamente, reduzindo inconsistências nas informações armazenadas.
 Adicionar critérios de aceitação especificando quais dados devem ser informados no momento da confirmação (ex.: cliente, serviço acordado, data e status do acordo).
 Especificar regras de negócio para deixar claro que a plataforma apenas registra a confirmação fornecida pelo profissional, sem validar automaticamente o acordo externo realizado entre as partes.
+
+---
+
+### Defeito 13: Fato Incorreto em US 07 (#29)
+
+**Número da US:** 07
+
+**Número do Defeito:** 12
+
+**Tipo de Defeito:** Omissão
+
+**Descrição do Problema:**
+> O requisito não define critérios de compatibilidade entre ofertas e área do profissional. Isso gera omissão, pois não há clareza sobre como o sistema filtra ou valida as oportunidades, podendo resultar em ofertas irrelevantes ou incorretas para o usuário.
+
+**Solução:**
+> Adicionar critérios de aceitação definindo como o sistema identifica a compatibilidade entre as ofertas e a área de atuação do profissional.
+Especificar regras de filtragem, considerando informações como categoria do serviço, habilidades cadastradas e localização do profissional.
+Detalhar o comportamento do sistema para impedir ou sinalizar ofertas incompatíveis, garantindo que apenas oportunidades relevantes sejam exibidas ao usuário.
 
 ---
 
