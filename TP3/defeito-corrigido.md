@@ -167,6 +167,27 @@ Detalhar o comportamento do sistema para impedir ou sinalizar ofertas incompatí
 
 ---
 
+### Defeito 14 : Ambiguidade em US 03 (#27)
+
+**Número da US:** 03
+
+**Número do Defeito:** 14
+
+**Tipo de Defeito:** Ambiguidade
+
+**Descrição do Problema:**
+> O requisito não detalha como o TTS será acionado (automático, botão, configuração). Essa falta de clareza gera ambiguidade na implementação e pode resultar em diferentes interpretações por parte da equipe de desenvolvimento.
+
+
+**Solução:**
+> Especificar no requisito como o recurso de TTS será acionado durante a validação do código de acesso.
+Definir se a leitura do código ocorrerá automaticamente, por meio de um botão específico ou através de uma configuração de acessibilidade ativada pelo usuário.
+Adicionar critérios de aceitação detalhando o comportamento do TTS, incluindo quando a leitura será iniciada, possibilidade de repetição do código e controles de áudio disponíveis ao usuário
+
+
+---
+
+
 ### Defeito 26 & 29: Omissão em US 12
 
 **Número da US:** 12 (#22)
