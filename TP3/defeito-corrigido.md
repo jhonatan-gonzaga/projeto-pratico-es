@@ -131,6 +131,24 @@ Detalhar explicitamente quais restrições se aplicam a cada estado do perfil, e
 
 ---
 
+### Defeito 12: Fato Incorreto em US 06 (#30)
+
+**Número da US:** 06
+
+**Número do Defeito:** 12
+
+**Tipo de Defeito:** Fato Incorreto
+
+**Descrição do Problema:**
+> O requisito depende de uma ação fora da plataforma (acordo externo). Isso gera risco de fato incorreto, pois o sistema não tem como validar ou registrar adequadamente esse processo, comprometendo a confiabilidade da funcionalidade.
+
+**Solução:**
+> Definir no requisito como o sistema irá registrar e validar a confirmação do acordo realizado externamente, reduzindo inconsistências nas informações armazenadas.
+Adicionar critérios de aceitação especificando quais dados devem ser informados no momento da confirmação (ex.: cliente, serviço acordado, data e status do acordo).
+Especificar regras de negócio para deixar claro que a plataforma apenas registra a confirmação fornecida pelo profissional, sem validar automaticamente o acordo externo realizado entre as partes.
+
+---
+
 ### Defeito 26 & 29: Omissão em US 12
 
 **Número da US:** 12 (#22)
