@@ -167,7 +167,7 @@ Detalhar o comportamento do sistema para impedir ou sinalizar ofertas incompatí
 
 ---
 
-### Defeito 14 : Ambiguidade em US 03 (#27)
+### Defeito 14: Ambiguidade em US 03 (#27)
 
 **Número da US:** 03
 
@@ -183,6 +183,24 @@ Detalhar o comportamento do sistema para impedir ou sinalizar ofertas incompatí
 > Especificar no requisito como o recurso de TTS será acionado durante a validação do código de acesso.
 Definir se a leitura do código ocorrerá automaticamente, por meio de um botão específico ou através de uma configuração de acessibilidade ativada pelo usuário.
 Adicionar critérios de aceitação detalhando o comportamento do TTS, incluindo quando a leitura será iniciada, possibilidade de repetição do código e controles de áudio disponíveis ao usuário
+
+---
+
+### Defeito 15: Ambiguidade em US
+
+**Número do Defeito:** 15
+
+**Tipo de Defeito:** Ambiguidade
+
+**Descrição do Problema:**
+> As restrições do portfólio são especificadas com redação quase idêntica tanto nos Critérios de Aceitação quanto nas Regras de Negócio, sem que a RN acrescente qualquer informação nova ou complementar.
+
+**Solução:**
+> Diferenciar claramente o papel dos Critérios de Aceitação e das Regras de Negócio, evitando repetição de informações com a mesma redação.
+Manter nos Critérios de Aceitação apenas os comportamentos funcionais e validações do sistema, enquanto as Regras de Negócio devem complementar o requisito com restrições ou políticas adicionais.
+Especificar na RN informações realmente complementares, como a necessidade de as fotos estarem relacionadas aos serviços do profissional e possíveis regras de moderação ou validação do conteúdo enviado.
+
+
 
 
 ---
