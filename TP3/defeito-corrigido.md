@@ -93,3 +93,145 @@ Cada seção a seguir apresenta o detalhamento de cada defeito, sua descrição,
 > Foi delimitado explicitamente no escopo da User Story e nos Critérios de Aceitação que o TTS cobrirá o rótulo principal, a descrição de ajuda e as mensagens de erro associadas ao campo, seguindo a ordem: Rótulo do campo → Texto de ajuda/instrução (se houver) → Mensagem de erro ativa (se houver). A nomenclatura do componente de acionamento foi padronizada para "ícone de alto-falante". O critério de volume foi ajustado para focar em uma indicação visual simples e acessível na interface (animação de ondas sonoras) e um aviso textual/visual sugerindo a ativação do som caso o sistema detecte que a saída de áudio está silenciada. Uma nova Regra de Negócio foi adicionada para que o TTS leia as opções de campos de seleção (combobox, checkbox e radio button) de forma individualizada. 
 
 ---
+
+### Defeito 26 & 29: Omissão em US 12
+
+**Número da US:** 12 (#22)
+
+**Número do Defeito:** 26 e 29
+
+**Tipo de Defeito:** Omissão
+
+**Número da issue contendo o defeito:** #116 e #119 (Duplicado)
+
+**Descrição do Problema:**
+
+> O limite de 2 minutos para áudios é especificado tanto no Critério de Aceitação quanto na Regra de Negócio com o mesmo propósito funcional, sem que a RN acrescente qualquer informação complementar.
+
+**Solução:**
+
+> Adicionado a finalidade da regra na RN:
+> 
+> - Áudios enviados podem ter, no máximo, dois minutos **para limitar a consumo de armazenamento de dados.**
+
+---
+
+### Defeito 27: Inconsistência em US 06 e US 07
+
+**Número da US:** 06 (#30) e 07 (#29)
+
+**Número do Defeito:** 27
+
+**Tipo de Defeito:** Inconsistência
+
+**Número da issue contendo o defeito:** #118
+
+**Descrição do Problema:**
+
+> O Critério de Aceitação desta US usa o termo "Andamento" para nomear o status do serviço, enquanto a US #29 utiliza "Em andamento" para o mesmo estado. A inconsistência de nomenclatura entre histórias pode gerar divergência na implementação.
+
+**Solução:**
+
+> Mudança na nomeclatura do estado na US #30:O status deve mudar para “Em Andamento”.
+
+---
+
+### Defeito 28 & 30: Ambiguidade em US 10
+
+**Número da US:** 10 (#26)
+
+**Número do Defeito:** 28 e 30
+
+**Tipo de Defeito:** Ambiguidade
+
+**Número da issue contendo o defeito:** #114 e #115 (Duplicado)
+
+**Descrição do Problema:**
+
+> A Regra de Negócio afirma que a mensagem deve conter informações mínimas obrigatórias, sem definir quais são essas informações. O Critério de Aceitação já lista nome, preço e link, mas a RN deveria formalizar esse conjunto com precisão.
+
+**Solução:**
+
+> - Adicionado as especificações na regra de negócio (RN): nome do produto, preço do produto e link da página, juntamente com o nome do aplicativo acima de todos (Conecta Obra Itacoatiara)
+
+---
+
+### Defeito 31: Ambiguidade em US 11
+
+**Número da US:** 11 (#25)
+
+**Número do Defeito:** 31
+
+**Tipo de Defeito:** Ambiguidade
+
+**Número da issue contendo o defeito:** #120
+
+**Descrição do Problema:**
+
+> A Regra de Negócio determina que o sistema deve revisar as informações para verificar se há erros, sem especificar quais erros devem ser verificados, quais validações são aplicadas ou qual o comportamento esperado do sistema ao encontrar um erro.
+
+**Solução:**
+
+> Especificados os erros:
+> 
+> As informações deve ser revisadas pelo sistema para verificar se há erros: Preço negativo ou não numérico.
+> 
+> Especificados o que ocorre caso o sistema encontre tais erros utilizando um CA:
+> 
+> Se houver algum erro identificado pelo sistema, impedir a atualização do preço e indicar ao usuário o erro via um sublinhado vermelho no campo estipulado.
+
+---
+
+### Defeito 32: Informação Estranha em US 09 e US 11
+
+**Número da US:** 09 (#24) e 11 (#25)
+
+**Número do Defeito:** 32
+
+**Tipo de Defeito:** Informação Estranha
+
+**Número da issue contendo o defeito:** #121
+
+**Descrição do Problema:**
+
+> O Critério de Aceitação restringe a edição apenas ao preço, sendo que a US #24 já prevê edição completa do produto, incluindo o preço. Criar uma funcionalidade isolada para editar apenas o preço, sem justificativa de UX ou negócio, introduz redundância sem valor agregado.
+
+**Solução:**
+
+> Excluído o CA in #25 dizendo que só é possível editar os preços. A #25 agora é uma US para o caso de editar especificamente o preço:~~Deve permitir editar apenas o preço~~
+
+---
+
+### Defeito 33: Omissão em US 08
+
+**Número da US:** 08 (#20)
+
+**Número do Defeito:** 33
+
+**Tipo de Defeito:** Omissão
+
+**Número da issue contendo o defeito:** #117
+
+**Descrição do Problema:**
+
+> A Regra de Negócio exige que o suporte peça permissão do cliente para trocar de canal, mas nenhum Critério de Aceitação valida esse fluxo — não está definido como a permissão é solicitada, o que ocorre se o cliente recusar e como o sistema registra essa ação.
+
+**Solução:**
+
+> Adicionado como o usuário de suporte solicita a permissão para a troca de canal:
+> 
+> - **[novo]** O usuário do suporte pode acionar a opção "Alternar para WhatsApp", o que gerará um link de redirecionamento oficial na tela do cliente, juntamente com um menu com duas opções em forma de botão: "Consentir troca para Whatsapp" e "Recusar troca para Whatsapp".
+>     
+> - **[novo]** O sistema só deve liberar o redirecionamento após o cliente clicar em um botão de consentimento ("Consentir troca para Whatsapp") na tela dele, aceitando continuar o atendimento fora do aplicativo.
+>     
+> - O cliente pode recusar a troca de canal clicando no botão "Recusar troca para Whatsapp".
+>         
+> 
+> Adicionado o que acontece em cada uma das opções, juntamente como o sistema registra cada um dos casos:
+> 
+> - Caso o cliente recuse a troca de canal, a conversa continuará normalmente, com o sistema registrando no chat da consersa com uma mensagem visível para o cliente e o usuário de suporte dizendo "Troca de canal para Whatsapp Recusada"
+>    
+> - Ao confirmar a transferência, o chat interno atual deve ser encerrado com o status "Transferido para o WhatsApp", salvando automaticamente o histórico da conversa gerado até aquele momento na plataforma.
+>     
+> - Assim que o status mudar para "Transferido", o slot do atendente deve ser liberado imediatamente, permitindo que ele receba um novo chamado da fila interna.
+>
