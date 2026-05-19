@@ -94,9 +94,9 @@ Cada seção a seguir apresenta o detalhamento de cada defeito, sua descrição,
 
 ---
 
-### Defeito 10: Omissão em US 
+### Defeito 10: Omissão em US (#28)
 
-**Número da US:** 15
+**Número da US:** 05
 
 **Número do Defeito:** 10
 
