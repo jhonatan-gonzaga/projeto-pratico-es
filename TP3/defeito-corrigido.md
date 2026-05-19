@@ -200,6 +200,23 @@ Adicionar critérios de aceitação detalhando o comportamento do TTS, incluindo
 Manter nos Critérios de Aceitação apenas os comportamentos funcionais e validações do sistema, enquanto as Regras de Negócio devem complementar o requisito com restrições ou políticas adicionais.
 Especificar na RN informações realmente complementares, como a necessidade de as fotos estarem relacionadas aos serviços do profissional e possíveis regras de moderação ou validação do conteúdo enviado.
 
+---
+
+### Defeito 16: Inconsistência em US 16 (#76)
+
+**Número da US:** 16
+
+**Número do Defeito:** 16
+
+**Tipo de Defeito:** Inconsistência
+
+**Descrição do Problema:**
+> Esta User Story especifica um chat em tempo real entre cliente e profissional com funcionalidades de marcação de leitura e varredura de mensagens, contradizendo diretamente o escopo negativo do projeto, que veda o chat interno e redireciona a comunicação para o WhatsApp.
+
+**Solução:**
+> Alinhar a User Story ao escopo negativo do projeto, removendo funcionalidades de chat interno em tempo real que contradizem os requisitos definidos.
+Especificar que a plataforma apenas realizará o redirecionamento da comunicação para aplicativos externos, como o WhatsApp, sem armazenamento ou gerenciamento de mensagens dentro do sistema.
+Atualizar os Critérios de Aceitação e as Regras de Negócio para deixar claro o fluxo de comunicação permitido, evitando interpretações conflitantes durante a implementação.
 
 
 
