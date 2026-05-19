@@ -114,6 +114,23 @@ Descrever de forma mais clara quais dados podem ser incluídos em “informaçõ
 
 ---
 
+### Defeito 11: Ambiguidade em US (#107)
+
+**Número do Defeito:** 11
+
+**Tipo de Defeito:** ambiguidade
+
+**Descrição do Problema:**
+> O Critério de Aceitação define dois estados distintos — "perfil salvo" e "perfil completo" — com condições diferentes, mas a Regra de Negócio não faz essa distinção, agrupando tudo em uma única regra e podendo gerar confusão na implementação.
+
+
+**Solução:**
+> Separar claramente os conceitos de “perfil salvo” e “perfil completo” nas Regras de Negócio, mantendo consistência com os Critérios de Aceitação.
+Especificar que um perfil salvo representa apenas o cadastro válido das informações obrigatórias, enquanto o perfil completo corresponde ao perfil apto para exibição e recebimento de ofertas.
+Detalhar explicitamente quais restrições se aplicam a cada estado do perfil, evitando interpretações diferentes durante a implementação.
+
+---
+
 ### Defeito 26 & 29: Omissão em US 12
 
 **Número da US:** 12 (#22)
