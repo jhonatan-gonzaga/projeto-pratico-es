@@ -94,6 +94,20 @@ Cada seção a seguir apresenta o detalhamento de cada defeito, sua descrição,
 
 ---
 
+### Defeito 10: Omissão em US 
+
+**Número da US:** 15
+**Número do Defeito:** 10
+**Tipo de Defeito:** Omissão
+
+**Descrição do Problema:**
+
+> O requisito não define quais informações são obrigatórias para o perfil. Pode haver omissão de dados essenciais (ex.: nome, contato, área de atuação), o que compromete a completude do requisito e pode gerar inconsistências no uso da plataforma.
+
+**Solução:**
+
+---
+
 ### Defeito 26 & 29: Omissão em US 12
 
 **Número da US:** 12 (#22)
