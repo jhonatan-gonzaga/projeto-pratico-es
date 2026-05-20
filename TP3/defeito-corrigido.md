@@ -237,7 +237,7 @@ Especificar nos requisitos que a comunicação entre cliente e profissional ser�
 
 ---
 
-### Defeito 18 & 23: Inconsistência em US 10
+### Defeito 18 & 23: Inconsistência em US 06
 
 **Número do Defeito:** 18 e 23
 
@@ -251,7 +251,7 @@ Especificar nos requisitos que a comunicação entre cliente e profissional ser�
 
 ---
 
-### Defeito 19: Omissão em US 08
+### Defeito 19: Omissão em US 05
 
 **Número do Defeito:** 19
 
@@ -269,7 +269,7 @@ Especificar nos requisitos que a comunicação entre cliente e profissional ser�
 
 ---
 
-### Defeito 20 & 24: Omissão e Informação Estranha em US 13 
+### Defeito 20 & 24: Omissão e Informação Estranha em US 17 
 
 **Número do Defeito:** 20 e 24
 
@@ -277,7 +277,7 @@ Especificar nos requisitos que a comunicação entre cliente e profissional ser�
 
 **Descrição dos Problemas:**
 > O Critério de Aceitação permite que o suporte edite logs passados livremente, sem que nenhuma Regra de Negócio imponha controle de auditoria sobre essas edições — não há registro de quem editou, o que foi alterado ou quando a edição ocorreu, comprometendo a integridade dos registros.
-> A Regra de Negócio trata do backup de chats de suporte excluídos, o que pertence ao escopo da US 21 (chat de suporte), não ao escopo desta US, que trata exclusivamente do sistema de logs.
+> A Regra de Negócio trata do backup de chats de suporte excluídos, o que pertence ao escopo da US #21 (chat de suporte), não ao escopo desta US, que trata exclusivamente do sistema de logs.
 
 **Soluções:**
 > Adequar o CA ao padrão e adicionar a regra de auditoria de segurança omitida.
@@ -286,7 +286,7 @@ Especificar nos requisitos que a comunicação entre cliente e profissional ser�
 
 ---
 
-### Defeito 21: Ambiguidade em US 15
+### Defeito 21: Ambiguidade em US 14
 
 **Número do Defeito:** 21
 
@@ -302,7 +302,7 @@ Especificar nos requisitos que a comunicação entre cliente e profissional ser�
 
 ---
 
-### Defeito 22: Omissão em US 09
+### Defeito 22: Omissão em US 07
 
 **Número do Defeito:** 22
 
@@ -318,7 +318,7 @@ Especificar nos requisitos que a comunicação entre cliente e profissional ser�
 
 ---
 
-### Defeito 25: Omissão em US 12
+### Defeito 25: Omissão em US 13
 
 **Número do Defeito:** 25
 
