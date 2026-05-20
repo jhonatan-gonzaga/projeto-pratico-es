@@ -30,7 +30,7 @@ A tabela abaixo apresenta a divisão por camadas, as tecnologias sugeridas e as 
 | **Backend (Infraestrutura)** | Prisma ORM | Facilita a comunicação segura com o banco de dados, mapeando entidades TypeScript para o banco de dados e abstraindo consultas SQL complexas. |
 | **Banco de Dados** | PostgreSQL | Armazenamento relacional robusto e escalável para gerenciar perfis, anúncios, catálogos de materiais e avaliações [3]. |
 | **Banco de Dados** | MySQL | Alternativa de banco de dados relacional amplamente utilizada, oferecendo flexibilidade e compatibilidade com diversas ferramentas e ambientes. |
-| **Infraestrutura (Cloud)** | Supabase | Plataforma de código aberto que oferece um conjunto de ferramentas para backend, incluindo banco de dados PostgreSQL, autenticação, armazenamento de arquivos e APIs em tempo real, simplificando o desenvolvimento e a hospedagem [7]. |
+| **Infraestrutura (Cloud)** | AWS ou Google Cloud | Provedores de nuvem líderes de mercado, oferecendo serviços de hospedagem escalável para a API, banco de dados e armazenamento de ativos de mídia [1]. |
 | **Serviços (Segurança)** | Firebase Auth | Centraliza a autenticação e gestão de identidade dos usuários com suporte a diversos provedores (e-mail/senha, Google, etc.) [3]. |
 | **Serviços (Acessibilidade)** | Expo Speech (TTS) | Biblioteca nativa para converter texto em fala, essencial para a proposta de inclusão digital e navegação assistida do projeto [6]. |
 | **Serviços (Localização)** | Google Maps API | Provê serviços de geolocalização para busca de profissionais próximos, localização de lojas e cálculo de rotas [3]. |
@@ -49,4 +49,3 @@ A tabela abaixo apresenta a divisão por camadas, as tecnologias sugeridas e as 
 [4] [README.md - TP1](https://github.com/jhonatan-gonzaga/projeto-pratico-es/blob/main/TP1/README.md)
 [5] [Implementing Clean Architecture with MVVM and Redux Toolkit in React Native](https://medium.com/@mohamed.ma872/implementing-clean-architecture-with-mvvm-and-redux-toolkit-in-react-native-0aeff1b2014c)
 [6] [Expo Speech Documentation](https://docs.expo.dev/versions/latest/sdk/speech/)
-[7] [Supabase Documentation](https://supabase.com/docs)
