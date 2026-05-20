@@ -235,9 +235,106 @@ Atualizar os Critérios de Aceitação e as Regras de Negócio para deixar claro
 Remover referências a chat interno, mensagens em tempo real e funcionalidades de leitura ou gerenciamento de mensagens dentro da plataforma.
 Especificar nos requisitos que a comunicação entre cliente e profissional será realizada exclusivamente por meio de redirecionamento para o WhatsApp ou outro canal externo autorizado.
 
+---
+
+### Defeito 18 & 23: Inconsistência em US 10
+
+**Número do Defeito:** 18 e 23
+
+**Tipo de Defeito:** Inconsistência
+
+**Descrição do Problema:**
+> As Regras de Negócio menciona a existência de chat interno no aplicativo como canal obrigatório para o contato inicial, além de estabelecer o chat interno do aplicativo como meio obrigatório para o primeiro contato entre as partes, contradizendo diretamente o escopo negativo do projeto, que veda o chat interno e redireciona para o WhatsApp.
+
+**Solução:**
+> Alterar a Regra de Negócio para respeitar o escopo negativo do projeto, com a negociação agora ocorrendo obrigatoriamente através do WhatsApp.
 
 ---
 
+### Defeito 19: Omissão em US 08
+
+**Número do Defeito:** 19
+
+**Tipo de Defeito:** Omissão
+
+**Descrição do Problema:**
+> As restrições do portfólio são especificadas com redação quase idêntica tanto nos Critérios de Aceitação quanto nas Regras de Negócio, sem que a RN acrescente qualquer informação nova ou complementar.
+
+**Solução:**
+> Remover a redundância e adicionar a verdadeira regra de negócio omitida sobre a finalidade das fotos, além de adequar o formato do CA.
+
+> CA Corrigido: "O sistema deve permitir adicionar até 5 fotos de serviços realizados (portfólio de trabalhos do profissional), com tamanho máximo de 5MB e nos formatos JPG ou PNG."
+
+> Nova RN: "As fotos anexadas ao portfólio passarão por uma moderação automatizada e devem ser estritamente relacionadas aos serviços prestados, sendo proibido conteúdo impróprio."
+
+---
+
+### Defeito 20 & 24: Omissão e Informação Estranha em US 13 
+
+**Número do Defeito:** 20 e 24
+
+**Tipo de Defeito:** Omissão e Informação Estranha
+
+**Descrição dos Problemas:**
+> O Critério de Aceitação permite que o suporte edite logs passados livremente, sem que nenhuma Regra de Negócio imponha controle de auditoria sobre essas edições — não há registro de quem editou, o que foi alterado ou quando a edição ocorreu, comprometendo a integridade dos registros.
+> A Regra de Negócio trata do backup de chats de suporte excluídos, o que pertence ao escopo da US 21 (chat de suporte), não ao escopo desta US, que trata exclusivamente do sistema de logs.
+
+**Soluções:**
+> Adequar o CA ao padrão e adicionar a regra de auditoria de segurança omitida.
+
+> Remover a regra de negócio irrelevante ao escopo da história atual e criar uma regra pertinente à retenção de logs.
+
+---
+
+### Defeito 21: Ambiguidade em US 15
+
+**Número do Defeito:** 21
+
+**Tipo de Defeito:** Ambiguidade
+
+**Descrição do Problema:**
+> O Critério de Aceitação estabelece que o status "problema resolvido" só pode ser marcado após 1 minuto de conversa ativa, mas não define o que caracteriza "conversa ativa" — se basta uma mensagem enviada, se o cliente precisa ter respondido ou se há outro critério.
+
+**Solução:**
+> Adequar o CA ao padrão exigido e remover a ambiguidade ao definir exatamente o que caracteriza a conversa.
+
+> CA Corrigido: "O sistema deve permitir a alteração do status do chat para 'problema resolvido' somente após no mínimo 1 minuto de conversa ativa (sendo uma conversa ativa caracterizada por, no mínimo, uma mensagem enviada pelo suporte e uma mensagem de resposta do cliente)."
+
+---
+
+### Defeito 22: Omissão em US 09
+
+**Número do Defeito:** 22
+
+**Tipo de Defeito:** Omissão
+
+**Descrição do Problema:**
+> O Critério de Aceitação posiciona o botão "Aceitar Oferta" apenas no card da lista principal, mas descreve também uma tela de detalhes separada. Não há nenhum critério definindo se o botão de aceitar deve ou não existir também na tela de detalhes.
+
+**Solução:**
+> Adequar o CA ao padrão de redação e incluir o local de interação que foi omitido na tela de detalhes.
+
+> CA Corrigido: "O sistema deve permitir clicar no botão 'Aceitar Oferta' tanto diretamente no card da oferta na lista principal, quanto internamente na tela de detalhes do serviço."
+
+---
+
+### Defeito 25: Omissão em US 12
+
+**Número do Defeito:** 25
+
+**Tipo de Defeito:** Omissão
+
+**Descrição do Problema:**
+> O Critério de Aceitação proíbe o envio simultâneo de texto e imagem na mesma mensagem, porém nenhuma Regra de Negócio justifica ou fundamenta essa restrição, e não há definição de como o sistema deve se comportar caso o usuário tente realizar essa ação.
+
+**Solução:**
+> Adequar o CA ao padrão descrevendo o comportamento da interface e adicionar a regra de negócio correspondente.
+
+> CA Corrigido: "O sistema deve permitir o bloqueio do campo de texto, desabilitando-o visualmente, assim que o usuário de suporte anexar uma imagem para envio no chat."
+
+> Nova RN: "O envio simultâneo de texto e imagem na mesma mensagem é restrito para garantir a integridade dos uploads de mídia no banco de dados e padronizar a renderização dos balões no histórico da conversa."
+
+---
 
 ### Defeito 26 & 29: Omissão em US 12
 
