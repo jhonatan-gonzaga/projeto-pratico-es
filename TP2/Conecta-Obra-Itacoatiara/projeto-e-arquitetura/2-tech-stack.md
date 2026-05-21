@@ -8,7 +8,7 @@ O ecossistema tecnológico do projeto foi projetado para garantir que a comunica
 
 *   **Frontend (React Native) para Backend**: O aplicativo móvel, construído com **React Native** e **TypeScript**, utiliza o **Axios** para realizar requisições assíncronas para a API **Node.js (NestJS)**. O **Redux Toolkit** no frontend gerencia o estado da aplicação, garantindo a consistência dos dados e a reatividade da interface.
 *   **Segurança e Autenticação**: O fluxo de autenticação é gerenciado pelo **Firebase Auth**. Após a autenticação bem-sucedida no aplicativo, um token é obtido e enviado no cabeçalho `Authorization` de cada requisição para o Backend. O servidor valida esse token via **Firebase Admin SDK** para proteger as rotas e garantir o acesso autorizado aos recursos.
-*   **Persistência e Acesso a Dados**: O Backend utiliza o **Prisma ORM** para interagir com o banco de dados **MySQL**. Essa camada de abstração facilita o mapeamento de objetos TypeScript para o banco de dados e vice-versa, reduzindo a necessidade de SQL manual e mantendo a lógica de negócio (Domain) independente da infraestrutura de dados.
+*   **Persistência e Acesso a Dados**: O Backend utiliza o **Prisma ORM** para interagir com o banco de dados **MySQL** durante o desenvolvimento. Para o ambiente de produção, o **Firebase Firestore** ou **Realtime Database** será utilizado, oferecendo escalabilidade e sincronização em tempo real. Essa abordagem permite flexibilidade no desenvolvimento e uma transição suave para a produção, mantendo a lógica de negócio (Domain) independente da infraestrutura de dados.
 *   **Acessibilidade e Experiência do Usuário**: O recurso de **Text-to-Speech (TTS)**, implementado via **Expo Speech**, é integrado diretamente na camada de visualização (View) do aplicativo. Isso permite que as informações processadas pelo **ViewModel** sejam lidas em voz alta para o usuário, promovendo a inclusão digital conforme os requisitos do projeto.
 *   **Serviços Externos**: As integrações com **Google Maps API** (para geolocalização) e **Twilio WhatsApp API** (para comunicação) são gerenciadas pela camada de **Data** no backend e consumidas pelo frontend mobile. Isso permite funcionalidades como busca de profissionais próximos, localização de lojas e suporte direto ao usuário via WhatsApp.
 
@@ -29,7 +29,8 @@ A tabela abaixo apresenta a divisão por camadas, as tecnologias sugeridas e as 
 | **Frontend (Mobile - Testes)** | Jest & React Native Testing Library | Jest para testes unitários e de integração, e React Native Testing Library para testes de componentes focados na experiência do usuário, garantindo a qualidade da interface. |
 | **Backend (Aplicação)** | Node.js (NestJS) | Fornece uma estrutura modular e robusta para implementar a Clean Architecture e gerenciar as regras de negócio do sistema de forma escalável. |
 | **Backend (Infraestrutura)** | Prisma ORM | Facilita a comunicação segura com o banco de dados, mapeando entidades TypeScript para o banco de dados e abstraindo consultas SQL complexas. |
-| **Banco de Dados** | MySQL | Alternativa de banco de dados relacional amplamente utilizada, oferecendo flexibilidade e compatibilidade com diversas ferramentas e ambientes. |
+| **Banco de Dados** | MySQL | Banco de dados relacional para uso em ambiente de desenvolvimento, oferecendo flexibilidade e compatibilidade com diversas ferramentas. |
+| **Banco de Dados** | Firebase Firestore/Realtime Database | Banco de dados NoSQL escalável e em tempo real para uso em ambiente de produção, ideal para aplicativos móveis devido à sua sincronização de dados e integração com outros serviços Firebase [7]. |
 | **Infraestrutura (Cloud)** | AWS ou Google Cloud | Provedores de nuvem líderes de mercado, oferecendo serviços de hospedagem escalável para a API, banco de dados e armazenamento de ativos de mídia [1]. |
 | **Serviços (Segurança)** | Firebase Auth | Centraliza a autenticação e gestão de identidade dos usuários com suporte a diversos provedores (e-mail/senha, Google, etc.) [3]. |
 | **Serviços (Acessibilidade)** | Expo Speech (TTS) | Biblioteca nativa para converter texto em fala, essencial para a proposta de inclusão digital e navegação assistida do projeto [6]. |
@@ -49,3 +50,4 @@ A tabela abaixo apresenta a divisão por camadas, as tecnologias sugeridas e as 
 [4] [README.md - TP1](https://github.com/jhonatan-gonzaga/projeto-pratico-es/blob/main/TP1/README.md)
 [5] [Implementing Clean Architecture with MVVM and Redux Toolkit in React Native](https://medium.com/@mohamed.ma872/implementing-clean-architecture-with-mvvm-and-redux-toolkit-in-react-native-0aeff1b2014c)
 [6] [Expo Speech Documentation](https://docs.expo.dev/versions/latest/sdk/speech/)
+[7] [Firebase Documentation](https://firebase.google.com/docs)
