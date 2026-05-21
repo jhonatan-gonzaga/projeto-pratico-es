@@ -27,6 +27,15 @@
 - Conclusão de Serviços: Funcionalidade para marcar trabalhos como concluídos após a finalização do serviço.
 ---
 ### 5. Painel de Suporte (Administrativo)
--  Interface de Atendimento: Central dedicada para atendimento a clientes que enfrentam dificuldades na plataforma.
--  Registro de Auditoria (Logs): Sistema de registro automático de atendimentos e ações realizadas pelo perfil de Suporte.
--  Omnicanalidade: Recursos para alternância entre meios de comunicação (Texto para Áudio) e transição de canais (do aplicativo diretamente para o WhatsApp) durante o atendimento.
+5.1 Interface de Atendimento: Central dedicada para atendimento a clientes que enfrentam dificuldades na plataforma.
+  - https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/21 - Existência de um chat de suporte com duas partes, podendo serem a persona de **Suporte** & **Cliente** & **Profissional** & **Lojista**.
+
+5.2 Omnicanalidade: Recursos para alternância entre meios de comunicação (Texto para Áudio) e transição de canais (do aplicativo diretamente para o WhatsApp) durante o atendimento.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/20 - Troca de canal no chat da persona de **Suporte** & **Cliente** & **Profissional** & **Lojista**.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/22 - Envio de Áudio no chat da persona de **Suporte** & **Cliente** & **Profissional** & **Lojista**.
+
+5.3 Possibilidade de Ajuda Visual: Permissão para o envio de imagens para uma melhor comunicação.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/44 - Envio de imagem (print) do sistema no chat da persona de **Suporte** & **Cliente** & **Profissional** & **Lojista**.
+
+5.4 Registro de Auditoria (Logs): Sistema de registro automático de atendimentos e ações realizadas pelo perfil de Suporte.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/19 - Existência de um sistema de registro de atendimentos (Logs) da persona de **Suporte**.
