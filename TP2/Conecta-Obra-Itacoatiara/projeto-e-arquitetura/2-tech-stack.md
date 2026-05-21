@@ -21,6 +21,7 @@ A tabela abaixo apresenta a divisão por camadas, as tecnologias sugeridas e as 
 | Camada | Tecnologia | Justificativa de Uso |
 | :--- | :--- | :--- |
 | **Frontend (Mobile - Framework)** | React Native (Expo) | Plataforma robusta para desenvolvimento mobile cross-platform, permitindo reutilização de código entre iOS e Android e acesso simplificado a APIs nativas [1]. |
+| **Frontend (Mobile - Visualização)** | Expo Go | Ferramenta essencial para visualização e teste rápido do aplicativo em dispositivos reais durante o desenvolvimento, agilizando o ciclo de feedback.
 | **Frontend (Mobile - Linguagem)** | TypeScript | Adiciona tipagem estática ao JavaScript, melhorando a manutenibilidade, detecção de erros em tempo de desenvolvimento e escalabilidade do código [1]. |
 | **Frontend (Mobile - Estado/MVVM)** | Redux Toolkit | Centraliza o estado global da aplicação e gerencia a lógica de apresentação (ViewModel) de forma previsível, facilitando a implementação do padrão MVVM [5]. |
 | **Frontend (Mobile - Estilização)** | Tailwind CSS (NativeWind) | Framework CSS utilitário que permite criar interfaces modernas e responsivas com alta produtividade e consistência visual. |
