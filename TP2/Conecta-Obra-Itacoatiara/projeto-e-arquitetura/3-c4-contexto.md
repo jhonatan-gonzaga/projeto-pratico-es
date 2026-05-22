@@ -19,10 +19,10 @@ A elaboração deste diagrama no nível 1 do Modelo C4 desempenha papéis estrat
 O diagrama apresenta o sistema central **Conecta Obra Itacoatiara** como um hub integrador, conectando quatro grupos de usuários a uma infraestrutura de serviços modernos:
 
 ### Atores (Pessoas)
-*   **Profissional (Acessibilidade):** Trabalhador autônomo que depende do sistema para visibilidade. O destaque para acessibilidade indica o uso de recursos de voz para inclusão digital.
-*   **Cliente:** O motor da plataforma, que busca serviços, anuncia demandas e garante a qualidade através de avaliações.
-*   **Suporte:** O mediador técnico, essencial para a confiabilidade do ecossistema, gerenciando logs e auxiliando usuários em múltiplos canais.
-*   **Lojista:** Parceiro comercial que provê os insumos necessários para a realização das obras, integrando o comércio local ao fluxo digital.
+*   **[Profissional (Acessibilidade)](https://github.com/jhonatan-gonzaga/projeto-pratico-es/blob/main/TP1/especificacao/2_design-thinking.md#31-persona-de-profissional-acessibilidade)**: Trabalhador autônomo que depende do sistema para visibilidade. O destaque para acessibilidade indica o uso de recursos de voz para inclusão digital.
+*   **[Cliente](https://github.com/jhonatan-gonzaga/projeto-pratico-es/blob/main/TP1/especificacao/2_design-thinking.md#32-persona-de-cliente):** O motor da plataforma, que busca serviços, anuncia demandas e garante a qualidade através de avaliações.
+*   **[Suporte](https://github.com/jhonatan-gonzaga/projeto-pratico-es/blob/main/TP1/especificacao/2_design-thinking.md#33-persona-de-suporte):** O mediador técnico, essencial para a confiabilidade do ecossistema, gerenciando logs e auxiliando usuários em múltiplos canais.
+*   **[Lojista](https://github.com/jhonatan-gonzaga/projeto-pratico-es/blob/main/TP1/especificacao/2_design-thinking.md#34-persona-de-dono-de-loja-de-materiais-de-constru%C3%A7%C3%A3o):** Parceiro comercial que provê os insumos necessários para a realização das obras, integrando o comércio local ao fluxo digital.
 
 ### Sistemas Externos (Dependências)
 *   **API/Serviço de Text-to-Speech:** Garante a acessibilidade, transformando dados do sistema em áudio para usuários com dificuldades de leitura.
