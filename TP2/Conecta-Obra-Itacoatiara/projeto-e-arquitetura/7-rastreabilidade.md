@@ -1,9 +1,6 @@
 # 1. Gestão de Acessos e Perfis
 
 - Cadastro e Gestão de Perfis: Cadastro, edição e gerenciamento de perfis para os quatro atores do sistema: Cliente, Profissional, Lojista e Suporte.
-  - exemplo de como fazer:
-    - https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/24 --> gestão do perfil da persona X
-    - sempre coloque a sua persona (exemplo apenas demostrativo o #24 não esta catologado corretamente)
 - Módulo de Acessibilidade: Implementação de recurso Text-to-Speech (TTS) para navegação assistida e acessível. 
 ---
 ### 2. Painel do Cliente & Contratação
