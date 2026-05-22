@@ -1,7 +1,11 @@
 # Tech Stack Map: Conecta Obra Itacoatiara (Versão Mobile)
 
 Este documento detalha a infraestrutura tecnológica sugerida para o projeto **Conecta Obra Itacoatiara**, com foco no desenvolvimento de um aplicativo móvel. A arquitetura permanece fiel aos padrões **Clean Architecture** e **MVVM**, garantindo a separação de interesses, escalabilidade e manutenibilidade do sistema.
-<img src="./imagens/Tech Stack Map - Google CloudFrame 1.svg" alt="Tech Stack Map" width="1500" height="1000" />
+
+<a href="./imagens/Tech Stack Map - Google CloudFrame 1.svg" target="_blank">
+  <img src="./imagens/Tech Stack Map - Google CloudFrame 1.svg" alt="Tech Stack Map" height="400" />
+</a>
+
 ## 1. Integração entre Tecnologias e Fluxo de Dados
 
 O ecossistema tecnológico do projeto foi projetado para garantir que a comunicação entre o aplicativo móvel e o servidor ocorra de forma eficiente e segura. Abaixo, descrevemos como as tecnologias se conectam:
