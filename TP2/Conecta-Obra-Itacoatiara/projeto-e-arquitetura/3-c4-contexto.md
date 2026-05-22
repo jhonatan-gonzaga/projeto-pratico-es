@@ -3,6 +3,7 @@
 O **Diagrama de Contexto** fornece uma visão de alto nível do sistema **Conecta Obra Itacoatiara**, detalhando como ele interage com os usuários (atores) e outros sistemas externos. Este diagrama ajuda a definir o escopo do projeto e seus limites.
 
 <img width="13890" height="7310" alt="diagrama de contexto drawio (2)" src="https://github.com/user-attachments/assets/99e83bc3-ec60-4744-b5de-f217ac3129fc" />
+ <p>Figura 1: diagrama de contexto </p>
 
 ## 1. Importância do Diagrama de Contexto
 
