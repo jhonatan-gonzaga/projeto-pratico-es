@@ -19,10 +19,24 @@
 #### 3.6 Suporte ao Cliente (Loja): Canal direto para que clientes tirem dúvidas sobre produtos diretamente com o lojista.
 ---
 ## 4. Painel do Profissional
+### 4. Painel do Profissional
 #### 4.1 Notificações de Vagas: Recebimento de alertas e notificações sobre novos anúncios de trabalho compatíveis.
-#### 4.2 Gestão de Propostas: Fluxo para o profissional visualizar e aceitar propostas de anúncios de trabalho.
-#### 4.3 Portfólio Digital: Interface para o profissional editar seu perfil pessoal e adicionar fotos/relatos de trabalhos anteriores.
-#### 4.4 Conclusão de Serviços: Funcionalidade para marcar trabalhos como concluídos após a finalização do serviço.
+#### 4.2 Chat de conversas: Possibilidade de conversa entre o Cliente e o Profissional via chat de texto.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/39 - Notificação da mensagem do **Cliente** no chat para a persona **Profissional**.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/41 - Chat de conversas para a persona **Profissional** & **Cliente**.
+#### 4.3 Gestão de Propostas: Fluxo para o profissional visualizar e aceitar propostas de anúncios de trabalho.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/29 - Visualização de serviços disponíveis da persona de **Profissional**.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/40 - Visualização de informações do cliente da persona do **Profissional**.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/35 - Envio de contraproposta da persona **Profissional** para **Cliente**.
+-  https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/36 - Visualização das mensagens de contraproposta da persona **Profissional**.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/37 - Cancelamento próprio da candidatura da persona **Profissional**.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/30 - Confirmação de Fechamento de acordo entre a persona de **Cliente** para **Profissional**.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/38 - Visualização dos serviços via menu dashboard da persona **Profissional**.
+#### 4.4 Portfólio Digital: Interface para o profissional editar seu perfil pessoal e adicionar fotos/relatos de trabalhos anteriores.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/28 - Criação de perfil na plataforma da persona **Profissional**
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/27 - Validação de acesso via código utilizando celular da persona **Profissional**.
+#### 4.5 Conclusão de Serviços: Funcionalidade para marcar trabalhos como concluídos após a finalização do serviço.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/31 - Finalização de Serviço da persona **Profissional**.
 ---
 ## 5. Painel de Suporte (Administrativo)
 #### 5.1 Interface de Atendimento: Central dedicada para atendimento a clientes que enfrentam dificuldades na plataforma.
@@ -35,5 +49,5 @@
 #### 5.3 Possibilidade de Ajuda Visual: Permissão para o envio de imagens para uma melhor comunicação.
 - https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/44 - Envio de imagem (print) do sistema no chat da persona de **Suporte** & **Cliente** & **Profissional** & **Lojista**.
 
-5.4 Registro de Auditoria (Logs): Sistema de registro automático de atendimentos e ações realizadas pelo perfil de Suporte.
+#### 5.4 Registro de Auditoria (Logs): Sistema de registro automático de atendimentos e ações realizadas pelo perfil de Suporte.
 - https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/19 - Existência de um sistema de registro de atendimentos (Logs) da persona de **Suporte**.
