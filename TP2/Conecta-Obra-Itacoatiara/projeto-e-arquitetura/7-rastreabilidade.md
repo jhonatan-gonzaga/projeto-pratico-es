@@ -6,9 +6,21 @@
 ---
 ## 2. Painel do Cliente & Contratação
 #### 2.1 Busca de Profissionais: Barra de pesquisa para localização de profissionais e visualização detalhada de seus perfis.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/73 - Pesquisa de Profissionais por Categoria da persona **Cliente** buscando a persona **Profissional**.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/74 - Filtragem de Profissionais por Nota da persona **Cliente** buscando a persona **Profissional**.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/78 - Favoritar Profissionais da persona **Cliente** em relação à persona **Profissional**.
 #### 2.2 Contratação Direta: Fluxo para contratação direta de profissionais através da plataforma
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/75 - Contratação Direta de Profissional da persona **Cliente** para a persona **Profissional**.
 #### 2.3 Avaliação de Serviços: Sistema de ranqueamento e avaliações (1 a 5 estrelas) para profissionais e serviços prestados.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/72 - Leitura em Áudio das Avaliações (TTS) da persona **Cliente** lendo os dados da persona **Profissional**.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/77 - Avaliação de Profissional Pós-Serviço da persona **Cliente** para a persona **Profissional**.
 #### 2.4 Fluxo de anúncio de serviços, candidaturas e contratação: Permite ao cliente criar e publicar vagas de serviços com descrição e fotos, exibe a lista de profissionais que se candidataram àquela vaga e possibilita ao cliente escolher e contratar o profissional desejado.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/65 - Publicação de Vaga Textual da persona **Cliente** visando atrair a persona **Profissional**.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/66 - Anexo de Imagens na Vaga da persona **Cliente** para fornecer contexto visual à persona **Profissional**.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/67 - Edição de Vaga Aberta da persona **Cliente**.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/68 - Cancelamento de Vaga da persona **Cliente**.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/69 - Visualização de Candidatos da persona **Cliente** visualizando perfis da persona **Profissional**.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/82 - Histórico de Contratações da persona **Cliente** contendo registros dos serviços da persona **Profissional**.
 ---
 ## 3. Painel do Lojista & Guia "Onde Comprar"
 #### 3.1 Perfil da Loja: Cadastro e exibição de informações comerciais da loja (horário de funcionamento, telefone e endereço).
