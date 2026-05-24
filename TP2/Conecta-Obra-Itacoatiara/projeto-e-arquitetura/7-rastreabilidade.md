@@ -1,10 +1,20 @@
 ## 1. Gestão de Acessos e Perfis
 
 #### 1.1 Cadastro e Gestão de Perfis: Cadastro, edição e gerenciamento de perfis para os quatro atores do sistema: Cliente, Profissional, Lojista e Suporte.
-- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/70 - Acionamento de funcionalidade de texto para voz nos rótulos do formulário da persona **Cliente**.
--
--
+-  https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/27 - Validação de acesso via código utilizando celular da persona **Profissional**.
+-  https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/28 - Criação de perfil na plataforma da persona **Profissional**.
+-  https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/64 - Atualização de nome e foto de perfil da persona **Cliente**.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/84 - Alteração de nome de exibição e fotografia no painel de configurações da persona **Cliente**.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/43 - Cadastro de informações comerciais (endereço e horários) da persona **Dono de Loja**.
+
 #### 1.2 Módulo de Acessibilidade: Implementação de recurso Text-to-Speech (TTS) para navegação assistida e acessível. 
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/70 - Acionamento de funcionalidade de texto para voz nos rótulos do formulário da persona **Cliente**.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/50 - Uso de Text-to-Speech para leitura de orientações e botões pela persona **Cliente**.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/51 - Recurso de voz para ouvir mensagens recebidas no chat pela persona **Cliente**.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/52 - Funcionalidade de texto para voz para ler o conteúdo de anúncios pela persona **Cliente**.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/71 - Escuta em áudio das mensagens enviadas por profissionais pela persona **Cliente**.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/72 - Leitura em áudio das avaliações recebidas pela persona **Cliente**.
+
 ---
 ## 2. Painel do Cliente & Contratação
 #### 2.1 Busca de Profissionais: Barra de pesquisa para localização de profissionais e visualização detalhada de seus perfis.
