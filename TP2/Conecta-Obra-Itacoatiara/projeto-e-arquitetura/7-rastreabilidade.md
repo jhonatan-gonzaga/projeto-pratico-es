@@ -1,7 +1,7 @@
 ## 1. Gestão de Acessos e Perfis
 
 #### 1.1 Cadastro e Gestão de Perfis: Cadastro, edição e gerenciamento de perfis para os quatro atores do sistema: Cliente, Profissional, Lojista e Suporte.
--
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/70 - Acionamento de funcionalidade de texto para voz nos rótulos do formulário da persona **Cliente**.
 -
 -
 #### 1.2 Módulo de Acessibilidade: Implementação de recurso Text-to-Speech (TTS) para navegação assistida e acessível. 
