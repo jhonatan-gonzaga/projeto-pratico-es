@@ -49,6 +49,7 @@
 ## 4. Painel do Profissional
 ### 4. Painel do Profissional
 #### 4.1 Notificações de Vagas: Recebimento de alertas e notificações sobre novos anúncios de trabalho compatíveis.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/141 - Recebimento de notificações de trabalhos compatíveis da persona **Profissional**.
 #### 4.2 Chat de conversas: Possibilidade de conversa entre o Cliente e o Profissional via chat de texto.
 - https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/39 - Notificação da mensagem do **Cliente** no chat para a persona **Profissional**.
 - https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/41 - Chat de conversas para a persona **Profissional** & **Cliente**.
@@ -56,8 +57,8 @@
 - https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/29 - Visualização de serviços disponíveis da persona de **Profissional**.
 - https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/40 - Visualização de informações do cliente da persona do **Profissional**.
 - https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/35 - Envio de contraproposta da persona **Profissional** para **Cliente**.
--  https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/36 - Visualização das mensagens de contraproposta da persona **Profissional**.
-- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/37 - Cancelamento próprio da candidatura da persona **Profissional**.
+-  https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/36 - Visualização própria das mensagens de contraproposta da persona **Profissional**.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/37 - Cancelamento próprio da candidatura da persona **Profissional** para a persona **Cliente**.
 - https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/30 - Confirmação de Fechamento de acordo entre a persona de **Cliente** para **Profissional**.
 - https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/38 - Visualização dos serviços via menu dashboard da persona **Profissional**.
 #### 4.4 Portfólio Digital: Interface para o profissional editar seu perfil pessoal e adicionar fotos/relatos de trabalhos anteriores.
