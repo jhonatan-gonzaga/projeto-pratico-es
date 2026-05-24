@@ -40,6 +40,7 @@
 - https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/42 - Marcação de produtos em promoção com destaque visual da persona **Dono de Loja**.
 
 #### 3.5 Histórico e Feedback: Visualização do histórico de pedidos realizados e das avaliações deixadas pelos clientes.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/87 - Rastreamento das entregas de pedidos pela persona **Dono de Loja**.
 
 #### 3.6 Suporte ao Cliente (Loja): Canal direto para que clientes tirem dúvidas sobre produtos diretamente com o lojista.
 - https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/85 - Visualização de mensagens de clientes interessados em produtos pela persona **Dono de Loja**.
