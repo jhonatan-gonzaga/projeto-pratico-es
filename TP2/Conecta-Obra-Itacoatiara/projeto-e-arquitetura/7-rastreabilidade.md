@@ -1,8 +1,9 @@
 ## 1. Gestão de Acessos e Perfis
 
 #### 1.1 Cadastro e Gestão de Perfis: Cadastro, edição e gerenciamento de perfis para os quatro atores do sistema: Cliente, Profissional, Lojista e Suporte.
-- 
-
+-
+-
+-
 #### 1.2 Módulo de Acessibilidade: Implementação de recurso Text-to-Speech (TTS) para navegação assistida e acessível. 
 ---
 ## 2. Painel do Cliente & Contratação
