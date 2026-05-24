@@ -1,19 +1,10 @@
 ## 1. Gestão de Acessos e Perfis
 
 #### 1.1 Cadastro e Gestão de Perfis: Cadastro, edição e gerenciamento de perfis para os quatro atores do sistema: Cliente, Profissional, Lojista e Suporte.
--  https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/27 - Validação de acesso via código utilizando celular da persona **Profissional**.
--  https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/28 - Criação de perfil na plataforma da persona **Profissional**.
--  https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/64 - Atualização de nome e foto de perfil da persona **Cliente**.
-- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/84 - Alteração de nome de exibição e fotografia no painel de configurações da persona **Cliente**.
 - https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/43 - Cadastro de informações comerciais (endereço e horários) da persona **Dono de Loja**.
 
 #### 1.2 Módulo de Acessibilidade: Implementação de recurso Text-to-Speech (TTS) para navegação assistida e acessível. 
-- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/70 - Acionamento de funcionalidade de texto para voz nos rótulos do formulário da persona **Cliente**.
-- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/50 - Uso de Text-to-Speech para leitura de orientações e botões pela persona **Cliente**.
-- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/51 - Recurso de voz para ouvir mensagens recebidas no chat pela persona **Cliente**.
-- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/52 - Funcionalidade de texto para voz para ler o conteúdo de anúncios pela persona **Cliente**.
-- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/71 - Escuta em áudio das mensagens enviadas por profissionais pela persona **Cliente**.
-- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/72 - Leitura em áudio das avaliações recebidas pela persona **Cliente**.
+
 
 ---
 ## 2. Painel do Cliente & Contratação
@@ -36,11 +27,23 @@
 ---
 ## 3. Painel do Lojista & Guia "Onde Comprar"
 #### 3.1 Perfil da Loja: Cadastro e exibição de informações comerciais da loja (horário de funcionamento, telefone e endereço).
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/43 - Cadastro de endereço completo e horários de funcionamento da persona **Dono de Loja**.
+  
 #### 3.2 Guia "Onde Comprar": Catálogo integrado para exibição de produtos, promoções e informações das lojas de materiais de construção parceiras.
+
+
 #### 3.3 Gerenciamento de Catálogo: Interface exclusiva para o lojista cadastrar, editar e gerenciar seus produtos.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/24 - Cadastro de produtos com foto, preço, descrição e estoque da persona **Dono de Loja**.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/25 - Atualização rápida de preços de produtos da persona **Dono de Loja**.
+
 #### 3.4 Gestão de Promoções: Ferramenta para o lojista criar e destacar promoções em itens específicos.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/42 - Marcação de produtos em promoção com destaque visual da persona **Dono de Loja**.
+
 #### 3.5 Histórico e Feedback: Visualização do histórico de pedidos realizados e das avaliações deixadas pelos clientes.
+
 #### 3.6 Suporte ao Cliente (Loja): Canal direto para que clientes tirem dúvidas sobre produtos diretamente com o lojista.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/85 - Visualização de mensagens de clientes interessados em produtos pela persona **Dono de Loja**.
+
 ---
 ## 4. Painel do Profissional
 ### 4. Painel do Profissional
