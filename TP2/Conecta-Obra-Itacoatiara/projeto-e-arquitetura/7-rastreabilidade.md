@@ -2,6 +2,8 @@
 
 #### 1.1 Cadastro e Gestão de Perfis: Cadastro, edição e gerenciamento de perfis para os quatro atores do sistema: Cliente, Profissional, Lojista e Suporte.
 - https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/43 - Cadastro de informações comerciais (endereço e horários) da persona **Dono de Loja**.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/28 - Criação de perfil na plataforma da persona **Profissional**
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/27 - Validação de acesso via código utilizando celular da persona **Profissional**.
 
 #### 1.2 Módulo de Acessibilidade: Implementação de recurso Text-to-Speech (TTS) para navegação assistida e acessível. 
 
