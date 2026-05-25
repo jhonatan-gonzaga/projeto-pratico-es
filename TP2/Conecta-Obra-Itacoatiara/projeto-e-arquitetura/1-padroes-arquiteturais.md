@@ -39,31 +39,31 @@ Também chamado de modelo de exibição. Segundo [Microsoft (2024)](https://lear
 ### 1.2.3 Model
 Model fica responsável pelos dados e como estes serão transferidos para o view-model, que será passado para o view. Ele é comparável com o componente "data" na arquitetura limpa, porém, neste caso, ele também assumiria o papel de "domínio". Segundo [Microsoft (2024)](https://learn.microsoft.com/pt-br/dotnet/architecture/maui/mvvm), o modelo "encapsula a lógica de negócios e os dados do aplicativo".
 
-## 1.3 Justificativa da Escolha
+# 2. Justificativa da escolha
 
-### 1.3.1 Justificar a escalabilidade e manutenção.
+## 2.1 Justificar a escalabilidade e manutenção.
 **Ação:** Utilizar a Clean Architecture para separar o sistema em camadas independentes, onde cada uma possui responsabilidades específicas. A camada de apresentação (MVVM) fica responsável pela interface e interação com o usuário, a camada Domain concentra as regras de negócio e a camada Data gerencia o banco de dados e as integrações externas. Essa separação reduz o acoplamento entre os componentes e evita que mudanças em uma camada afetem diretamente as demais.
 
 **Conexão com o projeto:** No Conecta Obra Itacoatiara, essa organização contribui para a escalabilidade do sistema, permitindo adicionar novos perfis de usuário e funcionalidades de forma mais simples e segura. Caso seja necessário criar novos módulos ou integrações, isso pode ser feito sem modificar toda a estrutura do sistema. Além disso, a arquitetura facilita a manutenção do código a longo prazo, pois a equipe consegue identificar problemas, atualizar funcionalidades e trabalhar simultaneamente em diferentes partes do projeto com mais organização, produtividade e menor risco de conflitos.
 
-### 1.3.2 Justificar a testabilidade.
+## 2.2 Justificar a testabilidade.
 **Ação:** A independência da lógica de negócios e a separação da interface no padrão MVVM tornam o sistema mais fácil de testar, pois cada camada pode ser validada individualmente. Os Casos de Uso da camada Domain podem ser testados sem depender da interface gráfica ou do banco de dados, enquanto os ViewModels podem ser verificados separadamente para garantir o correto funcionamento das interações da aplicação. Além disso, a utilização de testes unitários ajuda a identificar falhas rapidamente, garantindo maior robustez, estabilidade e confiabilidade ao sistema.
 
 **Conexão com o projeto:** No Conecta Obra Itacoatiara, a testabilidade é essencial para assegurar a qualidade do software, principalmente por se tratar de um sistema comercial com diferentes tipos de usuários e funcionalidades. A realização de testes nos Casos de Uso e ViewModels contribui para evitar erros em processos importantes, como autenticação, comunicação entre usuários, notificações e gerenciamento de serviços, aumentando a segurança e a confiabilidade da plataforma.
 
-### 1.3.3 Justificar a independência de frameworks e UI.
+## 2.3 Justificar a independência de frameworks e UI.
 **Ação:** A Clean Architecture garante que a lógica de negócios permaneça independente de frameworks e tecnologias externas, como React Native, Firebase ou bancos de dados. Isso significa que mudanças na interface ou na tecnologia utilizada não afetam diretamente as regras principais do sistema. Além disso, o padrão MVVM separa a lógica de apresentação da View, facilitando alterações na interface sem comprometer o funcionamento da aplicação. Essa independência torna o sistema mais flexível, reutilizável e preparado para futuras evoluções tecnológicas.
 
 **Conexão com o projeto:** No Conecta Obra Itacoatiara, essa organização permite que a plataforma acompanhe mudanças tecnológicas e futuras adaptações com maior facilidade. Caso seja necessário atualizar o framework da interface, trocar serviços externos ou modificar o banco de dados, as regras de negócio continuarão preservadas. Isso aumenta a longevidade do sistema, reduz custos de manutenção e garante maior estabilidade para a evolução contínua da plataforma.
 
-### 1.3.4 Atendimento aos requisitos não funcionais.
+## 2.4 Atendimento aos requisitos não funcionais.
 **Ação:** A escolha da Clean Architecture e do padrão MVVM contribui diretamente para o atendimento dos requisitos não funcionais do sistema. A separação das regras de negócio em camadas independentes permite otimizar o desempenho da aplicação, reduzindo impactos entre funcionalidades e facilitando a manutenção. O MVVM melhora a usabilidade ao organizar a interface de forma mais estruturada, tornando o desenvolvimento da UI mais eficiente e intuitivo. Além disso, recursos de acessibilidade, como o Text-to-Speech (TTS), podem ser implementados como serviços na camada de infraestrutura, mantendo o sistema organizado e modular.
 
 **Conexão com o projeto:** No Conecta Obra Itacoatiara, essa arquitetura fortalece a experiência do usuário para diferentes perfis da plataforma, como clientes, profissionais e lojistas. O módulo de acessibilidade com suporte a Text-to-Speech amplia a inclusão e facilita o uso do sistema por pessoas com dificuldades visuais ou de leitura. Dessa forma, a arquitetura adotada contribui para um sistema mais eficiente, acessível, organizado e preparado para atender às necessidades dos usuários.
 
-## 1.4 Aplicação no Sistema
+# 3. Aplicação no sistema
 
-### 1.4.1 Mapeamento das Camadas da Clean Architecture no Projeto
+## 3.1 Mapeamento das Camadas da Clean Architecture no Projeto
 A arquitetura do **Conecta Obra Itacoatiara** será estruturada para garantir a separação de responsabilidades, facilitando a manutenção e a escalabilidade do sistema. As camadas da Clean Architecture se manifestarão na seguinte estrutura de pastas e módulos:
 
 * **Camada de Domínio (`domain/`):** Representa o núcleo do sistema, contendo as regras de negócio puras e as entidades fundamentais, independentes de qualquer framework externo.
@@ -78,7 +78,7 @@ A arquitetura do **Conecta Obra Itacoatiara** será estruturada para garantir a 
     * **Repositórios (`repositories/`):** Implementações reais de acesso a dados (banco de dados local ou remoto).
     * **Serviços Externos (`services/`):** Integrações com bibliotecas de terceiros, como o mecanismo de Text-to-Speech (TTS) ou APIs de comunicação.
 
-### 1.4.2 Aplicação do MVVM na Camada de Apresentação
+## 3.2 Aplicação do MVVM na Camada de Apresentação
 O padrão **Model-View-ViewModel (MVVM)** será empregado para separar a lógica da interface gráfica da lógica de negócios, promovendo um código mais limpo e testável no ecossistema React Native.
 
 * **A View (Componentes React Native):** As telas do aplicativo atuarão como "Views puras". Elas são responsáveis apenas por renderizar a interface e capturar as interações do usuário (toques, digitação). A View não contém regras de validação ou lógica de negócio; ela apenas observa os dados fornecidos pelo ViewModel e notifica o ViewModel sobre as ações do usuário.
@@ -88,7 +88,7 @@ O padrão **Model-View-ViewModel (MVVM)** será empregado para separar a lógica
 **Exemplo prático de Telas:**
 Para a exibição do catálogo, teremos a tela `ProductListScreen` (View) que consumirá o `ProductListViewModel`. O ViewModel buscará a lista de produtos ativos através de um caso de uso e controlará o estado visual. Se a opção "Disponível para venda" estiver ativada, o produto será exibido na interface do cliente.
 
-### 1.4.3 Fluxo de Funcionalidade: US01 - Cadastrar produtos
+## 3.3 Fluxo de Funcionalidade: US01 - Cadastrar produtos
 Abaixo, detalhamos o fluxo arquitetural completo para a História de Usuário **US01**, onde o Dono de Loja cadastra produtos para enviar aos clientes pelo celular.
 
 1. **Interação na View (`CadastrarProdutoScreen`):** O usuário lojista (Persona Eric) preenche o formulário com foto (JPG/PNG, máx 5MB), nome, preço, descrição, estoque e visibilidade.
@@ -100,7 +100,7 @@ Abaixo, detalhamos o fluxo arquitetural completo para a História de Usuário **
 4. **Persistência na Infraestrutura (`ProdutoRepository`):** O Caso de Uso invoca a interface do repositório (Camada de Aplicação) para salvar os dados. A implementação concreta na Infraestrutura realiza a gravação no banco de dados.
 5. **Retorno para a View:** O Repositório confirma a gravação para o Caso de Uso, que retorna um sucesso para o ViewModel. O ViewModel atualiza seu estado, fazendo com que a View (`CadastrarProdutoScreen`) exiba a mensagem de sucesso exigida pelos critérios de aceitação: "Produto salvo com sucesso".
 
-## 1.5 Figura da Arquitetura
+# 4. Figura da Arquitetura
 A arquitetura do projeto Conecta Obra Itacoatiara foi concebida utilizando a integração dos padrões MVVM (Model-View-ViewModel) e Clean Architecture, conforme ilustrado na Figura 4. Essa abordagem garante a separação de interesses, facilitando a manutenção e a escalabilidade do software ao isolar as regras de negócio de detalhes técnicos e de interface.
 
 <div>
@@ -108,7 +108,7 @@ A arquitetura do projeto Conecta Obra Itacoatiara foi concebida utilizando a int
   <p>Figura 4: Diagrama de Arquitetura do Conecta Obra Itacoatiara integrando os padrões Clean Architecture e MVVM.</p>
 </div>
 
-### 1.5.1 Detalhamento dos Componentes da Arquitetura
+## 4.1 Detalhamento dos Componentes da Arquitetura
 
 **1. Camada de Apresentação (MVVM)**
 Localizada à esquerda no diagrama, esta camada é responsável pela interação direta com o usuário.
