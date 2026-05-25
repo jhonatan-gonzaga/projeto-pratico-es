@@ -32,7 +32,7 @@
 - https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/43 - Cadastro de endereço completo e horários de funcionamento da persona **Dono de Loja**.
   
 #### 3.2 Guia "Onde Comprar": Catálogo integrado para exibição de produtos, promoções e informações das lojas de materiais de construção parceiras.
-- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/142 - Busca por categoria, profissionais parceiros, lojas populares e realizar buscas no aplicativo da persona **Dono da Loja**
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/142 - Visualização de categoria, profissionais parceiros, lojas populares e realização de buscas no aplicativo da persona **Dono da Loja**
 
 #### 3.3 Gerenciamento de Catálogo: Interface exclusiva para o lojista cadastrar, editar e gerenciar seus produtos.
 - https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/24 - Cadastro de produtos com foto, preço, descrição e estoque da persona **Dono de Loja**.
