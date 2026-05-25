@@ -39,9 +39,11 @@ Também chamado de modelo de exibição. Segundo [Microsoft (2024)](https://lear
 ### 1.2.3 Model
 Model fica responsável pelos dados e como estes serão transferidos para o view-model, que será passado para o view. Ele é comparável com o componente "data" na arquitetura limpa, porém, neste caso, ele também assumiria o papel de "domínio". Segundo [Microsoft (2024)](https://learn.microsoft.com/pt-br/dotnet/architecture/maui/mvvm), o modelo "encapsula a lógica de negócios e os dados do aplicativo".
 
+
+
 <div>
-  <img width="16384" height="7389" alt="arquitetura drawio (3)" src="https://github.com/user-attachments/assets/cdbf25c9-4dde-4438-a401-8839ce20f814" />
-  <p>Figura X: Diagrama de Arquitetura do Conecta Obra Itacoatiara integrando os padrões Clean Architecture e MVVM.</p>
+ <img width="16384" height="7398" alt="arquitetura drawio" src="https://github.com/user-attachments/assets/47eec829-8eca-4f81-8c90-c5932a93fc27" />
+  <p>Figura 4: Diagrama de Arquitetura do Conecta Obra Itacoatiara integrando os padrões Clean Architecture e MVVM.</p>
 </div>
 
 ## Descrição da Arquitetura do Sistema
@@ -62,7 +64,7 @@ O núcleo central da aplicação contém as Regras de Negócio (RN) específicas
 Responsável pela infraestrutura e comunicação externa.
 - Serviços Externos: Gerencia integrações com Firebase/Auth (autenticação), APIs de Geolocalização e WhatsApp, além do serviço de acessibilidade TTS (Voz).
 - Mapeamento de Dados: Os dados brutos provenientes dessas fontes são convertidos através de Mappers para o formato de Entidades aceito pelo Domínio.
-- Persistência de Dados: O sistema utiliza o banco de dados relacional PostgreSQL para o armazenamento permanente e estruturado das informações do projeto.
+- Persistência de Dados: O sistema utiliza o banco de dados relacional para o armazenamento permanente e estruturado das informações do projeto.
 
 ---
 
