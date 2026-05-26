@@ -4,8 +4,14 @@
 - https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/43 - Cadastro de informações comerciais (endereço e horários) da persona **Dono de Loja**.
 - https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/28 - Criação de perfil na plataforma da persona **Profissional**
 - https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/27 - Validação de acesso via código utilizando celular da persona **Profissional**.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/79 - Denúncia de Conduta Inadequada da persona **Cliente** reportando o perfil da persona **Profissional** (impactando o status e auditoria da conta reportada).
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/83 - Painel Central de Notificações da persona **Cliente** (abrangendo avisos de atualizações e status da conta).
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/84 - Atualização de Dados de Identificação da persona **Cliente** (edição direta do próprio perfil).
 
 #### 1.2 Módulo de Acessibilidade: Implementação de recurso Text-to-Speech (TTS) para navegação assistida e acessível. 
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/70 - Leitura de Tela do Formulário (TTS) da persona **Cliente**.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/71 - Reprodução em Áudio de Mensagens (TTS) da persona **Cliente** lendo em voz alta as mensagens enviadas pela persona **Profissional**.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/72 - Leitura em Áudio das Avaliações (TTS) da persona **Cliente** reproduzindo as informações e avaliações do perfil da persona **Profissional**.
 
 
 ---
@@ -25,6 +31,7 @@
 - https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/67 - Edição de Vaga Aberta da persona **Cliente**.
 - https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/68 - Cancelamento de Vaga da persona **Cliente**.
 - https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/69 - Visualização de Candidatos da persona **Cliente** visualizando perfis da persona **Profissional**.
+- https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/76 - Comunicação via Chat Interno da persona **Cliente** com a persona **Profissional** para alinhamento de propostas, orçamentos e detalhes do serviço.
 - https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/82 - Histórico de Contratações da persona **Cliente** contendo registros dos serviços da persona **Profissional**.
 ---
 ## 3. Painel do Lojista & Guia "Onde Comprar"
