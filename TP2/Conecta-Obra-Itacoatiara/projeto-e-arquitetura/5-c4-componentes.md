@@ -70,7 +70,7 @@ Os serviços locais atuam como pontes para os seguintes provedores externos:
 
 ---
 
-# 4. diagrama de componente - AccessScreen 
+# 4. diagrama de componente - ClientDashboard 
 Este diagrama de componentes C4 detalha o funcionamento do Painel do Cliente. Ele ilustra as interações da interface do usuário (ClientDashboard) com os serviços internos que gerenciam a busca de profissionais, publicação de vagas, submissão de propostas, avaliações, chat e gerenciamento de perfil, além de mapear as dependências com serviços externos de geolocalização e persistência.
 
 <div align = "center">
@@ -98,9 +98,56 @@ Os serviços locais conectam-se às seguintes entidades externas para a execuç�
 
 - **Google Maps API (Maps SDK)**: Provedor externo consumido pelo SearchController para fornecer mapas dinâmicos e inteligência de geolocalização, permitindo encontrar profissionais nas proximidades.
 - **Cloud Firestore (Container Firebase Firestore)**: Banco de dados em nuvem e em tempo real que atua como repositório centralizado de persistência de dados. Ele armazena os históricos de contratações, propostas, mensagens do chat, avaliações e logs estruturados de perfis.
+---
+# 5 Diagrama de componentes - ProfessionalDashboard
+Este diagrama de componentes C4 detalha o funcionamento do Painel do Profissional. Ele ilustra como a interface dedicada ao trabalhador autônomo (ProfessionalDashboard) interage com os serviços internos para gerenciar candidaturas a vagas, atualizar o portfólio digital, acompanhar reputação, ajustar dados de perfil e manter a comunicação com os clientes.
+
+
+<div align = "center">
+  <img width="6687" height="3753" alt="diagrama de componente - ProfessionalDashboard drawio" src="https://github.com/user-attachments/assets/bcc52a35-bdb7-48be-af72-c9e9a8b8b312" />
+  <p>figura 3 - diagrama de componente - ClientDashboard </p>
+</div>
+
+## 5.1 - Componentes de Interface (UI Component)
+- **ProfessionalDashboard**: Subcomponente de tela (React Native Screen). É a área de trabalho do profissional, oferecendo controles visuais para visualizar serviços disponíveis, enviar contrapropostas, gerenciar o portfólio de fotos e relatos, e acessar canais de comunicação direta.
+
+## 5.2 - Serviços Locais (Services)
+A interface se conecta a uma camada de serviços locais especializados para a execução das regras de negócio da persona:
+
+- **ProposalService**: Componente central baseado em Firebase Firestore + Redux Toolkit. Ele gerencia o ciclo de candidaturas, permitindo ao profissional visualizar vagas compatíveis, enviar propostas e contrapropostas, gerenciar negociações e cancelar candidaturas quando necessário.
+- **PortfolioService**: Componente encarregado de estruturar e gerenciar o portfólio digital e histórico do profissional, viabilizando o upload e exibição de fotos e relatos de trabalhos anteriores.
+- **RatingService**: Permite ao profissional consultar suas avaliações, pontuação acumulada e feedback de reputação deixado pelos clientes após a finalização de serviços.
+- **ProfileService**: Gerencia os dados cadastrais da persona (Redux Toolkit + Firestore), controlando as informações de perfil, dados de identificação e validações associadas à conta.
+- **ChatService**: Componente baseado em Firestore Realtime focado em mensagens e comunicação. Garante a troca de mensagens de texto, recebimento de notificações de novos chats e alinhamento de orçamentos diretamente com os clientes interessados.
+
+## 5.3 - Infraestrutura Externa e Persistência (Cloud Services)
+Os microsserviços locais utilizam uma infraestrutura em nuvem unificada para manter a consistência do sistema:
+
+- **Cloud Firestore (Container Firebase Firestore**): Banco de dados NoSQL baseado em nuvem que atua como o repositório central. Ele persiste de forma segura e síncrona os dados de propostas de serviços, histórico de portfólios, avaliações, dados cadastrais e as conversas em tempo real estabelecidas entre o profissional e os clientes.
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
 
 
 
