@@ -153,78 +153,60 @@ Os serviços comunicam-se com provedores em nuvem para garantir a inteligência 
 
 - **Google Maps API (Maps SDK)**: API externa consumida pelo MarketPlaceService para fornecer geolocalização e mapas, auxiliando na busca de lojas físicas, rotas e no cadastro de endereços comerciais.
 - **Cloud Firestore (Container Firebase Firestore):** Banco de dados centralizado em nuvem e de tempo real que persiste as tabelas de catálogos de produtos, histórico de pedidos, cupons promocionais, logs de avaliações e mensagens de chat.
+---
+7. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ---
+# 9 Diagrama de componente - SupportDashboard drawio
+Este diagrama de componentes C4 detalha a arquitetura do Painel de Suporte. Ele ilustra como a interface administrativa (SupportDashboard) gerencia os chamados de atendimento omnicanal, interage com perfis de usuários sob auditoria e registra logs de segurança, além de detalhar as integrações com APIs de comunicação externa e armazenamento em nuvem.
 
+<div align = "center">
+  <img width="6003" height="3783" alt="diagrama de componente- SupportDashboard drawio" src="https://github.com/user-attachments/assets/39d55a48-e80f-44c6-ae9d-c3836915294b" />
+  <p>figura 3 - diagrama de componente - SupportDashboard </p>
+</div>
 
+## 9.1 Componentes de Interface (UI Component)
+- **SupportDashboard**: Subcomponente de tela (React Native Screen). Trata-se da interface exclusiva da persona de Suporte, fornecendo ferramentas visuais para gerenciar chats de atendimento com múltiplas partes, analisar denúncias e transferir chamados para canais externos.
 
+## 9.2 Serviços Locais (Services)
+A camada de interface aciona um conjunto de serviços modulares que processam as regras de atendimento, conformidade e auditoria:
 
+- **ProfileService**: Componente baseado em Redux Toolkit + Firestore. É utilizado pelo suporte para consultar e validar informações cadastrais dos perfis envolvidos em chamados ou que foram alvo de denúncias de conduta inadequada.
+- **ChatService**: Módulo baseado em Firestore Realtime que sustenta a central de atendimento por texto. Ele permite a criação de chats dinâmicos e a troca de mensagens com arquivos anexados (como imagens/prints do sistema para ajuda visual) entre o suporte e as outras personas (Cliente, Profissional ou Lojista).
+- **SupportService**: Componente responsável pelas regras de omnicanalidade do atendimento (Component: WhatsApp API). Ele gerencia a transição dinâmica e a troca de canais de comunicação, permitindo mover o atendimento de dentro do aplicativo para ambientes externos.
+- **AuditService**: Microsserviço local especializado em segurança (Component: Firestore). Ele cria registros automáticos e centraliza o sistema de logs de atendimento e auditoria de contas.
 
+## 9.3 Integrações e Infraestrutura Externa (External Services & Cloud)
+Os serviços locais dependem das seguintes conexões externas para garantir a operação e a persistência dos dados:
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- **WhatsApp API (Twilio/WhatsApp)**: Gateway e canal externo de comunicação integrado ao SupportService. É acionado para encaminhar atendimentos complexos diretamente para o aplicativo de mensagens externo, garantindo a continuidade do suporte ao cliente.
+- **Cloud Firestore (Container Firebase Firestore)**: Banco de dados em nuvem e em tempo real. Armazena de maneira persistente e síncrona o histórico de conversas de suporte, metadados de perfis, logs de auditoria detalhados e o status das ocorrências finalizadas.
 
 
