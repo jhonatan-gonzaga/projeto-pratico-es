@@ -124,6 +124,66 @@ A interface se conecta a uma camada de serviços locais especializados para a ex
 Os microsserviços locais utilizam uma infraestrutura em nuvem unificada para manter a consistência do sistema:
 
 - **Cloud Firestore (Container Firebase Firestore**): Banco de dados NoSQL baseado em nuvem que atua como o repositório central. Ele persiste de forma segura e síncrona os dados de propostas de serviços, histórico de portfólios, avaliações, dados cadastrais e as conversas em tempo real estabelecidas entre o profissional e os clientes.
+---
+
+# 6 Diagrama de componente - Marketplace
+Este diagrama de componentes C4 detalha o funcionamento do Módulo de Marketplace e Lojas. Ele ilustra como as duas interfaces comerciais — a visão do comprador (MarketplaceDashboard) e a visão administrativa do lojista (StoreDashboard) — interagem com os serviços internos para gerenciar o catálogo de produtos, controle de pedidos, promoções, avaliações e chats comerciais, além de mapear as integrações de geolocalização e persistência.
+
+<div align = "center">
+  <img width="6303" height="3723" alt="diagrama de componente - MarketplaceDashboard drawio" src="https://github.com/user-attachments/assets/eb13f3b1-0a9e-4284-83db-0f89cae22c28" />
+  <p>figura 3 - diagrama de componente - ClientDashboard </p>
+</div>
+
+## 6.1 Componentes de Interface (UI Components)
+- **MarketplaceDashboard**: Tela de navegação do usuário focada no guia de lojas, realização de compras e acompanhamento de pedidos. É a interface do catálogo integrado para busca de materiais de construção.
+- **StoreDashboard**: Tela administrativa de navegação exclusiva do Dono de Loja, fornecendo ferramentas para gerenciar o estoque, cadastrar produtos, configurar destaques promocionais e responder a clientes.
+
+## 6.2 Serviços Locais (Services)
+As interfaces delegam suas ações para uma camada de serviços modulares que processam as regras de negócio de e-commerce e catálogo:
+
+- **MarketPlaceService**: Componente que orquestra o guia de lojas parceiras e profissionais parceiros. Ele faz a ponte de dados geográficos para listar estabelecimentos populares e categorias próximas ao usuário.
+- **OrderService**: Gerencia o fluxo de compras, controlando as solicitações de pedidos de materiais e viabilizando o rastreamento das entregas para o lojista e o cliente.
+- **RatingService**: Processa o sistema de reputação e feedback, coletando e exibindo as avaliações deixadas pelos clientes sobre os produtos e o atendimento das lojas.
+- **CatalogService**: Responsável pelo gerenciamento do catálogo de produtos. Permite ao lojista cadastrar itens (com foto, preço, descrição e estoque) e realizar atualizações rápidas de preços.
+- **PromotionService**: Controla as regras de promoções da plataforma, aplicando destaques visuais e anúncios para itens em oferta no guia "Onde Comprar".
+- **ChatService**: Componente baseado em Firestore Realtime voltado para o suporte ao cliente na loja. Centraliza a troca de mensagens de texto e imagens para sanar dúvidas sobre produtos e compras.
+
+## 6.3 Integrações e Infraestrutura Externa (External Services & Cloud)
+Os serviços comunicam-se com provedores em nuvem para garantir a inteligência geográfica e a integridade dos dados:
+
+- **Google Maps API (Maps SDK)**: API externa consumida pelo MarketPlaceService para fornecer geolocalização e mapas, auxiliando na busca de lojas físicas, rotas e no cadastro de endereços comerciais.
+- **Cloud Firestore (Container Firebase Firestore):** Banco de dados centralizado em nuvem e de tempo real que persiste as tabelas de catálogos de produtos, histórico de pedidos, cupons promocionais, logs de avaliações e mensagens de chat.
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
