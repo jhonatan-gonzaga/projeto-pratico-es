@@ -8,7 +8,7 @@ painéis especializados, além de mapear os serviços centrais de backend e as i
 
 <div align="center">
   <img width="16384" height="16328" alt="diagrama de componente-visão Geral" src="https://github.com/user-attachments/assets/b275af95-57c7-43a3-a474-f05fade160fc" />
-  <p>figura 1 - diagrama de componente-visão Geral drawio"</p>
+  <p>figura 1 - diagrama de componente-visão Geral "</p>
 </div>
 
 
@@ -105,7 +105,7 @@ Este diagrama de componentes C4 detalha o funcionamento do Painel do Profissiona
 
 <div align = "center">
   <img width="6687" height="3753" alt="diagrama de componente - ProfessionalDashboard drawio" src="https://github.com/user-attachments/assets/bcc52a35-bdb7-48be-af72-c9e9a8b8b312" />
-  <p>figura 3 - diagrama de componente - ClientDashboard </p>
+  <p>figura 4 - diagrama de componente - ProfessionalDashboard </p>
 </div>
 
 ## 5.1 - Componentes de Interface (UI Component)
@@ -131,7 +131,7 @@ Este diagrama de componentes C4 detalha o funcionamento do Módulo de Marketplac
 
 <div align = "center">
   <img width="6303" height="3723" alt="diagrama de componente - MarketplaceDashboard drawio" src="https://github.com/user-attachments/assets/eb13f3b1-0a9e-4284-83db-0f89cae22c28" />
-  <p>figura 3 - diagrama de componente - ClientDashboard </p>
+  <p>figura 5 - diagrama de componente - MarketplaceDashboard </p>
 </div>
 
 ## 6.1 Componentes de Interface (UI Components)
@@ -154,9 +154,27 @@ Os serviços comunicam-se com provedores em nuvem para garantir a inteligência 
 - **Google Maps API (Maps SDK)**: API externa consumida pelo MarketPlaceService para fornecer geolocalização e mapas, auxiliando na busca de lojas físicas, rotas e no cadastro de endereços comerciais.
 - **Cloud Firestore (Container Firebase Firestore):** Banco de dados centralizado em nuvem e de tempo real que persiste as tabelas de catálogos de produtos, histórico de pedidos, cupons promocionais, logs de avaliações e mensagens de chat.
 ---
-7. 
+# 7. Diagrama de componente - StoreDashboard
+Este diagrama de componentes C4 detalha a arquitetura do Painel Administrativo do Lojista. Ele mapeia como a interface exclusiva do comerciante (StoreDashboard) interage com a camada de serviços locais para executar a gestão de estoques, criação de campanhas promocionais, monitoramento de reputação, atualização cadastral do estabelecimento e o ciclo completo de atendimento a pedidos.
+<div align = "center">
+  <img width="5673" height="3783" alt="diagrama de componente- StoreDashboard drawio" src="https://github.com/user-attachments/assets/c2283bce-0359-44e5-b6ff-952f8d6dd83a" />
+  <p>figura 7 - diagrama de componente - StoreDashboard </p>
+</div>
+## 7.1 Componentes de Interface (UI Component)
+- **StoreDashboard**: Subcomponente de tela (React Native Screen). É a interface de controle do Dono de Loja, centralizando as telas de navegação comercial, relatórios de compras e ferramentas de gerenciamento de produtos.
 
+## 7.2 Serviços Locais (Services)
+A camada de interface aciona cinco serviços locais especializados que encapsulam as regras de negócio do e-commerce pelo lado do vendedor:
+- **CatalogService**: Componente baseado em Firestore encarregado de gerenciar o catálogo de produtos da loja. Ele processa a criação, edição e exclusão de itens (fotos, descrições, preços e contagem de estoque).
+- **PromotionService**: Módulo que configura promoções, descontos e gerencia o destaque visual de anúncios de materiais que aparecerão no feed público do aplicativo.
+- **RatingService**: Permite ao lojista consultar as avaliações de produtos e a reputação geral do estabelecimento deixada pelos clientes após as vendas.
+- **ProfileService**: Componente responsável por atualizar o perfil e as informações comerciais da loja (Redux Toolkit + Firestore), tais como endereço completo e horários de funcionamento.
+- **OrderService**: Microsserviço local que gerencia pedidos e solicitações recebidas. Controla o processamento, validação e acompanhamento logístico até a entrega final dos materiais de construção ao cliente.
 
+## 7.3 Infraestrutura Externa e Persistência (Cloud Services)
+Os microsserviços integrados comunicam-se de forma direta com o backend em nuvem para garantir a consistência das operações comerciais:
+- **Cloud Firestore (Container Firebase Firestore):** Banco de dados centralizado NoSQL de tempo real. Ele persiste e sincroniza de forma contínua as tabelas de estoque, regras de precificação promocional, logs de avaliações, dados cadastrais e as atualizações de status de entrega de cada pedido gerado.
+- 
 
 
 
