@@ -174,33 +174,32 @@ A camada de interface aciona cinco serviços locais especializados que encapsula
 ## 7.3 Infraestrutura Externa e Persistência (Cloud Services)
 Os microsserviços integrados comunicam-se de forma direta com o backend em nuvem para garantir a consistência das operações comerciais:
 - **Cloud Firestore (Container Firebase Firestore):** Banco de dados centralizado NoSQL de tempo real. Ele persiste e sincroniza de forma contínua as tabelas de estoque, regras de precificação promocional, logs de avaliações, dados cadastrais e as atualizações de status de entrega de cada pedido gerado.
-- 
+---
 
+# 8 Diagrama de componentes - Interação Cliente-Profissional (Fluxo de Serviço)
+ste diagrama de componentes C4 detalha o ciclo de vida e o fluxo de contratação de ponta a ponta. Ele ilustra como as duas interfaces de usuário principais — a visão do tomador de serviço (ClientDashboard) e a visão do prestador autônomo (ProfessionalDashboard) — operam de forma integrada e concorrente sobre os mesmos serviços locais para realizar buscas, propostas, negociações e comunicações em tempo real.
 
+<div align = "center">
+  <img width="6576" height="4383" alt="diagrama de componente- cliente e profissional drawio" src="https://github.com/user-attachments/assets/b8f542ab-3c7f-49f5-9d2a-29337d1e7526" />
+  <p>figura 8 - diagrama de componente - Interação Cliente-Profissional (Fluxo de Serviço) </p>
+</div>
 
+## 8.1 Componentes de Interface (UI Components)
+- **ClientDashboard**: A interface do Cliente, utilizada para disparar a busca geográfica de trabalhadores, cadastrar e gerenciar vagas abertas, analisar candidatos interessados e fechar os acordos.
+- **ProfessionalDashboard**: A interface do Profissional, utilizada para inspecionar os serviços publicados na região, enviar propostas de orçamentos, gerenciar o status das candidaturas e atualizar seu portfólio visível ao mercado.
 
+## 8.2 Serviços Locais Partilhados (Shared Core Services)
+O ecossistema estabelece o fluxo de trabalho orquestrando chamadas cruzadas nos seguintes componentes de backend:
 
+- **SearchController**: Consome dados de geolocalização para aproximar os usuários. Ele permite que o Cliente filtre os profissionais mais próximos e mapeia as vagas disponíveis na região para exibição no painel do Profissional.
+- **HiringService**: Centraliza o ciclo das vagas. O Cliente publica os detalhes textuais e imagens do projeto, enquanto o serviço disponibiliza essas informações para consulta da ponta prestadora.
+- **ProposalService**: O motor de negociação da plataforma. Ele recebe o envio de propostas e contrapropostas vindas do Profissional e atualiza, em tempo real, a lista de candidatos e o status da contratação no painel do Cliente para a tomada de decisão.
+- **PortfolioService**: Gerencia a vitrine digital. Ele é alimentado pelo Profissional (com fotos e relatos de trabalhos) e consultado diretamente pelo Cliente durante a fase de triagem de candidatos.
+- **ChatService**: Componente baseado em Firestore Realtime que estabelece o canal de negociação direta (chat de texto e imagens), permitindo o alinhamento de orçamentos e detalhes do serviço antes e durante a execução do contrato.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+## 8.3 Integrações Externas e Persistência de Estado (Cloud Infrastructure)
+- **Google Maps API (Maps SDK)**: Fornece o suporte de mapas dinâmicos para o cálculo de distâncias entre o endereço da vaga do cliente e a localização do profissional.
+- **Cloud Firestore (Container Firebase Firestore)** :Infraestrutura NoSQL de nuvem que garante o sincronismo de dados em tempo real. Sempre que um profissional envia uma proposta ou uma mensagem no chat, o estado é persistido e replicado imediatamente na tela do cliente correspondente.
 ---
 # 9 Diagrama de componente - SupportDashboard drawio
 Este diagrama de componentes C4 detalha a arquitetura do Painel de Suporte. Ele ilustra como a interface administrativa (SupportDashboard) gerencia os chamados de atendimento omnicanal, interage com perfis de usuários sob auditoria e registra logs de segurança, além de detalhar as integrações com APIs de comunicação externa e armazenamento em nuvem.
