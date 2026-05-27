@@ -160,6 +160,7 @@ Este diagrama de componentes C4 detalha a arquitetura do Painel Administrativo d
   <img width="5673" height="3783" alt="diagrama de componente- StoreDashboard drawio" src="https://github.com/user-attachments/assets/c2283bce-0359-44e5-b6ff-952f8d6dd83a" />
   <p>figura 7 - diagrama de componente - StoreDashboard </p>
 </div>
+
 ## 7.1 Componentes de Interface (UI Component)
 - **StoreDashboard**: Subcomponente de tela (React Native Screen). É a interface de controle do Dono de Loja, centralizando as telas de navegação comercial, relatórios de compras e ferramentas de gerenciamento de produtos.
 
