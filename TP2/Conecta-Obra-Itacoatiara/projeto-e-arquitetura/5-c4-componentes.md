@@ -47,7 +47,7 @@ Para estender as funcionalidades do ecossistema, o aplicativo se conecta a micro
 Este diagrama de componentes C4 detalha o fluxo de Gestão de Acessos, Autenticação e Acessibilidade Inicial do aplicativo. Ele demonstra como a tela de login/cadastro (AccessScreen) interage com os serviços locais de autenticação e suporte por voz, bem como a comunicação direta com os provedores de nuvem e APIs externas para garantir uma entrada segura e inclusiva na plataforma.
 
 <div align="center">
-<img width="6183" height="3183" alt="diagrama de componente - AccessScreen drawio" src="https://github.com/user-attachments/assets/c4a57f01-64f7-4411-9ec9-c8cafa91339c" />
+<img width="10270" height="4060" alt="diagrama de componente - AccessScreen drawio" src="https://github.com/user-attachments/assets/23354d7a-5d7f-4a0c-8d97-d6fcebaa3c0d" />
 <p>figura 2 - diagrama de componente - AccessScreen</p>
 </div>
 
@@ -74,7 +74,7 @@ Os serviços locais atuam como pontes para os seguintes provedores externos:
 Este diagrama de componentes C4 detalha o funcionamento do Painel do Cliente. Ele ilustra as interações da interface do usuário (ClientDashboard) com os serviços internos que gerenciam a busca de profissionais, publicação de vagas, submissão de propostas, avaliações, chat e gerenciamento de perfil, além de mapear as dependências com serviços externos de geolocalização e persistência.
 
 <div align = "center">
-  <img width="6606" height="4956" alt="diagrama de componente - ClientDashboard drawio" src="https://github.com/user-attachments/assets/9abaf499-de96-4be2-b1c6-3e739de45fb9" />
+  <img width="9710" height="8260" alt="diagrama de componente - ClientDashboard drawio" src="https://github.com/user-attachments/assets/57404627-1632-45d8-903d-55667341ae71" />
   <p>figura 3 - diagrama de componente - ClientDashboard </p>
 </div>
 
@@ -104,7 +104,7 @@ Este diagrama de componentes C4 detalha o funcionamento do Painel do Profissiona
 
 
 <div align = "center">
-  <img width="6687" height="3753" alt="diagrama de componente - ProfessionalDashboard drawio" src="https://github.com/user-attachments/assets/bcc52a35-bdb7-48be-af72-c9e9a8b8b312" />
+  <img width="9900" height="6260" alt="diagrama de componente - ProfessionalDashboard drawio" src="https://github.com/user-attachments/assets/ee55cd8e-1064-4807-9d11-3b1ae873f7a3" />
   <p>figura 4 - diagrama de componente - ProfessionalDashboard </p>
 </div>
 
@@ -130,7 +130,7 @@ Os microsserviços locais utilizam uma infraestrutura em nuvem unificada para ma
 Este diagrama de componentes C4 detalha o funcionamento do Módulo de Marketplace e Lojas. Ele ilustra como as duas interfaces comerciais — a visão do comprador (MarketplaceDashboard) e a visão administrativa do lojista (StoreDashboard) — interagem com os serviços internos para gerenciar o catálogo de produtos, controle de pedidos, promoções, avaliações e chats comerciais, além de mapear as integrações de geolocalização e persistência.
 
 <div align = "center">
-  <img width="6303" height="3723" alt="diagrama de componente - MarketplaceDashboard drawio" src="https://github.com/user-attachments/assets/eb13f3b1-0a9e-4284-83db-0f89cae22c28" />
+  <img width="8960" height="5755" alt="diagrama de componente - MarketplaceDashboard drawio" src="https://github.com/user-attachments/assets/4f6bfa78-41f3-48a4-a0eb-494f724512f4" />
   <p>figura 5 - diagrama de componente - MarketplaceDashboard </p>
 </div>
 
@@ -157,7 +157,7 @@ Os serviços comunicam-se com provedores em nuvem para garantir a inteligência 
 # 7. Diagrama de componente - StoreDashboard
 Este diagrama de componentes C4 detalha a arquitetura do Painel Administrativo do Lojista. Ele mapeia como a interface exclusiva do comerciante (StoreDashboard) interage com a camada de serviços locais para executar a gestão de estoques, criação de campanhas promocionais, monitoramento de reputação, atualização cadastral do estabelecimento e o ciclo completo de atendimento a pedidos.
 <div align = "center">
-  <img width="5673" height="3783" alt="diagrama de componente- StoreDashboard drawio" src="https://github.com/user-attachments/assets/c2283bce-0359-44e5-b6ff-952f8d6dd83a" />
+  <img width="8655" height="6255" alt="diagrama de componente- SupportDashboard drawio" src="https://github.com/user-attachments/assets/5a1cf2a0-daeb-4214-84fe-c0d6686ff42b" />
   <p>figura 7 - diagrama de componente - StoreDashboard </p>
 </div>
 
@@ -181,7 +181,7 @@ Os microsserviços integrados comunicam-se de forma direta com o backend em nuve
 ste diagrama de componentes C4 detalha o ciclo de vida e o fluxo de contratação de ponta a ponta. Ele ilustra como as duas interfaces de usuário principais — a visão do tomador de serviço (ClientDashboard) e a visão do prestador autônomo (ProfessionalDashboard) — operam de forma integrada e concorrente sobre os mesmos serviços locais para realizar buscas, propostas, negociações e comunicações em tempo real.
 
 <div align = "center">
-  <img width="6576" height="4383" alt="diagrama de componente- cliente e profissional drawio" src="https://github.com/user-attachments/assets/b8f542ab-3c7f-49f5-9d2a-29337d1e7526" />
+  <img width="9505" height="6960" alt="diagrama de componente- cliente e profissional drawio" src="https://github.com/user-attachments/assets/4170716f-3739-45ef-8a74-6aa6bc0111f7" />
   <p>figura 8 - diagrama de componente - Interação Cliente-Profissional (Fluxo de Serviço) </p>
 </div>
 
@@ -206,7 +206,7 @@ O ecossistema estabelece o fluxo de trabalho orquestrando chamadas cruzadas nos 
 Este diagrama de componentes C4 detalha a arquitetura do Painel de Suporte. Ele ilustra como a interface administrativa (SupportDashboard) gerencia os chamados de atendimento omnicanal, interage com perfis de usuários sob auditoria e registra logs de segurança, além de detalhar as integrações com APIs de comunicação externa e armazenamento em nuvem.
 
 <div align = "center">
-  <img width="6003" height="3783" alt="diagrama de componente- SupportDashboard drawio" src="https://github.com/user-attachments/assets/39d55a48-e80f-44c6-ae9d-c3836915294b" />
+  <img width="8655" height="6255" alt="diagrama de componente- SupportDashboard drawio" src="https://github.com/user-attachments/assets/95c82edc-8e1a-4183-a562-1f1b3c65d03b" />
   <p>figura 3 - diagrama de componente - SupportDashboard </p>
 </div>
 
