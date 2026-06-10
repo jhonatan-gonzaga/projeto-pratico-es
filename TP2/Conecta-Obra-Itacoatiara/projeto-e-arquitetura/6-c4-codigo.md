@@ -1,6 +1,7 @@
 # Diagrama de Classes do Profissional
 
-<img width="1893" height="1239" alt="diagrama de class profissional" src="https://github.com/user-attachments/assets/b7792422-cefd-4cd2-826c-da66ec7da723" />
+<img width="1946" height="1239" alt="diagrama de class2" src="https://github.com/user-attachments/assets/7e0c4c12-f4d2-4db6-89d1-cded8e806154" />
+
 
 Este documento fornece uma explicação técnica e funcional de cada classe e fluxo presente no diagrama de classes do **Painel do Profissional**, correlacionando-os com os itens de rastreabilidade definidos no projeto.
 
