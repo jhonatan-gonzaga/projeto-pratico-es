@@ -157,7 +157,7 @@ Os serviços comunicam-se com provedores em nuvem para garantir a inteligência 
 # 7. Diagrama de componente - StoreDashboard
 Este diagrama de componentes C4 detalha a arquitetura do Painel Administrativo do Lojista. Ele mapeia como a interface exclusiva do comerciante (StoreDashboard) interage com a camada de serviços locais para executar a gestão de estoques, criação de campanhas promocionais, monitoramento de reputação, atualização cadastral do estabelecimento e o ciclo completo de atendimento a pedidos.
 <div align = "center">
-  <img width="8655" height="6255" alt="diagrama de componente- SupportDashboard drawio" src="https://github.com/user-attachments/assets/5a1cf2a0-daeb-4214-84fe-c0d6686ff42b" />
+  <img width="13779" height="9729" alt="diagrama de componente-StoreDashboard drawio" src="https://github.com/user-attachments/assets/25fb7652-09bc-4375-9881-f00b23107f7c" />
   <p>figura 7 - diagrama de componente - StoreDashboard </p>
 </div>
 
