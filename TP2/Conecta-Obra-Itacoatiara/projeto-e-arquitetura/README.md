@@ -28,3 +28,12 @@ Abaixo estão listados os documentos que compõem a arquitetura do projeto, orga
 ## Como navegar nesta documentação
 
 Para uma compreensão progressiva do sistema, recomenda-se seguir a ordem numérica dos arquivos. Comece pelos **Padrões Arquiteturais** e a **Tech Stack** para entender as fundações tecnológicas, e então siga os níveis do modelo **C4** (do Contexto ao Código) para aprofundar-se na implementação técnica.
+
+---
+
+## Ferramentas de Inteligência Artificial Utilizadas
+
+Para a criação e organização desta documentação e dos artefatos do projeto, foram utilizadas as seguintes ferramentas de Inteligência Artificial:
+
+-   **Manus:** Utilizado para a organização e estruturação dos diretórios e arquivos de documentação, garantindo consistência e padronização.
+-   **ChatGPT:** Empregado como ferramenta de auxílio na concepção e refinamento dos diagramas arquiteturais, contribuindo para a clareza e precisão das representações visuais.
