@@ -6,7 +6,7 @@ Este documento detalha a estrutura de código do sistema Conecta Obra Itacoatiar
 
 O nível de Código (nível 4 do modelo C4) é a camada mais granular da documentação arquitetural. Sua importância reside em:
 - **Redução de Ambiguidade:** Define explicitamente os tipos de dados, visibilidade de atributos e assinaturas de métodos, evitando interpretações equivocadas durante o desenvolvimento.
-- **Padronização:** Garante que todos os desenvolvedores sigam a mesma estrutura de classes e padrões de nomenclatura, facilitando a manutenção e a integração do código.
+- **Padronização:** Garante que todos os desenvolvedores sigam a mesma estrutura de classes e padrões de nomenclatura, facilitando a manutenção e a integração do código;
 - **Base para Testes:** Fornece um roteiro claro para a criação de testes unitários, permitindo validar cada classe e método de forma isolada.
 - **Rastreabilidade Técnica:** Conecta diretamente as funcionalidades descritas no backlog e nos diagramas de níveis superiores com as implementações de código reais.
 
