@@ -16,10 +16,10 @@ Neste nível, o sistema central é decomposto em duas unidades principais:
 
 As conexões no diagrama refletem as escolhas tecnológicas do projeto:
 
-*   **Persistência de Dados:** O App Mobile realiza operações de leitura e escrita (CRUD) diretamente no Firestore via **Firebase SDK**, garantindo que os dados estejam disponíveis mesmo em condições de baixa conectividade.
+*   **Persistência de Dados:** O App Mobile realiza operações de leitura e escrita (CRUD) diretamente no Firestore via **Firebase SDK**, garantindo que os dados estejam disponíveis mesmo em condições de baixa conectividade;
 *   **Segurança e Acesso:** A autenticação é delegada ao **Firebase Auth**, que processa o login via código SMS (OTP), garantindo um acesso seguro e simplificado para os profissionais no canteiro de obras.
-*   **Acessibilidade e Inclusão:** O App consome a **API de Text-to-Speech (Expo Speech)** para converter informações textuais em áudio, permitindo que o sistema seja utilizado por profissionais com diferentes níveis de literacia digital.
-*   **Geolocalização:** A integração com a **Google Maps API** provê os serviços de geocodificação necessários para que clientes encontrem profissionais e lojas de materiais de construção por proximidade geográfica em Itacoatiara.
+*   **Acessibilidade e Inclusão:** O App consome a **API de Text-to-Speech (Expo Speech)** para converter informações textuais em áudio, permitindo que o sistema seja utilizado por profissionais com diferentes níveis de literacia digital;
+*   **Geolocalização:** A integração com a **Google Maps API** provê os serviços de geocodificação necessários para que clientes encontrem profissionais e lojas de materiais de construção por proximidade geográfica em Itacoatiara;
 *   **Comunicação Externa:** O transbordo para o **WhatsApp** é iniciado via integração de API, permitindo que negociações complexas e suporte técnico ocorram em um canal familiar ao usuário.
 
 ---
