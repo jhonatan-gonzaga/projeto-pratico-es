@@ -224,7 +224,7 @@ A camada de interface aciona um conjunto de serviços modulares que processam as
 ## 9.3 Integrações e Infraestrutura Externa (External Services & Cloud)
 Os serviços locais dependem das seguintes conexões externas para garantir a operação e a persistência dos dados:
 
-- **WhatsApp API (Twilio/WhatsApp)**: Gateway e canal externo de comunicação integrado ao SupportService. É acionado para encaminhar atendimentos complexos diretamente para o aplicativo de mensagens externo, garantindo a continuidade do suporte ao cliente.
+- **WhatsApp API (Twilio/WhatsApp)**: Gateway e canal externo de comunicação integrado ao SupportService. É acionado para encaminhar atendimentos complexos diretamente para o aplicativo de mensagens externo, garantindo a continuidade do suporte ao cliente;
 - **Cloud Firestore (Container Firebase Firestore)**: Banco de dados em nuvem e em tempo real. Armazena de maneira persistente e síncrona o histórico de conversas de suporte, metadados de perfis, logs de auditoria detalhados e o status das ocorrências finalizadas.
 
 
