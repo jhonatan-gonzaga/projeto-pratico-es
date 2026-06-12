@@ -2,7 +2,7 @@
 
 <img width="5255" height="3993" alt="diagrama de class-geral" src="https://github.com/user-attachments/assets/d561c829-4bf5-4ac7-96ce-8504a7ff7ab6" />
 
-# 2 diagrama de classe - login e cadastro
+# 2 diagrama de classe - Gestão de Acessos e Perfis
 
 <img width="1542" height="1180" alt="diagrama de class login" src="https://github.com/user-attachments/assets/c10b0f05-6088-44b8-864e-c4c12d5e0acb" />
 
