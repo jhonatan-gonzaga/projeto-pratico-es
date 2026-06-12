@@ -1,3 +1,7 @@
+Este documento de rastreabilidade tem como objetivo principal estabelecer uma conexão clara e direta entre os requisitos de negócio, representados pelas Histórias de Usuário (issues do GitHub), e os módulos funcionais do sistema Conecta Obra Itacoatiara. Cada seção detalha um painel ou funcionalidade principal, listando as issues correspondentes que contribuem para a sua implementação. Isso permite que a equipe de desenvolvimento e as partes interessadas compreendam como cada requisito é atendido e qual o seu impacto nas diferentes partes do sistema, facilitando o acompanhamento do progresso, a identificação de dependências e a validação da entrega de valor.
+
+---
+
 ## 1. Gestão de Acessos e Perfis
 
 #### 1.1 Cadastro e Gestão de Perfis: Cadastro, edição e gerenciamento de perfis para os quatro atores do sistema: Cliente, Profissional, Lojista e Suporte.
