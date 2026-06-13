@@ -110,7 +110,7 @@ Detalha as interfaces comerciais, abrangendo tanto a visão do comprador quanto 
 Este diagrama de componentes C4 detalha o funcionamento do Painel de Suporte, uma interface administrativa crucial para a gestão de atendimento ao cliente. Ele ilustra como a interface (SupportDashboard) interage com os serviços internos para mediar conflitos, auditar contas denunciadas e fornecer suporte direto aos usuários, incluindo funcionalidades omnicanal e registro de auditoria.
 
 <div align="center">
-  <img width="8960" height="5755" alt="diagrama de componente - SupportDashboard drawio" src="https://github.com/user-attachments/assets/suporte-dashboard-diagrama" />
+  <img width="15579" height="11259" alt="diagrama de componente- SupportDashboard drawio" src="https://github.com/user-attachments/assets/c0de7dba-0e59-40e1-b93b-f9e6f3f6e785" />
   <p><b>Figura 6:</b> Diagrama de Componentes - Painel de Suporte.</p>
 </div>
 
