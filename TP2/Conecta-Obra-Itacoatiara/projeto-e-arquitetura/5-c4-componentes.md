@@ -99,6 +99,13 @@ Detalha as interfaces comerciais, abrangendo tanto a visão do comprador quanto 
 ### Funcionalidades e Serviços
 - **MarketPlaceService:** Orquestra o guia de lojas e profissionais parceiros por geolocalização.
 - **Catalog & Promotion Services:** Permitem o gerenciamento de produtos (fotos, preços, estoque) e destaques promocionais.
+
+## 1.5 Painel do Profissional (Professionalsuport)
+<div align="center">
+  
+  <p><b>Figura 4:</b> Diagrama de Componentes - Painel do suporte</p>
+</div>
+
 - **OrderService:** Controla o fluxo de pedidos e o rastreamento de entregas.
 - **ChatService:** Centraliza o suporte comercial para sanar dúvidas sobre produtos e compras.
 - **Infraestrutura:** Integração com Google Maps para localização de lojas e Firestore para persistência de dados comerciais.
