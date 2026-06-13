@@ -100,7 +100,7 @@ Detalha as interfaces comerciais, abrangendo tanto a visão do comprador quanto 
 - **MarketPlaceService:** Orquestra o guia de lojas e profissionais parceiros por geolocalização.
 - **Catalog & Promotion Services:** Permitem o gerenciamento de produtos (fotos, preços, estoque) e destaques promocionais.
 
-## 1.5 Painel do Profissional (Professionalsuport)
+## 1.6 Painel do Profissional (Professionalsuport)
 <div align="center">
   <img width="15579" height="11259" alt="diagrama de componente- SupportDashboard drawio" src="https://github.com/user-attachments/assets/7654005e-1b09-4b4f-8054-f8d5e6d35a03" />
   <p><b>Figura 4:</b> Diagrama de Componentes - Painel do suporte</p>
