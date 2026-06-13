@@ -36,7 +36,7 @@ Este diagrama detalha as classes envolvidas na segurança e identificação dos 
 
 Focado na experiência e necessidades do consumidor, este diagrama está relacionado aos tópicos **2.1 Busca de Profissionais**, **2.2 Contratação Direta** e **2.3 Avaliação de Serviços** do arquivo de [Rastreabilidade (7-rastreabilidade.md)](7-rastreabilidade.md). Ele define as classes que sustentam a pesquisa por categoria/nota, o fluxo de favoritar profissionais e o sistema de ranqueamento pós-serviço.
 
-<img width="1936" height="1180" alt="diagrama de class cliente" src="https://github.com/user-attachments/assets/56624904-c056-42b7-a5c4-3dd85ab13e34" />
+<img width="1950" height="1189" alt="diagrama de class - cliente" src="https://github.com/user-attachments/assets/fe0a1d25-43cb-49ec-95d0-131b5a223412" />
 
 **Figura 3:** Diagrama de Classe - Cliente do Conecta Obra Itacoatiara.
 
