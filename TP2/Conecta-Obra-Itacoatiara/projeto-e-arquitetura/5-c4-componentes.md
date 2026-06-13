@@ -102,10 +102,6 @@ Detalha as interfaces comerciais, abrangendo tanto a visão do comprador quanto 
 
 ## 1.5 Painel do Profissional (Professionalsuport)
 <div align="center">
-  
+  <img width="15579" height="11259" alt="diagrama de componente- SupportDashboard drawio" src="https://github.com/user-attachments/assets/7654005e-1b09-4b4f-8054-f8d5e6d35a03" />
   <p><b>Figura 4:</b> Diagrama de Componentes - Painel do suporte</p>
 </div>
-
-- **OrderService:** Controla o fluxo de pedidos e o rastreamento de entregas.
-- **ChatService:** Centraliza o suporte comercial para sanar dúvidas sobre produtos e compras.
-- **Infraestrutura:** Integração com Google Maps para localização de lojas e Firestore para persistência de dados comerciais.
