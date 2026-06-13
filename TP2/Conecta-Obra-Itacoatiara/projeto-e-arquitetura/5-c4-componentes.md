@@ -99,9 +99,27 @@ Detalha as interfaces comerciais, abrangendo tanto a visão do comprador quanto 
 ### Funcionalidades e Serviços
 - **MarketPlaceService:** Orquestra o guia de lojas e profissionais parceiros por geolocalização.
 - **Catalog & Promotion Services:** Permitem o gerenciamento de produtos (fotos, preços, estoque) e destaques promocionais.
+- **OrderService:** Controla o fluxo de pedidos e o rastreamento de entregas.
+- **ChatService:** Centraliza o suporte comercial para sanar dúvidas sobre produtos e compras.
+- **Infraestrutura:** Integração com Google Maps para localização de lojas e Firestore para persistência de dados comerciais.
 
-## 1.6 Painel do Profissional (Professionalsuport)
+---
+
+## 1.6 Painel de Suporte (SupportDashboard)
+
+Este diagrama de componentes C4 detalha o funcionamento do Painel de Suporte, uma interface administrativa crucial para a gestão de atendimento ao cliente. Ele ilustra como a interface (SupportDashboard) interage com os serviços internos para mediar conflitos, auditar contas denunciadas e fornecer suporte direto aos usuários, incluindo funcionalidades omnicanal e registro de auditoria.
+
 <div align="center">
-  <img width="15579" height="11259" alt="diagrama de componente- SupportDashboard drawio" src="https://github.com/user-attachments/assets/7654005e-1b09-4b4f-8054-f8d5e6d35a03" />
-  <p><b>Figura 4:</b> Diagrama de Componentes - Painel do suporte</p>
+  <img width="8960" height="5755" alt="diagrama de componente - SupportDashboard drawio" src="https://github.com/user-attachments/assets/suporte-dashboard-diagrama" />
+  <p><b>Figura 6:</b> Diagrama de Componentes - Painel de Suporte.</p>
 </div>
+
+### Componentes e Responsabilidades
+- **SupportDashboard:** Interface dedicada aos agentes de suporte, centralizando ferramentas para atendimento, mediação e auditoria.
+
+### Serviços Locais e Integrações
+- **SupportService:** Gerencia as interações de suporte, incluindo a mediação de conflitos e a resolução de problemas dos usuários.
+- **AuditService:** Responsável pelo registro de auditoria de ações realizadas na plataforma, especialmente em casos de denúncias de conduta inadequada.
+- **ChatService:** Facilita a comunicação com os usuários, suportando troca de mensagens de texto, áudio e imagens, além de permitir a transição para outros canais como o WhatsApp.
+- **WhatsApp API:** Permite a transição de atendimentos complexos do chat interno diretamente para o mensageiro externo, oferecendo um suporte mais flexível.
+- **Cloud Firestore:** Atua como repositório central para persistir logs de atendimento, histórico de chats e dados de auditoria, garantindo a integridade e rastreabilidade das informações.
