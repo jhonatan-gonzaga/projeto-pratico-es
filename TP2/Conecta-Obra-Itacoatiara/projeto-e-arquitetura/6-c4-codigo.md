@@ -26,7 +26,8 @@ O diagrama de classe de visão geral apresenta as principais entidades e seus re
 
 Este diagrama detalha as classes envolvidas na segurança e identificação dos usuários. Ele está diretamente relacionado ao tópico **1. Gestão de Acessos e Perfis** do arquivo de [Rastreabilidade (7-rastreabilidade.md)](7-rastreabilidade.md), cobrindo as estruturas necessárias para o cadastro, edição de perfis e validação de acesso via código para todos os atores do sistema.
 
-<img width="1542" height="1180" alt="diagrama de class login" src="https://github.com/user-attachments/assets/c10b0f05-6088-44b8-862c-9562fceeb5ec" />
+<img width="1542" height="1180" alt="diagrama de class login" src="https://github.com/user-attachments/assets/e7a1dcd5-c457-4497-b90d-c4999c7d089f" />
+
 
 **Figura 2:** Diagrama de Classe - Gestão de Acessos e Perfis do Conecta Obra Itacoatiara.
 
