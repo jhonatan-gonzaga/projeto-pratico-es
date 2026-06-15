@@ -51,6 +51,7 @@ US https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/21 - Existênci
 | Condição de Entrada                                     | Classes Válidas                                                  | Classes Inválidas                                       |
 | ------------------------------------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------- |
 | Tempo de conversa ativa ao definir "problema resolvido" | Igual ou superior a 1 minuto (60 segundos) de conversa ativa (1) | Inferior a 1 minuto (60 segundos) de conversa ativa (2) |
+
 **Casos de Teste – Tabela 3: Definição do Status "Problema Resolvido"** no Chat
 
 | Classes de Equivalência | Entradas                      | Resultado Esperado                                          |
@@ -70,6 +71,7 @@ US https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/20 - Troca de c
 | Condição de Entrada | Classes Válidas | Classes Inválidas | Classes Inválidas |
 |---|---|---|---|
 | Resposta do cliente ao menu de troca de canal | Cliente clica em "Consentir troca para WhatsApp" (1) | Cliente clica em "Recusar troca para WhatsApp" (2) | Cliente não interage com o menu de consentimento (3) |
+
 **Casos de Teste – Tabela 1: Consentimento do Cliente para Troca de Canal**
 
 | Classes de Equivalência | Entradas                                         | Resultado Esperado                                                                                     |
@@ -92,6 +94,7 @@ US https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/22 - Envio de �
 | --------------------------------------- | ----------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------ |
 | Duração do áudio gravado antes do envio | Entre 1 segundo e 2 minutos (1)                                   | Superior a 2 minutos (2)                                      | Zero segundos (gravação vazia, sem conteúdo) (3) |
 | Ação do usuário com o botão de áudio    | Manter o botão pressionado para gravar e soltá-lo para enviar (4) | Deslizar o botão para cima (cancela a gravação sem envio) (5) |                                                  |
+
 **Casos de Teste – Tabela 1: Envio de Áudio no Chat**
 
 | Classes de Equivalência | Entradas                                               | Resultado Esperado                                                     |
@@ -133,6 +136,7 @@ US https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/44 - Envio de i
 | Condição de Entrada                             | Classes Válidas                        | Classes Inválidas                     |
 | ----------------------------------------------- | -------------------------------------- | ------------------------------------- |
 | Tempo decorrido desde o envio da imagem no chat | Imagem enviada há 60 dias ou menos (1) | Imagem enviada há mais de 60 dias (2) |
+
 **Casos de Teste – Tabela 2: Armazenamento das Imagens Enviadas**
 
 | Classes de Equivalência | Entradas                  | Resultado Esperado                    |
@@ -152,6 +156,7 @@ US https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/19 - Existênci
 | Condição de Entrada                                     | Classes Válidas                                           | Classes Inválidas                                     |
 | ------------------------------------------------------- | --------------------------------------------------------- | ----------------------------------------------------- |
 | Justificativa fornecida ao solicitar exclusão de um log | Justificativa preenchida com texto válido (não vazia) (1) | Justificativa não fornecida (campo vazio ou nulo) (2) |
+
 **Casos de Teste – Tabela 1: Exclusão de Log**
 
 | Classes de Equivalência | Entradas                                                     | Resultado Esperado       |
@@ -168,6 +173,7 @@ US https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/19 - Existênci
 | Condição de Entrada                   | Classes Válidas                  | Classes Inválidas                          | Classes Inválidas                       |
 | ------------------------------------- | -------------------------------- | ------------------------------------------ | --------------------------------------- |
 | Status do chat a ser vinculado ao log | Chat com status "finalizado" (1) | Chat com status "ativo" (em andamento) (2) | Chat com status "em fila de espera" (3) |
+
 **Casos de Teste – Tabela 2: Vinculação de Log a um Chat de Suporte**
 
 |Classes de Equivalência|Entradas|Resultado Esperado|
@@ -186,6 +192,7 @@ US https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/19 - Existênci
 | Condição de Entrada                    | Classes Válidas                                            | Classes Inválidas                                               |
 | -------------------------------------- | ---------------------------------------------------------- | --------------------------------------------------------------- |
 | Dados fornecidos ao registrar novo log | Log criado com todos os dados obrigatórios preenchidos (1) | Tentativa de criação de log com dados obrigatórios ausentes (2) |
+
 **Casos de Teste – Tabela 3: Registro de Logs**
 
 | Classes de Equivalência | Entradas                                         | Resultado Esperado         |
@@ -201,6 +208,7 @@ US https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/19 - Existênci
 | Condição de Entrada   | Classes Válidas                                  | Classes Inválidas                                          |
 | --------------------- | ------------------------------------------------ | ---------------------------------------------------------- |
 | Alvo da edição de log | Edição realizada em log existente no sistema (3) | Tentativa de editar log que não existe ou foi excluído (4) |
+
 **Casos de Teste – Tabela 3: Edição de Logs**
 
 | Classes de Equivalência | Entradas                                    | Resultado Esperado         |
