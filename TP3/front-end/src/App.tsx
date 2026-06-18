@@ -18,7 +18,7 @@ import {
 
 const logo = require("../assets/logotipo.png");
 
-type Screen = "login" | "signup";
+type Screen = "login" | "signup" | "phone";
 type IconName = keyof typeof Ionicons.glyphMap;
 
 type FieldProps = {
@@ -90,7 +90,7 @@ function Field({
   );
 }
 
-function SocialButtons() {
+function SocialButtons({ onPhone }: { onPhone: () => void }) {
   return (
     <View className="flex-row gap-3">
       <Pressable
@@ -101,6 +101,7 @@ function SocialButtons() {
         <Text className="text-[15px] font-semibold text-foreground">Google</Text>
       </Pressable>
       <Pressable
+        onPress={onPhone}
         className="min-h-[50px] flex-1 flex-row items-center justify-center gap-2 rounded-[14px] border-[1.5px] border-input-border bg-card px-3"
         accessibilityRole="button"
       >
@@ -123,7 +124,13 @@ function Divider() {
   );
 }
 
-function LoginScreen({ onCreateAccount }: { onCreateAccount: () => void }) {
+function LoginScreen({
+  onCreateAccount,
+  onPhone,
+}: {
+  onCreateAccount: () => void;
+  onPhone: () => void;
+}) {
   const [email, setEmail] = useState("joao.silva@email.com");
   const [password, setPassword] = useState("conecta123");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -206,7 +213,7 @@ function LoginScreen({ onCreateAccount }: { onCreateAccount: () => void }) {
         </Pressable>
 
         <Divider />
-        <SocialButtons />
+        <SocialButtons onPhone={onPhone} />
       </View>
 
       <View className="z-10 items-center gap-2.5 px-6 pb-7 pt-5">
@@ -229,7 +236,13 @@ function LoginScreen({ onCreateAccount }: { onCreateAccount: () => void }) {
   );
 }
 
-function SignupScreen({ onLogin }: { onLogin: () => void }) {
+function SignupScreen({
+  onLogin,
+  onPhone,
+}: {
+  onLogin: () => void;
+  onPhone: () => void;
+}) {
   const [name, setName] = useState("Maria da Silva");
   const [phone, setPhone] = useState("(11) 99999-9999");
   const [email, setEmail] = useState("maria@email.com");
@@ -317,7 +330,7 @@ function SignupScreen({ onLogin }: { onLogin: () => void }) {
         </Pressable>
 
         <Divider />
-        <SocialButtons />
+        <SocialButtons onPhone={onPhone} />
       </View>
 
       <View className="z-10 items-center gap-2.5 px-6 pb-6 pt-[18px]">
@@ -340,8 +353,142 @@ function SignupScreen({ onLogin }: { onLogin: () => void }) {
   );
 }
 
+function PhoneVerificationScreen({ onBack }: { onBack: () => void }) {
+  const [phone, setPhone] = useState("(11) 99999-9999");
+
+  return (
+    <View className="relative min-h-[812px] w-full max-w-[480px] overflow-hidden bg-background">
+      <View className="absolute -left-16 -top-20 h-[320px] w-[320px] rounded-full bg-[#f5c0c2] opacity-50" />
+      <View className="absolute -right-20 -top-10 h-[220px] w-[220px] rounded-full bg-[#fbd3d5] opacity-60" />
+      <View className="absolute -bottom-16 -right-16 h-[260px] w-[260px] rounded-full bg-[#f5c0c2] opacity-30" />
+
+      <View className="z-10 items-center gap-4 px-6 pb-5 pt-[48px]">
+        <BrandLogo />
+        <View className="items-center gap-1.5">
+          <Text className="text-center text-[28px] font-extrabold leading-8 text-foreground">
+            Verificar por SMS
+          </Text>
+          <Text className="max-w-[260px] text-center text-[15px] leading-6 text-muted-foreground">
+            Enviaremos um codigo de verificacao por mensagem de texto para o
+            seu numero.
+          </Text>
+        </View>
+      </View>
+
+      <View className="z-10 items-center px-6 pt-2">
+        <View className="flex-row items-center gap-2.5 rounded-full bg-card px-[18px] py-2.5 shadow-lg shadow-primary/10">
+          <View className="h-[34px] w-[34px] items-center justify-center rounded-full bg-primary">
+            <Ionicons name="chatbox-outline" size={18} color="#ffffff" />
+          </View>
+          <View className="gap-0.5">
+            <Text className="text-[13px] font-bold text-foreground">
+              Codigo via SMS
+            </Text>
+            <Text className="text-[11px] text-muted-foreground">
+              Entrega em ate 60 segundos
+            </Text>
+          </View>
+        </View>
+      </View>
+
+      <View className="z-10 mx-4 mt-5 gap-3.5 rounded-[24px] bg-card px-5 pb-[22px] pt-6 shadow-lg shadow-primary/10">
+        <View className="gap-1.5">
+          <Text className="text-[13px] font-semibold text-muted-foreground">
+            Numero de telefone
+          </Text>
+          <View className="min-h-[54px] flex-row overflow-hidden rounded-[14px] border-[1.5px] border-primary bg-background">
+            <Pressable
+              className="flex-row items-center gap-1.5 border-r-[1.5px] border-input-border bg-card px-3"
+              accessibilityRole="button"
+              accessibilityLabel="Selecionar codigo do pais"
+            >
+              <Text className="text-sm font-semibold text-foreground">BR</Text>
+              <Text className="text-sm font-semibold text-foreground">+55</Text>
+              <Ionicons name="chevron-down" size={14} color="#7a6568" />
+            </Pressable>
+            <View className="flex-1 flex-row items-center gap-2 px-3.5 py-3.5">
+              <Ionicons name="phone-portrait-outline" size={18} color="#b94b50" />
+              <TextInput
+                value={phone}
+                onChangeText={setPhone}
+                keyboardType="phone-pad"
+                autoComplete="tel"
+                className="min-h-[24px] flex-1 p-0 text-[15px] font-medium text-foreground"
+                placeholder="(11) 99999-9999"
+                placeholderTextColor="#c5adaf"
+                accessibilityLabel="Numero de telefone"
+              />
+            </View>
+          </View>
+        </View>
+
+        <View className="flex-row items-start gap-2.5 rounded-[14px] border border-primary/10 bg-[#fff5f5] px-3.5 py-3">
+          <Ionicons
+            name="information-circle-outline"
+            size={20}
+            color="#b94b50"
+          />
+          <Text className="flex-1 text-[13px] leading-5 text-muted-foreground">
+            Um SMS com o codigo de verificacao sera enviado para{" "}
+            <Text className="font-semibold text-primary">{phone}</Text>. Tarifas
+            de SMS podem ser aplicadas.
+          </Text>
+        </View>
+
+        <Pressable
+          className="min-h-[56px] flex-row items-center justify-center gap-2 rounded-full bg-primary px-6 shadow-lg shadow-primary/40"
+          accessibilityRole="button"
+        >
+          <Ionicons name="send-outline" size={18} color="#ffffff" />
+          <Text className="text-base font-bold text-white">Enviar codigo</Text>
+        </Pressable>
+
+        <Pressable
+          onPress={onBack}
+          className="min-h-[52px] flex-row items-center justify-center gap-2 rounded-full border-[1.5px] border-input-border bg-transparent px-6"
+          accessibilityRole="button"
+        >
+          <Ionicons name="arrow-back" size={16} color="#7a6568" />
+          <Text className="text-[15px] font-semibold text-muted-foreground">
+            Usar outro metodo
+          </Text>
+        </Pressable>
+      </View>
+
+      <View className="z-10 items-center gap-2.5 px-6 pb-7 pt-[18px]">
+        <Pressable
+          onPress={onBack}
+          className="flex-row items-center gap-1"
+          accessibilityRole="button"
+        >
+          <Ionicons name="chevron-back" size={14} color="#b94b50" />
+          <Text className="text-center text-sm text-muted-foreground">
+            Voltar para <Text className="font-semibold text-primary">Criar conta</Text>
+          </Text>
+        </Pressable>
+        <Text className="text-center text-xs leading-5 text-muted-foreground">
+          Ao continuar, voce concorda com nossos{" "}
+          <Text className="font-semibold text-primary">Termos de Uso</Text> e{" "}
+          <Text className="font-semibold text-primary">
+            Politica de Privacidade
+          </Text>
+          .
+        </Text>
+      </View>
+    </View>
+  );
+}
+
 export default function App() {
   const [screen, setScreen] = useState<Screen>("login");
+  const [previousScreen, setPreviousScreen] = useState<Exclude<Screen, "phone">>(
+    "signup",
+  );
+
+  const openPhoneScreen = (from: Exclude<Screen, "phone">) => {
+    setPreviousScreen(from);
+    setScreen("phone");
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-background">
@@ -357,9 +504,17 @@ export default function App() {
           showsVerticalScrollIndicator={false}
         >
           {screen === "login" ? (
-            <LoginScreen onCreateAccount={() => setScreen("signup")} />
+            <LoginScreen
+              onCreateAccount={() => setScreen("signup")}
+              onPhone={() => openPhoneScreen("login")}
+            />
+          ) : screen === "signup" ? (
+            <SignupScreen
+              onLogin={() => setScreen("login")}
+              onPhone={() => openPhoneScreen("signup")}
+            />
           ) : (
-            <SignupScreen onLogin={() => setScreen("login")} />
+            <PhoneVerificationScreen onBack={() => setScreen(previousScreen)} />
           )}
         </ScrollView>
       </KeyboardAvoidingView>
