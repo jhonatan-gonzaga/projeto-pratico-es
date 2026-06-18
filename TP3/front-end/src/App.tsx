@@ -21,6 +21,7 @@ const logo = require("../assets/logotipo.png");
 type ReturnScreen = "login" | "signup";
 type Screen = ReturnScreen | "phone" | "google";
 type IconName = keyof typeof Ionicons.glyphMap;
+type ValidationStatus = "default" | "valid" | "error";
 
 type FieldProps = {
   label: string;
@@ -32,7 +33,56 @@ type FieldProps = {
   autoComplete?: "email" | "password" | "name" | "tel";
   secureTextEntry?: boolean;
   active?: boolean;
+  helperText?: string;
+  onBlur?: () => void;
   rightAction?: React.ReactNode;
+  status?: ValidationStatus;
+};
+
+const onlyDigits = (value: string) => value.replace(/\D/g, "");
+
+const formatBRPhone = (value: string) => {
+  const digits = onlyDigits(value).slice(0, 11);
+
+  if (digits.length <= 2) {
+    return digits;
+  }
+
+  if (digits.length <= 7) {
+    return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+  }
+
+  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+};
+
+const isValidEmail = (value: string) =>
+  /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value.trim());
+
+const isValidName = (value: string) => {
+  const parts = value.trim().split(/\s+/).filter(Boolean);
+  return parts.length >= 2 && parts.every((part) => part.length >= 2);
+};
+
+const isValidPhone = (value: string) => onlyDigits(value).length === 11;
+
+const isValidPassword = (value: string) =>
+  /^(?=.*[A-Za-z])(?=.*\d).{8,}$/.test(value);
+
+const validationStatus = (
+  isTouched: boolean,
+  isValid: boolean,
+): ValidationStatus => {
+  if (!isTouched) {
+    return "default";
+  }
+
+  return isValid ? "valid" : "error";
+};
+
+const statusClasses: Record<ValidationStatus, string> = {
+  default: "border-input-border bg-background",
+  valid: "border-[#16a34a] bg-[#f7fff9]",
+  error: "border-[#dc2626] bg-[#fff7f7]",
 };
 
 function BrandLogo() {
@@ -58,35 +108,60 @@ function Field({
   autoComplete,
   secureTextEntry,
   active,
+  helperText,
+  onBlur,
   rightAction,
+  status = "default",
 }: FieldProps) {
+  const appliedStatus = status === "default" && active ? "active" : status;
+  const containerClass =
+    appliedStatus === "active"
+      ? "border-primary bg-[#fff9f9]"
+      : statusClasses[status];
+  const isValidated = status === "valid" || status === "error";
+
   return (
-    <View
-      className={`min-h-[62px] gap-1 rounded-[14px] border-[1.5px] px-3.5 py-2.5 ${
-        active
-          ? "border-primary bg-[#fff9f9]"
-          : "border-input-border bg-background"
-      }`}
-    >
-      <Text className="text-[10px] font-bold uppercase tracking-[0.7px] text-primary">
-        {label}
-      </Text>
-      <View className="flex-row items-center gap-2.5">
-        <Ionicons name={icon} size={17} color="#b94b50" />
-        <TextInput
-          value={value}
-          onChangeText={onChangeText}
-          keyboardType={keyboardType}
-          autoCapitalize="none"
-          autoComplete={autoComplete}
-          secureTextEntry={secureTextEntry}
-          className="min-h-[24px] flex-1 p-0 text-[15px] font-medium text-foreground"
-          placeholder={placeholder}
-          placeholderTextColor="#c5adaf"
-          accessibilityLabel={label}
-        />
-        {rightAction}
+    <View className="gap-1">
+      <View
+        className={`min-h-[62px] gap-1 rounded-[14px] border-[1.5px] px-3.5 py-2.5 ${containerClass}`}
+      >
+        <Text className="text-[10px] font-bold uppercase tracking-[0.7px] text-primary">
+          {label}
+        </Text>
+        <View className="flex-row items-center gap-2.5">
+          <Ionicons name={icon} size={17} color="#b94b50" />
+          <TextInput
+            value={value}
+            onBlur={onBlur}
+            onChangeText={onChangeText}
+            keyboardType={keyboardType}
+            autoCapitalize="none"
+            autoComplete={autoComplete}
+            secureTextEntry={secureTextEntry}
+            className="min-h-[24px] flex-1 p-0 text-[15px] font-medium text-foreground"
+            placeholder={placeholder}
+            placeholderTextColor="#c5adaf"
+            accessibilityLabel={label}
+          />
+          {rightAction}
+          {isValidated ? (
+            <Ionicons
+              name={status === "valid" ? "checkmark-circle" : "alert-circle"}
+              size={18}
+              color={status === "valid" ? "#16a34a" : "#dc2626"}
+            />
+          ) : null}
+        </View>
       </View>
+      {helperText ? (
+        <Text
+          className={`px-1 text-xs leading-4 ${
+            status === "error" ? "text-[#dc2626]" : "text-muted-foreground"
+          }`}
+        >
+          {helperText}
+        </Text>
+      ) : null}
     </View>
   );
 }
@@ -144,6 +219,14 @@ function LoginScreen({
   const [email, setEmail] = useState("joao.silva@email.com");
   const [password, setPassword] = useState("conecta123");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [touched, setTouched] = useState({
+    email: false,
+    password: false,
+  });
+
+  const emailIsValid = isValidEmail(email);
+  const passwordIsValid = isValidPassword(password);
+  const loginIsValid = emailIsValid && passwordIsValid;
 
   return (
     <View className="relative min-h-[812px] w-full max-w-[480px] overflow-hidden bg-background">
@@ -173,22 +256,38 @@ function LoginScreen({
       <View className="z-10 mx-4 gap-3.5 rounded-[24px] bg-card px-5 pb-5 pt-6 shadow-lg shadow-primary/10">
         <View className="gap-2.5">
           <Field
-            label="Email ou Nome"
+            label="Email"
             icon="person-outline"
             value={email}
+            onBlur={() => setTouched((current) => ({ ...current, email: true }))}
             onChangeText={setEmail}
             keyboardType="email-address"
             autoComplete="email"
             placeholder="seu@email.com"
+            status={validationStatus(touched.email, emailIsValid)}
+            helperText={
+              touched.email && !emailIsValid
+                ? "Digite um e-mail completo, exemplo: joao.silva@gmail.com."
+                : undefined
+            }
           />
           <Field
             label="Senha"
             icon="lock-closed-outline"
             value={password}
+            onBlur={() =>
+              setTouched((current) => ({ ...current, password: true }))
+            }
             onChangeText={setPassword}
             secureTextEntry={!isPasswordVisible}
             autoComplete="password"
             placeholder="Sua senha"
+            status={validationStatus(touched.password, passwordIsValid)}
+            helperText={
+              touched.password && !passwordIsValid
+                ? "Use 8 ou mais caracteres com letras e numeros."
+                : undefined
+            }
             rightAction={
               <Pressable
                 onPress={() => setIsPasswordVisible((current) => !current)}
@@ -215,7 +314,11 @@ function LoginScreen({
         </Pressable>
 
         <Pressable
-          className="min-h-[58px] flex-row items-center justify-center gap-2.5 rounded-full bg-primary px-6 shadow-lg shadow-primary/40"
+          disabled={!loginIsValid}
+          onPress={() => setTouched({ email: true, password: true })}
+          className={`min-h-[58px] flex-row items-center justify-center gap-2.5 rounded-full px-6 shadow-lg shadow-primary/40 ${
+            loginIsValid ? "bg-primary" : "bg-[#d7a0a3]"
+          }`}
           accessibilityRole="button"
         >
           <Text className="text-base font-bold text-white">Entrar</Text>
@@ -260,6 +363,19 @@ function SignupScreen({
   const [email, setEmail] = useState("maria@email.com");
   const [password, setPassword] = useState("conecta12");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [touched, setTouched] = useState({
+    name: false,
+    phone: false,
+    email: false,
+    password: false,
+  });
+
+  const nameIsValid = isValidName(name);
+  const phoneIsValid = isValidPhone(phone);
+  const emailIsValid = isValidEmail(email);
+  const passwordIsValid = isValidPassword(password);
+  const signupIsValid =
+    nameIsValid && phoneIsValid && emailIsValid && passwordIsValid;
 
   return (
     <View className="relative min-h-[812px] w-full max-w-[480px] overflow-hidden bg-background">
@@ -284,37 +400,67 @@ function SignupScreen({
           label="Nome completo"
           icon="person-outline"
           value={name}
+          onBlur={() => setTouched((current) => ({ ...current, name: true }))}
           onChangeText={setName}
           autoComplete="name"
           placeholder="Maria da Silva"
+          status={validationStatus(touched.name, nameIsValid)}
+          helperText={
+            touched.name && !nameIsValid
+              ? "Informe nome e sobrenome."
+              : undefined
+          }
         />
         <Field
           label="Telefone"
           icon="call-outline"
           value={phone}
-          onChangeText={setPhone}
+          onBlur={() => setTouched((current) => ({ ...current, phone: true }))}
+          onChangeText={(value) => setPhone(formatBRPhone(value))}
           keyboardType="phone-pad"
           autoComplete="tel"
           placeholder="(11) 99999-9999"
+          status={validationStatus(touched.phone, phoneIsValid)}
+          helperText={
+            touched.phone && !phoneIsValid
+              ? "Digite DDD + numero, com 11 digitos."
+              : undefined
+          }
         />
         <Field
           label="Email"
           icon="mail-outline"
           value={email}
+          onBlur={() => setTouched((current) => ({ ...current, email: true }))}
           onChangeText={setEmail}
           keyboardType="email-address"
           autoComplete="email"
           placeholder="maria@email.com"
           active
+          status={validationStatus(touched.email, emailIsValid)}
+          helperText={
+            touched.email && !emailIsValid
+              ? "Digite um e-mail valido, exemplo: maria@gmail.com."
+              : undefined
+          }
         />
         <Field
           label="Senha"
           icon="lock-closed-outline"
           value={password}
+          onBlur={() =>
+            setTouched((current) => ({ ...current, password: true }))
+          }
           onChangeText={setPassword}
           secureTextEntry={!isPasswordVisible}
           autoComplete="password"
           placeholder="Sua senha"
+          status={validationStatus(touched.password, passwordIsValid)}
+          helperText={
+            touched.password && !passwordIsValid
+              ? "Use 8 ou mais caracteres com letras e numeros."
+              : undefined
+          }
           rightAction={
             <Pressable
               onPress={() => setIsPasswordVisible((current) => !current)}
@@ -334,7 +480,18 @@ function SignupScreen({
         />
 
         <Pressable
-          className="mt-1 min-h-[56px] flex-row items-center justify-center gap-2 rounded-full bg-primary px-6 shadow-lg shadow-primary/40"
+          disabled={!signupIsValid}
+          onPress={() =>
+            setTouched({
+              name: true,
+              phone: true,
+              email: true,
+              password: true,
+            })
+          }
+          className={`mt-1 min-h-[56px] flex-row items-center justify-center gap-2 rounded-full px-6 shadow-lg shadow-primary/40 ${
+            signupIsValid ? "bg-primary" : "bg-[#d7a0a3]"
+          }`}
           accessibilityRole="button"
         >
           <Text className="text-base font-bold text-white">Cadastrar</Text>
@@ -367,6 +524,8 @@ function SignupScreen({
 
 function PhoneVerificationScreen({ onBack }: { onBack: () => void }) {
   const [phone, setPhone] = useState("(11) 99999-9999");
+  const [phoneTouched, setPhoneTouched] = useState(false);
+  const phoneIsValid = isValidPhone(phone);
 
   return (
     <View className="relative min-h-[812px] w-full max-w-[480px] overflow-hidden bg-background">
@@ -408,7 +567,15 @@ function PhoneVerificationScreen({ onBack }: { onBack: () => void }) {
           <Text className="text-[13px] font-semibold text-muted-foreground">
             Numero de telefone
           </Text>
-          <View className="min-h-[54px] flex-row overflow-hidden rounded-[14px] border-[1.5px] border-primary bg-background">
+          <View
+            className={`min-h-[54px] flex-row overflow-hidden rounded-[14px] border-[1.5px] ${
+              phoneTouched
+                ? phoneIsValid
+                  ? "border-[#16a34a] bg-[#f7fff9]"
+                  : "border-[#dc2626] bg-[#fff7f7]"
+                : "border-primary bg-background"
+            }`}
+          >
             <Pressable
               className="flex-row items-center gap-1.5 border-r-[1.5px] border-input-border bg-card px-3"
               accessibilityRole="button"
@@ -422,7 +589,8 @@ function PhoneVerificationScreen({ onBack }: { onBack: () => void }) {
               <Ionicons name="phone-portrait-outline" size={18} color="#b94b50" />
               <TextInput
                 value={phone}
-                onChangeText={setPhone}
+                onBlur={() => setPhoneTouched(true)}
+                onChangeText={(value) => setPhone(formatBRPhone(value))}
                 keyboardType="phone-pad"
                 autoComplete="tel"
                 className="min-h-[24px] flex-1 p-0 text-[15px] font-medium text-foreground"
@@ -430,8 +598,20 @@ function PhoneVerificationScreen({ onBack }: { onBack: () => void }) {
                 placeholderTextColor="#c5adaf"
                 accessibilityLabel="Numero de telefone"
               />
+              {phoneTouched ? (
+                <Ionicons
+                  name={phoneIsValid ? "checkmark-circle" : "alert-circle"}
+                  size={18}
+                  color={phoneIsValid ? "#16a34a" : "#dc2626"}
+                />
+              ) : null}
             </View>
           </View>
+          {phoneTouched && !phoneIsValid ? (
+            <Text className="px-1 text-xs leading-4 text-[#dc2626]">
+              Digite DDD + numero, com 11 digitos.
+            </Text>
+          ) : null}
         </View>
 
         <View className="flex-row items-start gap-2.5 rounded-[14px] border border-primary/10 bg-[#fff5f5] px-3.5 py-3">
@@ -448,7 +628,11 @@ function PhoneVerificationScreen({ onBack }: { onBack: () => void }) {
         </View>
 
         <Pressable
-          className="min-h-[56px] flex-row items-center justify-center gap-2 rounded-full bg-primary px-6 shadow-lg shadow-primary/40"
+          disabled={!phoneIsValid}
+          onPress={() => setPhoneTouched(true)}
+          className={`min-h-[56px] flex-row items-center justify-center gap-2 rounded-full px-6 shadow-lg shadow-primary/40 ${
+            phoneIsValid ? "bg-primary" : "bg-[#d7a0a3]"
+          }`}
           accessibilityRole="button"
         >
           <Ionicons name="send-outline" size={18} color="#ffffff" />
