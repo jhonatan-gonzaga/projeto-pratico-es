@@ -42,7 +42,7 @@ type FieldProps = {
 const onlyDigits = (value: string) => value.replace(/\D/g, "");
 
 const formatBRPhone = (value: string) => {
-  const digits = onlyDigits(value).slice(0, 11);
+  const digits = onlyDigits(value);
 
   if (digits.length <= 2) {
     return digits;
