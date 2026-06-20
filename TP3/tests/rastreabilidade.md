@@ -62,25 +62,39 @@ Os demais casos de teste representaram cenários inválidos. Nos <strong>Casos 2
 **Legenda da Tabela:** Casos de Teste da US #27.
 
 
-## Simulação de Testes Automatizados
+## Simulação de Testes Manuais dos Casos de Teste da US #27.
 
-### Caso 1 
-<img width="739" height="1600" alt="image" src="https://github.com/user-attachments/assets/93aa0e20-b5a1-46dd-a743-1f99a9b479bb" />
+### Caso 1  
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/93aa0e20-b5a1-46dd-a743-1f99a9b479bb" />
 
-### Caso 2
-<img width="739" height="1600" alt="image" src="https://github.com/user-attachments/assets/936c889c-4637-4a59-8c39-da0dab2897f2" />
+(Classes de Equivalência 1, 4, 7)   
 
-### Caso 3
-<img width="739" height="1600" alt="image" src="https://github.com/user-attachments/assets/0510d038-ea94-44e7-bed3-fcaea52a501c" />
+### Caso 2 
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/936c889c-4637-4a59-8c39-da0dab2897f2" />
 
-### Caso 4
-<img width="739" height="1600" alt="image" src="https://github.com/user-attachments/assets/d68defb7-c46f-4dd0-b9d9-19b93503d99b" />
+(Classes de Equivalência 2, 4, 7)
 
-### Caso 5
-<img width="739" height="1600" alt="image" src="https://github.com/user-attachments/assets/9eaaad8f-6fab-45fb-8094-755012b676a4" />
+### Caso 3 
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/0510d038-ea94-44e7-bed3-fcaea52a501c" />
 
-### Caso 6
-<img width="739" height="1600" alt="image" src="https://github.com/user-attachments/assets/d41fc861-531d-43fb-97c0-e222e4a033e4" />
+(Classes de Equivalência 3, 4, 7)
 
-### Caso 7
-<img width="739" height="1600" alt="image" src="https://github.com/user-attachments/assets/ece8c3af-de89-4690-9c8d-b6167799a561" />
+### Caso 4 
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/d68defb7-c46f-4dd0-b9d9-19b93503d99b" />
+
+(Classes de Equivalência 1, 5, 7)
+
+### Caso 5 
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/9eaaad8f-6fab-45fb-8094-755012b676a4" />
+
+(Classes de Equivalência 1, 6, 7)
+
+### Caso 6 
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/d41fc861-531d-43fb-97c0-e222e4a033e4" />
+
+(Classes de Equivalência 1, 4, 8)
+
+### Caso 7 
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/ece8c3af-de89-4690-9c8d-b6167799a561" />
+
+(Classes de Equivalência 1, 4, 9)
