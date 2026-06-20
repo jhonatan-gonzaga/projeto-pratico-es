@@ -19,9 +19,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 const logo = require("../assets/logotipo.png");
 
 type ReturnScreen = "login" | "signup";
-type Screen = ReturnScreen | "phone" | "google";
+type Screen = ReturnScreen | "phone" | "google" | "profileChoice";
 type IconName = keyof typeof Ionicons.glyphMap;
 type ValidationStatus = "default" | "valid" | "error";
+type ProfileType = "cliente" | "profissional";
 
 type FieldProps = {
   label: string;
@@ -211,10 +212,12 @@ function LoginScreen({
   onCreateAccount,
   onGoogle,
   onPhone,
+  onSuccess,
 }: {
   onCreateAccount: () => void;
   onGoogle: () => void;
   onPhone: () => void;
+  onSuccess: () => void;
 }) {
   const [email, setEmail] = useState("joao.silva@email.com");
   const [password, setPassword] = useState("conecta123");
@@ -315,7 +318,7 @@ function LoginScreen({
 
         <Pressable
           disabled={!loginIsValid}
-          onPress={() => setTouched({ email: true, password: true })}
+          onPress={onSuccess}
           className={`min-h-[58px] flex-row items-center justify-center gap-2.5 rounded-full px-6 shadow-lg shadow-primary/40 ${
             loginIsValid ? "bg-primary" : "bg-[#d7a0a3]"
           }`}
@@ -353,10 +356,12 @@ function SignupScreen({
   onLogin,
   onGoogle,
   onPhone,
+  onSuccess,
 }: {
   onLogin: () => void;
   onGoogle: () => void;
   onPhone: () => void;
+  onSuccess: () => void;
 }) {
   const [name, setName] = useState("Maria da Silva");
   const [phone, setPhone] = useState("(11) 99999-9999");
@@ -481,14 +486,7 @@ function SignupScreen({
 
         <Pressable
           disabled={!signupIsValid}
-          onPress={() =>
-            setTouched({
-              name: true,
-              phone: true,
-              email: true,
-              password: true,
-            })
-          }
+          onPress={onSuccess}
           className={`mt-1 min-h-[56px] flex-row items-center justify-center gap-2 rounded-full px-6 shadow-lg shadow-primary/40 ${
             signupIsValid ? "bg-primary" : "bg-[#d7a0a3]"
           }`}
@@ -838,6 +836,137 @@ function GoogleSignInScreen({ onBack }: { onBack: () => void }) {
   );
 }
 
+function ProfileCard({
+  description,
+  icon,
+  label,
+  selected,
+  onPress,
+}: {
+  description: string;
+  icon: IconName;
+  label: string;
+  selected: boolean;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      className={`relative rounded-[24px] px-6 pb-8 pt-6 ${
+        selected ? "border-2 border-primary bg-card" : "border border-input-border bg-card"
+      }`}
+      accessibilityRole="radio"
+      accessibilityState={{ selected }}
+      accessibilityLabel={label}
+    >
+      <View className="absolute right-4 top-4">
+        {selected ? (
+          <View className="h-6 w-6 items-center justify-center rounded-full bg-primary">
+            <View className="h-2.5 w-2.5 rounded-full bg-white" />
+          </View>
+        ) : (
+          <View className="h-6 w-6 rounded-full border-2 border-muted" />
+        )}
+      </View>
+
+      <View className="mb-4 items-center">
+        <View className="h-16 w-16 items-center justify-center rounded-full bg-[#f7e8e9]">
+          <Ionicons name={icon} size={28} color="#b94b50" />
+        </View>
+      </View>
+
+      <Text className="mb-2 text-center text-xl font-bold text-foreground">
+        {label}
+      </Text>
+      <Text className="text-center text-base leading-7 text-muted-foreground">
+        {description}
+      </Text>
+    </Pressable>
+  );
+}
+
+function ProfileChoiceScreen({
+  onBack,
+}: {
+  onBack: () => void;
+}) {
+  const [selectedProfile, setSelectedProfile] = useState<ProfileType>("cliente");
+
+  return (
+    <View className="min-h-[812px] w-full max-w-[480px] bg-background">
+      <View className="flex-row items-center justify-between px-5 pb-4 pt-12">
+        <Pressable
+          onPress={onBack}
+          className="h-9 w-9 items-center justify-center"
+          accessibilityRole="button"
+          accessibilityLabel="Sair da escolha de perfil"
+        >
+          <Ionicons name="log-out-outline" size={22} color="#0f1720" />
+        </Pressable>
+
+        <Image
+          source={logo}
+          className="h-10 w-[150px]"
+          resizeMode="contain"
+          accessibilityLabel="Conecta Obras Itacoatiara"
+        />
+
+        <View className="h-10 w-10 items-center justify-center rounded-full border-2 border-primary bg-card">
+          <Ionicons name="person" size={20} color="#b94b50" />
+        </View>
+      </View>
+
+      <View className="h-px bg-muted" />
+
+      <View className="items-center px-5 pb-6 pt-8">
+        <View className="mb-5 rounded-full bg-[#f7e8e9] px-5 py-2">
+          <Text className="text-sm font-bold uppercase tracking-[1.6px] text-primary">
+            Ola, bem-vindo(a)!
+          </Text>
+        </View>
+
+        <Text className="mb-3 text-center text-3xl font-bold text-foreground">
+          Informe o seu perfil
+        </Text>
+        <Text className="mb-8 text-center text-base leading-7 text-muted-foreground">
+          Selecione o tipo de conta que melhor descreve voce para
+          personalizarmos sua experiencia.
+        </Text>
+
+        <View
+          className="w-full gap-4"
+          accessibilityRole="radiogroup"
+        >
+          <ProfileCard
+            label="Cliente"
+            description="Busque por servicos e produtos locais"
+            icon="person-outline"
+            selected={selectedProfile === "cliente"}
+            onPress={() => setSelectedProfile("cliente")}
+          />
+          <ProfileCard
+            label="Profissional"
+            description="Ofereca sua mao de obra e servicos"
+            icon="color-palette-outline"
+            selected={selectedProfile === "profissional"}
+            onPress={() => setSelectedProfile("profissional")}
+          />
+        </View>
+      </View>
+
+      <View className="mt-auto px-5 pb-10">
+        <Pressable
+          className="min-h-[56px] items-center justify-center rounded-[24px] bg-primary px-6"
+          accessibilityRole="button"
+          accessibilityLabel={`Continuar como ${selectedProfile}`}
+        >
+          <Text className="text-base font-semibold text-white">Continuar</Text>
+        </Pressable>
+      </View>
+    </View>
+  );
+}
+
 export default function App() {
   const [screen, setScreen] = useState<Screen>("login");
   const [previousScreen, setPreviousScreen] = useState<ReturnScreen>("signup");
@@ -870,15 +999,19 @@ export default function App() {
               onCreateAccount={() => setScreen("signup")}
               onGoogle={() => openGoogleScreen("login")}
               onPhone={() => openPhoneScreen("login")}
+              onSuccess={() => setScreen("profileChoice")}
             />
           ) : screen === "signup" ? (
             <SignupScreen
               onLogin={() => setScreen("login")}
               onGoogle={() => openGoogleScreen("signup")}
               onPhone={() => openPhoneScreen("signup")}
+              onSuccess={() => setScreen("profileChoice")}
             />
           ) : screen === "phone" ? (
             <PhoneVerificationScreen onBack={() => setScreen(previousScreen)} />
+          ) : screen === "profileChoice" ? (
+            <ProfileChoiceScreen onBack={() => setScreen("login")} />
           ) : (
             <GoogleSignInScreen onBack={() => setScreen(previousScreen)} />
           )}
