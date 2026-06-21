@@ -1,6 +1,6 @@
 # TP3 - Projeto Prático de Engenharia de Software
 
-Este diretório, **TP3**, faz parte do projeto prático de Engenharia de Software e concentra os artefatos relacionados à fase de testes e ao desenvolvimento de uma aplicação front-end. O objetivo principal é demonstrar a aplicação de técnicas de teste, como classes de equivalência e rastreabilidade, em conjunto com o desenvolvimento de uma interface de usuário responsiva.
+Este diretório, **TP3**, faz parte do projeto prático de Engenharia de Software e concentra os artefatos relacionados à fase de testes e ao desenvolvimento. O objetivo principal é demonstrar a aplicação de técnicas de teste, como classes de equivalência e rastreabilidade, em conjunto com o desenvolvimento de uma interface de usuário responsiva.
 
 ## Estrutura do Diretório
 
