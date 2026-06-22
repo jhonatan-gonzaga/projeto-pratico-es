@@ -20,7 +20,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 const logo = require("../assets/logotipo.png");
 
 type ReturnScreen = "login" | "signup";
-type Screen = ReturnScreen | "phone" | "google" | "profileChoice" | "accountProfile";
+type Screen =
+  | ReturnScreen
+  | "phone"
+  | "google"
+  | "profileChoice"
+  | "accountProfile"
+  | "professionalSetup";
 type IconName = keyof typeof Ionicons.glyphMap;
 type ValidationStatus = "default" | "valid" | "error";
 type ProfileType = "cliente" | "profissional";
@@ -888,9 +894,11 @@ function ProfileCard({
 
 function ProfileChoiceScreen({
   onBack,
+  onContinue,
   onProfilePress,
 }: {
   onBack: () => void;
+  onContinue: (profile: ProfileType) => void;
   onProfilePress: () => void;
 }) {
   const [selectedProfile, setSelectedProfile] = useState<ProfileType>("cliente");
@@ -964,11 +972,353 @@ function ProfileChoiceScreen({
 
       <View className="mt-auto px-5 pb-10">
         <Pressable
+          onPress={() => onContinue(selectedProfile)}
           className="min-h-[56px] items-center justify-center rounded-[24px] bg-primary px-6"
           accessibilityRole="button"
           accessibilityLabel={`Continuar como ${selectedProfile}`}
         >
           <Text className="text-base font-semibold text-white">Continuar</Text>
+        </Pressable>
+      </View>
+    </View>
+  );
+}
+
+function SetupTextField({
+  icon,
+  keyboardType = "default",
+  multiline,
+  onChangeText,
+  placeholder,
+  value,
+}: {
+  icon?: IconName;
+  keyboardType?: "default" | "numeric" | "phone-pad";
+  multiline?: boolean;
+  onChangeText: (value: string) => void;
+  placeholder?: string;
+  value: string;
+}) {
+  return (
+    <View
+      className={`flex-row gap-2.5 rounded-[16px] border-[1.5px] border-input-border bg-card px-4 py-3 shadow-sm ${
+        multiline ? "min-h-[100px] items-start" : "items-center"
+      }`}
+    >
+      {icon ? <Ionicons name={icon} size={16} color="#b94b50" /> : null}
+      <TextInput
+        value={value}
+        onChangeText={onChangeText}
+        keyboardType={keyboardType}
+        multiline={multiline}
+        className={`flex-1 p-0 text-[15px] font-medium text-foreground ${
+          multiline ? "min-h-[74px] text-top" : "min-h-[24px]"
+        }`}
+        placeholder={placeholder}
+        placeholderTextColor="#b0b8c1"
+        accessibilityLabel={placeholder}
+      />
+    </View>
+  );
+}
+
+function SetupSection({
+  children,
+  label,
+}: {
+  children: React.ReactNode;
+  label: string;
+}) {
+  return (
+    <View className="gap-2">
+      <Text className="text-sm font-bold text-foreground">{label}</Text>
+      {children}
+    </View>
+  );
+}
+
+function ChoiceChip({
+  label,
+  selected,
+  onPress,
+}: {
+  label: string;
+  selected: boolean;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      className={`rounded-full border-[1.5px] px-[18px] py-2.5 shadow-sm ${
+        selected ? "border-primary bg-primary" : "border-input-border bg-card"
+      }`}
+      accessibilityRole="button"
+      accessibilityState={{ selected }}
+    >
+      <Text
+        className={`text-sm font-semibold ${
+          selected ? "text-white" : "text-foreground"
+        }`}
+      >
+        {label}
+      </Text>
+    </Pressable>
+  );
+}
+
+function DayButton({
+  label,
+  selected,
+  onPress,
+}: {
+  label: string;
+  selected: boolean;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      className={`h-10 w-10 items-center justify-center rounded-full border-[1.5px] shadow-sm ${
+        selected ? "border-primary bg-primary" : "border-input-border bg-card"
+      }`}
+      accessibilityRole="button"
+      accessibilityState={{ selected }}
+      accessibilityLabel={`Dia ${label}`}
+    >
+      <Text
+        className={`text-[13px] font-bold ${
+          selected ? "text-white" : "text-foreground"
+        }`}
+      >
+        {label}
+      </Text>
+    </Pressable>
+  );
+}
+
+function ProfessionalSetupScreen({ onBack }: { onBack: () => void }) {
+  const [name, setName] = useState("Joao Nonato");
+  const [phone, setPhone] = useState("(92) 99123-4567");
+  const [dailyRate, setDailyRate] = useState("R$ 150");
+  const [neighborhood, setNeighborhood] = useState("");
+  const [street, setStreet] = useState("");
+  const [number, setNumber] = useState("");
+  const [about, setAbout] = useState("");
+  const [startTime, setStartTime] = useState("08:00");
+  const [endTime, setEndTime] = useState("18:00");
+  const [specialties, setSpecialties] = useState<string[]>([
+    "Pedreiro",
+    "Pintor",
+  ]);
+  const [availableDays, setAvailableDays] = useState<string[]>([
+    "S",
+    "Q1",
+    "Q2",
+    "Sx",
+    "Sa",
+  ]);
+
+  const specialtyOptions = [
+    "Pedreiro",
+    "Eletricista",
+    "Pintor",
+    "Encanador",
+    "Ajudante",
+    "Ar Condicionado",
+    "Carpinteiro",
+  ];
+
+  const days = [
+    { id: "S", label: "S" },
+    { id: "T", label: "T" },
+    { id: "Q1", label: "Q" },
+    { id: "Q2", label: "Q" },
+    { id: "Sx", label: "S" },
+    { id: "Sa", label: "S" },
+    { id: "D", label: "D" },
+  ];
+
+  const toggleSpecialty = (specialty: string) => {
+    setSpecialties((current) =>
+      current.includes(specialty)
+        ? current.filter((item) => item !== specialty)
+        : [...current, specialty],
+    );
+  };
+
+  const toggleDay = (day: string) => {
+    setAvailableDays((current) =>
+      current.includes(day)
+        ? current.filter((item) => item !== day)
+        : [...current, day],
+    );
+  };
+
+  return (
+    <View className="min-h-[812px] w-full max-w-[480px] bg-background">
+      <View className="flex-row items-center justify-between bg-background px-5 pb-3 pt-[52px]">
+        <Pressable
+          onPress={onBack}
+          className="h-10 w-10 items-center justify-center rounded-full bg-card shadow-sm"
+          accessibilityRole="button"
+          accessibilityLabel="Voltar"
+        >
+          <Ionicons name="arrow-back" size={20} color="#0f1720" />
+        </Pressable>
+
+        <View className="flex-row items-center gap-2">
+          <Image
+            source={logo}
+            className="h-10 w-[150px]"
+            resizeMode="contain"
+            accessibilityLabel="Conecta Obras Itacoatiara"
+          />
+        </View>
+
+        <View className="h-10 w-10" />
+      </View>
+
+      <View className="gap-7 px-5 pb-[120px] pt-3">
+        <View className="items-center gap-2">
+          <View className="relative">
+            <View className="h-24 w-24 items-center justify-center rounded-full border-[3px] border-primary bg-[#f7e8e9]">
+              <Ionicons name="person" size={46} color="#b94b50" />
+            </View>
+            <Pressable
+              className="absolute bottom-0.5 right-0.5 h-7 w-7 items-center justify-center rounded-full bg-primary shadow-sm"
+              accessibilityRole="button"
+              accessibilityLabel="Alterar foto"
+            >
+              <Ionicons name="camera" size={14} color="#ffffff" />
+            </Pressable>
+          </View>
+          <Text className="text-[13px] font-semibold text-primary">
+            Alterar foto
+          </Text>
+        </View>
+
+        <SetupSection label="Nome Completo">
+          <SetupTextField value={name} onChangeText={setName} />
+        </SetupSection>
+
+        <SetupSection label="Telefone">
+          <SetupTextField
+            value={phone}
+            onChangeText={(value) => setPhone(formatBRPhone(value))}
+            keyboardType="phone-pad"
+          />
+        </SetupSection>
+
+        <SetupSection label="Especialidades">
+          <View className="flex-row flex-wrap gap-2.5">
+            {specialtyOptions.map((specialty) => (
+              <ChoiceChip
+                key={specialty}
+                label={specialty}
+                selected={specialties.includes(specialty)}
+                onPress={() => toggleSpecialty(specialty)}
+              />
+            ))}
+          </View>
+        </SetupSection>
+
+        <SetupSection label="Disponibilidade">
+          <Text className="mb-1 text-[13px] font-medium text-muted-foreground">
+            Dias da semana
+          </Text>
+          <View className="flex-row flex-wrap gap-2">
+            {days.map((day) => (
+              <DayButton
+                key={day.id}
+                label={day.label}
+                selected={availableDays.includes(day.id)}
+                onPress={() => toggleDay(day.id)}
+              />
+            ))}
+          </View>
+        </SetupSection>
+
+        <SetupSection label="Horario de Atendimento">
+          <View className="flex-row gap-3">
+            <View className="flex-1 gap-2">
+              <Text className="text-[13px] font-semibold text-muted-foreground">
+                Das
+              </Text>
+              <SetupTextField value={startTime} onChangeText={setStartTime} />
+            </View>
+            <View className="flex-1 gap-2">
+              <Text className="text-[13px] font-semibold text-muted-foreground">
+                Ate
+              </Text>
+              <SetupTextField value={endTime} onChangeText={setEndTime} />
+            </View>
+          </View>
+        </SetupSection>
+
+        <SetupSection label="Valor da Diaria">
+          <SetupTextField
+            value={dailyRate}
+            onChangeText={setDailyRate}
+            keyboardType="numeric"
+          />
+        </SetupSection>
+
+        <SetupSection label="Localizacao">
+          <View className="gap-2.5">
+            <SetupTextField
+              icon="map-outline"
+              value={neighborhood}
+              onChangeText={setNeighborhood}
+              placeholder="Bairro"
+            />
+            <View className="flex-row gap-2.5">
+              <View className="flex-[2]">
+                <SetupTextField
+                  icon="navigate-outline"
+                  value={street}
+                  onChangeText={setStreet}
+                  placeholder="Rua"
+                />
+              </View>
+              <View className="flex-1">
+                <SetupTextField
+                  icon="keypad-outline"
+                  value={number}
+                  onChangeText={setNumber}
+                  placeholder="No"
+                />
+              </View>
+            </View>
+          </View>
+        </SetupSection>
+
+        <SetupSection label="Sobre mim">
+          <View className="gap-2">
+            <SetupTextField
+              value={about}
+              onChangeText={setAbout}
+              placeholder="Descreva sua experiencia e diferenciais..."
+              multiline
+            />
+            <View className="items-end">
+              <Pressable
+                className="h-10 w-10 items-center justify-center rounded-full bg-[#f7e8e9]"
+                accessibilityRole="button"
+                accessibilityLabel="Gravar audio"
+              >
+                <Ionicons name="mic-outline" size={18} color="#b94b50" />
+              </Pressable>
+            </View>
+          </View>
+        </SetupSection>
+      </View>
+
+      <View className="absolute bottom-0 left-0 right-0 border-t border-input-border bg-card px-5 pb-8 pt-4">
+        <Pressable
+          className="min-h-[56px] items-center justify-center rounded-[18px] bg-primary px-6"
+          accessibilityRole="button"
+        >
+          <Text className="text-base font-bold text-white">Salvar Perfil</Text>
         </Pressable>
       </View>
     </View>
@@ -1206,8 +1556,15 @@ export default function App() {
           ) : screen === "profileChoice" ? (
             <ProfileChoiceScreen
               onBack={() => setScreen("login")}
+              onContinue={(profile) => {
+                if (profile === "profissional") {
+                  setScreen("professionalSetup");
+                }
+              }}
               onProfilePress={() => setScreen("accountProfile")}
             />
+          ) : screen === "professionalSetup" ? (
+            <ProfessionalSetupScreen onBack={() => setScreen("profileChoice")} />
           ) : screen === "accountProfile" ? (
             <AccountProfileScreen
               onBack={() => setScreen("profileChoice")}
