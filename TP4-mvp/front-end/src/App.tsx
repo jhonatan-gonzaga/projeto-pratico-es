@@ -41,6 +41,22 @@ type ServiceRequest = {
   negotiable?: boolean;
 };
 
+type ProfessionalTab = "requests" | "services";
+type ServiceStatus = "inProgress" | "completed" | "pending";
+
+type ProfessionalService = {
+  title: string;
+  status: ServiceStatus;
+  order: string;
+  customer: string;
+  price: string;
+  date: string;
+  time: string;
+  address?: string;
+  messageCount?: string;
+  action?: string;
+};
+
 type FieldProps = {
   label: string;
   icon: IconName;
@@ -1135,6 +1151,62 @@ const serviceRequests: ServiceRequest[] = [
   },
 ];
 
+const professionalServices: ProfessionalService[] = [
+  {
+    title: "Pintura Residencial",
+    status: "inProgress",
+    order: "SRV-1029",
+    customer: "Carla Mendes",
+    price: "R$ 450",
+    date: "04 Dez, 2023",
+    time: "08:00 - 17:00",
+    address: "Rua das Flores, 45 - Centro",
+    messageCount: "3",
+    action: "Finalizar Servico",
+  },
+  {
+    title: "Instalacao Eletrica",
+    status: "completed",
+    order: "SRV-0984",
+    customer: "Roberto Silva",
+    price: "R$ 120",
+    date: "28 Nov, 2023",
+    time: "14:00 - 15:30",
+  },
+  {
+    title: "Montagem de Moveis",
+    status: "pending",
+    order: "SRV-1041",
+    customer: "Fernanda Costa",
+    price: "R$ 280",
+    date: "06 Dez, 2023",
+    time: "10:00 - 12:30",
+    address: "Av. Paulista, 820 - Bela Vista",
+    action: "Cancelar",
+  },
+];
+
+const statusMeta: Record<
+  ServiceStatus,
+  { label: string; bg: string; color: string }
+> = {
+  inProgress: {
+    label: "Em Andamento",
+    bg: "bg-[#e5effc]",
+    color: "#2d6bbf",
+  },
+  completed: {
+    label: "Concluido",
+    bg: "bg-[#e8f5ee]",
+    color: "#2e7d5c",
+  },
+  pending: {
+    label: "Aguardando Aprovacao",
+    bg: "bg-[#fdf3dc]",
+    color: "#b07c18",
+  },
+};
+
 function ProfessionalHomeHeader({ onBack }: { onBack: () => void }) {
   return (
     <View className="flex-row items-center justify-between border-b border-input-border bg-background px-4 py-3">
@@ -1173,25 +1245,49 @@ function ProfessionalHomeHeader({ onBack }: { onBack: () => void }) {
   );
 }
 
-function ProfessionalTabToggle() {
+function ProfessionalTabToggle({
+  activeTab,
+  onChangeTab,
+}: {
+  activeTab: ProfessionalTab;
+  onChangeTab: (tab: ProfessionalTab) => void;
+}) {
   return (
     <View className="mx-4 my-4 flex-row rounded-[16px] border border-input-border bg-card p-1">
       <Pressable
-        className="min-h-[38px] flex-1 flex-row items-center justify-center gap-2 rounded-[12px] bg-primary px-3"
+        onPress={() => onChangeTab("requests")}
+        className={`min-h-[38px] flex-1 flex-row items-center justify-center gap-2 rounded-[12px] px-3 ${
+          activeTab === "requests" ? "bg-primary" : "bg-transparent"
+        }`}
         accessibilityRole="tab"
-        accessibilityState={{ selected: true }}
+        accessibilityState={{ selected: activeTab === "requests" }}
       >
-        <Text className="text-sm font-semibold text-white">Novos Pedidos</Text>
-        <View className="h-5 w-5 items-center justify-center rounded-full bg-white">
-          <Text className="text-xs font-bold text-primary">2</Text>
-        </View>
+        <Text
+          className={`text-sm font-semibold ${
+            activeTab === "requests" ? "text-white" : "text-muted-foreground"
+          }`}
+        >
+          Novos Pedidos
+        </Text>
+        {activeTab === "requests" ? (
+          <View className="h-5 w-5 items-center justify-center rounded-full bg-white">
+            <Text className="text-xs font-bold text-primary">2</Text>
+          </View>
+        ) : null}
       </Pressable>
       <Pressable
-        className="min-h-[38px] flex-1 items-center justify-center rounded-[12px] px-3"
+        onPress={() => onChangeTab("services")}
+        className={`min-h-[38px] flex-1 items-center justify-center rounded-[12px] px-3 ${
+          activeTab === "services" ? "bg-primary" : "bg-transparent"
+        }`}
         accessibilityRole="tab"
-        accessibilityState={{ selected: false }}
+        accessibilityState={{ selected: activeTab === "services" }}
       >
-        <Text className="text-sm font-semibold text-muted-foreground">
+        <Text
+          className={`text-sm font-semibold ${
+            activeTab === "services" ? "text-white" : "text-muted-foreground"
+          }`}
+        >
           Meus Servicos
         </Text>
       </Pressable>
@@ -1280,6 +1376,179 @@ function NewRequestCard({ request }: { request: ServiceRequest }) {
   );
 }
 
+function ServiceFilterChips() {
+  const filters = ["Todos (6)", "Em Andamento (1)", "Concluido"];
+
+  return (
+    <View className="flex-row gap-2 px-4 pb-4">
+      {filters.map((filter, index) => (
+        <Pressable
+          key={filter}
+          className={`rounded-[12px] px-4 py-2 shadow-sm ${
+            index === 0 ? "bg-primary" : "bg-card"
+          }`}
+          accessibilityRole="button"
+          accessibilityState={{ selected: index === 0 }}
+        >
+          <Text
+            className={`text-sm font-semibold ${
+              index === 0 ? "text-white" : "text-foreground"
+            }`}
+          >
+            {filter}
+          </Text>
+        </Pressable>
+      ))}
+    </View>
+  );
+}
+
+function StatusBadge({ status }: { status: ServiceStatus }) {
+  const meta = statusMeta[status];
+
+  return (
+    <View
+      className={`shrink-0 flex-row items-center gap-1 rounded-[12px] px-3 py-1 ${meta.bg}`}
+    >
+      <View
+        className="h-2 w-2 rounded-full"
+        style={{ backgroundColor: meta.color }}
+      />
+      <Text className="text-xs font-semibold" style={{ color: meta.color }}>
+        {meta.label}
+      </Text>
+    </View>
+  );
+}
+
+function ServiceInfoBox({
+  icon,
+  label,
+  value,
+}: {
+  icon: IconName;
+  label: string;
+  value: string;
+}) {
+  return (
+    <View className="flex-1 flex-row items-center gap-2 rounded-[8px] bg-[#f7eced] px-3 py-2">
+      <Ionicons name={icon} size={14} color="#b94b50" />
+      <View className="flex-1">
+        <Text className="mb-0.5 text-xs uppercase leading-3 tracking-[0.4px] text-muted-foreground">
+          {label}
+        </Text>
+        <Text className="text-sm font-semibold leading-4 text-foreground">
+          {value}
+        </Text>
+      </View>
+    </View>
+  );
+}
+
+function CustomerAvatar({ name }: { name: string }) {
+  const initials = name
+    .split(" ")
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
+  return (
+    <View className="h-9 w-9 items-center justify-center rounded-full bg-[#f7e8e9]">
+      <Text className="text-xs font-bold text-primary">{initials}</Text>
+    </View>
+  );
+}
+
+function ServiceOrderCard({ service }: { service: ProfessionalService }) {
+  const compact = service.status === "completed";
+
+  return (
+    <View className="mx-4 mb-4 rounded-[8px] bg-card p-4 shadow-md shadow-black/10">
+      <View className="mb-1 flex-row items-start justify-between">
+        <Text className="flex-1 pr-2 text-xl font-bold leading-6 text-foreground">
+          {service.title}
+        </Text>
+        <StatusBadge status={service.status} />
+      </View>
+
+      <Text className="mb-4 text-xs text-muted-foreground">
+        Pedido #{service.order}
+      </Text>
+
+      <View className="mb-4 flex-row items-center justify-between">
+        <View className="flex-row items-center gap-2">
+          <CustomerAvatar name={service.customer} />
+          <Text className="text-base font-semibold text-foreground">
+            {service.customer}
+          </Text>
+        </View>
+        <Text className="text-xl font-bold text-foreground">
+          {service.price}
+        </Text>
+      </View>
+
+      <View className={`flex-row gap-2 ${compact ? "mb-4" : "mb-2"}`}>
+        <ServiceInfoBox icon="calendar" label="DATA" value={service.date} />
+        <ServiceInfoBox icon="time-outline" label="HORARIO" value={service.time} />
+      </View>
+
+      {service.address ? (
+        <View className="mb-4 flex-row items-start gap-2 rounded-[8px] bg-[#f7eced] px-3 py-2">
+          <Ionicons name="location" size={14} color="#b94b50" />
+          <View className="flex-1">
+            <Text className="mb-0.5 text-xs uppercase leading-3 tracking-[0.4px] text-muted-foreground">
+              ENDERECO
+            </Text>
+            <Text className="text-sm font-semibold leading-5 text-foreground">
+              {service.address}
+            </Text>
+          </View>
+        </View>
+      ) : null}
+
+      {!compact ? (
+        <View className="mb-3 mt-1 flex-row gap-2">
+          <Pressable
+            className="relative min-h-[44px] flex-row items-center justify-center gap-2 rounded-[12px] border border-input-border bg-card px-4"
+            accessibilityRole="button"
+          >
+            <Ionicons name="chatbubble-outline" size={18} color="#0f1720" />
+            <Text className="text-sm font-semibold text-foreground">
+              Mensagem
+            </Text>
+            {service.messageCount ? (
+              <View className="absolute -right-2 -top-2 h-5 w-5 items-center justify-center rounded-full bg-primary">
+                <Text className="text-[10px] font-bold text-white">
+                  {service.messageCount}
+                </Text>
+              </View>
+            ) : null}
+          </Pressable>
+          <Pressable
+            className="min-h-[44px] flex-1 items-center justify-center rounded-[12px] bg-primary px-4"
+            accessibilityRole="button"
+          >
+            <Text className="text-sm font-bold text-white">
+              {service.action}
+            </Text>
+          </Pressable>
+        </View>
+      ) : null}
+
+      <Pressable
+        className="min-h-[44px] flex-row items-center justify-center gap-2 rounded-[12px] bg-[#f7eced] px-4"
+        accessibilityRole="button"
+      >
+        <Ionicons name="document-text-outline" size={16} color="#b94b50" />
+        <Text className="text-sm font-semibold text-primary">
+          {compact ? "Ver Detalhes" : "Detalhe do Servico"}
+        </Text>
+      </Pressable>
+    </View>
+  );
+}
+
 function ProfessionalBottomTab() {
   const items: Array<{
     icon: IconName;
@@ -1333,16 +1602,27 @@ function ProfessionalBottomTab() {
 }
 
 function ProfessionalHomeScreen({ onBack }: { onBack: () => void }) {
+  const [activeTab, setActiveTab] = useState<ProfessionalTab>("requests");
+
   return (
     <View className="min-h-[812px] w-full max-w-[480px] bg-background">
       <ProfessionalHomeHeader onBack={onBack} />
-      <ProfessionalTabToggle />
+      <ProfessionalTabToggle activeTab={activeTab} onChangeTab={setActiveTab} />
 
-      <View className="pb-2">
-        {serviceRequests.map((request) => (
-          <NewRequestCard key={request.title} request={request} />
-        ))}
-      </View>
+      {activeTab === "requests" ? (
+        <View className="pb-2">
+          {serviceRequests.map((request) => (
+            <NewRequestCard key={request.title} request={request} />
+          ))}
+        </View>
+      ) : (
+        <View className="pb-2">
+          <ServiceFilterChips />
+          {professionalServices.map((service) => (
+            <ServiceOrderCard key={service.order} service={service} />
+          ))}
+        </View>
+      )}
 
       <ProfessionalBottomTab />
     </View>
