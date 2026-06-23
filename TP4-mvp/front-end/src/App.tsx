@@ -26,10 +26,36 @@ type Screen =
   | "google"
   | "profileChoice"
   | "accountProfile"
-  | "professionalSetup";
+  | "professionalSetup"
+  | "professionalHome";
 type IconName = keyof typeof Ionicons.glyphMap;
 type ValidationStatus = "default" | "valid" | "error";
 type ProfileType = "cliente" | "profissional";
+
+type ServiceRequest = {
+  title: string;
+  location: string;
+  date: string;
+  description: string;
+  price: string;
+  negotiable?: boolean;
+};
+
+type ProfessionalTab = "requests" | "services";
+type ServiceStatus = "inProgress" | "completed" | "pending";
+
+type ProfessionalService = {
+  title: string;
+  status: ServiceStatus;
+  order: string;
+  customer: string;
+  price: string;
+  date: string;
+  time: string;
+  address?: string;
+  messageCount?: string;
+  action?: string;
+};
 
 type FieldProps = {
   label: string;
@@ -1096,7 +1122,520 @@ function DayButton({
   );
 }
 
-function ProfessionalSetupScreen({ onBack }: { onBack: () => void }) {
+const serviceRequests: ServiceRequest[] = [
+  {
+    title: "Pintura Residencial",
+    location: "Centro",
+    date: "04 de dez.",
+    description:
+      "Pintura completa de casa de 3 quartos, incluindo teto e paredes internas.",
+    price: "R$ 1.800",
+    negotiable: true,
+  },
+  {
+    title: "Instalacao Eletrica",
+    location: "Jauary",
+    date: "05 de dez.",
+    description:
+      "Troca de fiacao e instalacao de novos pontos de energia em residencia.",
+    price: "R$ 950",
+    negotiable: true,
+  },
+  {
+    title: "Montagem de Moveis",
+    location: "Bela Vista",
+    date: "06 de dez.",
+    description:
+      "Montagem de guarda-roupa, cama e mesa de cabeceira em apartamento.",
+    price: "R$ 280",
+  },
+];
+
+const professionalServices: ProfessionalService[] = [
+  {
+    title: "Pintura Residencial",
+    status: "inProgress",
+    order: "SRV-1029",
+    customer: "Carla Mendes",
+    price: "R$ 450",
+    date: "04 Dez, 2023",
+    time: "08:00 - 17:00",
+    address: "Rua das Flores, 45 - Centro",
+    messageCount: "3",
+    action: "Finalizar Servico",
+  },
+  {
+    title: "Instalacao Eletrica",
+    status: "completed",
+    order: "SRV-0984",
+    customer: "Roberto Silva",
+    price: "R$ 120",
+    date: "28 Nov, 2023",
+    time: "14:00 - 15:30",
+  },
+  {
+    title: "Montagem de Moveis",
+    status: "pending",
+    order: "SRV-1041",
+    customer: "Fernanda Costa",
+    price: "R$ 280",
+    date: "06 Dez, 2023",
+    time: "10:00 - 12:30",
+    address: "Av. Paulista, 820 - Bela Vista",
+    action: "Cancelar",
+  },
+];
+
+const statusMeta: Record<
+  ServiceStatus,
+  { label: string; bg: string; color: string }
+> = {
+  inProgress: {
+    label: "Em Andamento",
+    bg: "bg-[#e5effc]",
+    color: "#2d6bbf",
+  },
+  completed: {
+    label: "Concluido",
+    bg: "bg-[#e8f5ee]",
+    color: "#2e7d5c",
+  },
+  pending: {
+    label: "Aguardando Aprovacao",
+    bg: "bg-[#fdf3dc]",
+    color: "#b07c18",
+  },
+};
+
+function ProfessionalHomeHeader({ onBack }: { onBack: () => void }) {
+  return (
+    <View className="flex-row items-center justify-between border-b border-input-border bg-background px-4 py-3">
+      <Pressable
+        onPress={onBack}
+        className="h-9 w-9 items-center justify-center rounded-[12px] border border-input-border bg-card"
+        accessibilityRole="button"
+        accessibilityLabel="Voltar"
+      >
+        <Ionicons name="chevron-back" size={20} color="#0f1720" />
+      </Pressable>
+
+      <View className="flex-row items-center gap-2">
+        <View className="h-9 w-9 items-center justify-center overflow-hidden rounded-[8px] bg-primary">
+          <Image
+            source={logo}
+            className="h-full w-full"
+            resizeMode="cover"
+            accessibilityLabel="Logo Conecta Obras"
+          />
+        </View>
+        <View>
+          <Text className="text-xs font-bold leading-4 text-primary">
+            CONECTA OBRAS
+          </Text>
+          <Text className="text-xs font-bold leading-4 text-primary">
+            ITACOATIARA
+          </Text>
+        </View>
+      </View>
+
+      <View className="h-10 w-10 items-center justify-center overflow-hidden rounded-full border-2 border-primary bg-[#f7e8e9]">
+        <Ionicons name="person" size={22} color="#b94b50" />
+      </View>
+    </View>
+  );
+}
+
+function ProfessionalTabToggle({
+  activeTab,
+  onChangeTab,
+}: {
+  activeTab: ProfessionalTab;
+  onChangeTab: (tab: ProfessionalTab) => void;
+}) {
+  return (
+    <View className="mx-4 my-4 flex-row rounded-[16px] border border-input-border bg-card p-1">
+      <Pressable
+        onPress={() => onChangeTab("requests")}
+        className={`min-h-[38px] flex-1 flex-row items-center justify-center gap-2 rounded-[12px] px-3 ${
+          activeTab === "requests" ? "bg-primary" : "bg-transparent"
+        }`}
+        accessibilityRole="tab"
+        accessibilityState={{ selected: activeTab === "requests" }}
+      >
+        <Text
+          className={`text-sm font-semibold ${
+            activeTab === "requests" ? "text-white" : "text-muted-foreground"
+          }`}
+        >
+          Novos Pedidos
+        </Text>
+        {activeTab === "requests" ? (
+          <View className="h-5 w-5 items-center justify-center rounded-full bg-white">
+            <Text className="text-xs font-bold text-primary">2</Text>
+          </View>
+        ) : null}
+      </Pressable>
+      <Pressable
+        onPress={() => onChangeTab("services")}
+        className={`min-h-[38px] flex-1 items-center justify-center rounded-[12px] px-3 ${
+          activeTab === "services" ? "bg-primary" : "bg-transparent"
+        }`}
+        accessibilityRole="tab"
+        accessibilityState={{ selected: activeTab === "services" }}
+      >
+        <Text
+          className={`text-sm font-semibold ${
+            activeTab === "services" ? "text-white" : "text-muted-foreground"
+          }`}
+        >
+          Meus Servicos
+        </Text>
+      </Pressable>
+    </View>
+  );
+}
+
+function RequestMetaPill({
+  icon,
+  label,
+}: {
+  icon: IconName;
+  label: string;
+}) {
+  return (
+    <View className="flex-row items-center gap-1 rounded-full bg-[#f7eced] px-3 py-1.5">
+      <Ionicons name={icon} size={13} color="#b94b50" />
+      <Text className="text-xs font-semibold text-foreground">{label}</Text>
+    </View>
+  );
+}
+
+function NewRequestCard({ request }: { request: ServiceRequest }) {
+  return (
+    <View className="mx-4 mb-4 rounded-[8px] bg-card p-4 shadow-md shadow-black/10">
+      <Text className="mb-3 text-xl font-bold leading-6 text-foreground">
+        {request.title}
+      </Text>
+
+      <View className="mb-3 flex-row flex-wrap gap-2">
+        <RequestMetaPill icon="location" label={request.location} />
+        <RequestMetaPill icon="calendar" label={request.date} />
+      </View>
+
+      <Text className="mb-4 text-sm leading-6 text-muted-foreground">
+        {request.description}
+      </Text>
+
+      <View className="mb-4 flex-row items-center justify-between rounded-[8px] bg-[#f7eced] p-3">
+        <View className="flex-row items-center gap-3">
+          <View className="h-9 w-9 items-center justify-center rounded-[8px] bg-primary/10">
+            <Ionicons name="wallet-outline" size={18} color="#b94b50" />
+          </View>
+          <View>
+            <Text className="mb-1 text-xs leading-3 text-muted-foreground">
+              Valor estimado
+            </Text>
+            <Text className="text-xl font-bold leading-6 text-foreground">
+              {request.price}
+            </Text>
+          </View>
+        </View>
+
+        {request.negotiable ? (
+          <View className="rounded-[12px] border border-primary px-3 py-1">
+            <Text className="text-xs font-bold text-primary">Negociavel</Text>
+          </View>
+        ) : null}
+      </View>
+
+      <View className="flex-row gap-2">
+        <Pressable
+          className="min-h-[44px] flex-1 items-center justify-center rounded-[12px] border border-input-border bg-card px-4"
+          accessibilityRole="button"
+        >
+          <Text className="text-sm font-semibold text-muted-foreground">
+            Recusar
+          </Text>
+        </Pressable>
+        <Pressable
+          className="min-h-[44px] flex-1 items-center justify-center rounded-[12px] bg-primary px-4"
+          accessibilityRole="button"
+        >
+          <Text className="text-sm font-bold text-white">Aceitar</Text>
+        </Pressable>
+      </View>
+
+      <Pressable
+        className="mt-2 min-h-[44px] flex-row items-center justify-center gap-2 rounded-[12px] bg-[#f7eced] px-4"
+        accessibilityRole="button"
+      >
+        <Ionicons name="document-text-outline" size={15} color="#b94b50" />
+        <Text className="text-sm font-semibold text-primary">Ver detalhes</Text>
+      </Pressable>
+    </View>
+  );
+}
+
+function ServiceFilterChips() {
+  const filters = ["Todos (6)", "Em Andamento (1)", "Concluido"];
+
+  return (
+    <View className="flex-row gap-2 px-4 pb-4">
+      {filters.map((filter, index) => (
+        <Pressable
+          key={filter}
+          className={`rounded-[12px] px-4 py-2 shadow-sm ${
+            index === 0 ? "bg-primary" : "bg-card"
+          }`}
+          accessibilityRole="button"
+          accessibilityState={{ selected: index === 0 }}
+        >
+          <Text
+            className={`text-sm font-semibold ${
+              index === 0 ? "text-white" : "text-foreground"
+            }`}
+          >
+            {filter}
+          </Text>
+        </Pressable>
+      ))}
+    </View>
+  );
+}
+
+function StatusBadge({ status }: { status: ServiceStatus }) {
+  const meta = statusMeta[status];
+
+  return (
+    <View
+      className={`shrink-0 flex-row items-center gap-1 rounded-[12px] px-3 py-1 ${meta.bg}`}
+    >
+      <View
+        className="h-2 w-2 rounded-full"
+        style={{ backgroundColor: meta.color }}
+      />
+      <Text className="text-xs font-semibold" style={{ color: meta.color }}>
+        {meta.label}
+      </Text>
+    </View>
+  );
+}
+
+function ServiceInfoBox({
+  icon,
+  label,
+  value,
+}: {
+  icon: IconName;
+  label: string;
+  value: string;
+}) {
+  return (
+    <View className="flex-1 flex-row items-center gap-2 rounded-[8px] bg-[#f7eced] px-3 py-2">
+      <Ionicons name={icon} size={14} color="#b94b50" />
+      <View className="flex-1">
+        <Text className="mb-0.5 text-xs uppercase leading-3 tracking-[0.4px] text-muted-foreground">
+          {label}
+        </Text>
+        <Text className="text-sm font-semibold leading-4 text-foreground">
+          {value}
+        </Text>
+      </View>
+    </View>
+  );
+}
+
+function CustomerAvatar({ name }: { name: string }) {
+  const initials = name
+    .split(" ")
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
+  return (
+    <View className="h-9 w-9 items-center justify-center rounded-full bg-[#f7e8e9]">
+      <Text className="text-xs font-bold text-primary">{initials}</Text>
+    </View>
+  );
+}
+
+function ServiceOrderCard({ service }: { service: ProfessionalService }) {
+  const compact = service.status === "completed";
+
+  return (
+    <View className="mx-4 mb-4 rounded-[8px] bg-card p-4 shadow-md shadow-black/10">
+      <View className="mb-1 flex-row items-start justify-between">
+        <Text className="flex-1 pr-2 text-xl font-bold leading-6 text-foreground">
+          {service.title}
+        </Text>
+        <StatusBadge status={service.status} />
+      </View>
+
+      <Text className="mb-4 text-xs text-muted-foreground">
+        Pedido #{service.order}
+      </Text>
+
+      <View className="mb-4 flex-row items-center justify-between">
+        <View className="flex-row items-center gap-2">
+          <CustomerAvatar name={service.customer} />
+          <Text className="text-base font-semibold text-foreground">
+            {service.customer}
+          </Text>
+        </View>
+        <Text className="text-xl font-bold text-foreground">
+          {service.price}
+        </Text>
+      </View>
+
+      <View className={`flex-row gap-2 ${compact ? "mb-4" : "mb-2"}`}>
+        <ServiceInfoBox icon="calendar" label="DATA" value={service.date} />
+        <ServiceInfoBox icon="time-outline" label="HORARIO" value={service.time} />
+      </View>
+
+      {service.address ? (
+        <View className="mb-4 flex-row items-start gap-2 rounded-[8px] bg-[#f7eced] px-3 py-2">
+          <Ionicons name="location" size={14} color="#b94b50" />
+          <View className="flex-1">
+            <Text className="mb-0.5 text-xs uppercase leading-3 tracking-[0.4px] text-muted-foreground">
+              ENDERECO
+            </Text>
+            <Text className="text-sm font-semibold leading-5 text-foreground">
+              {service.address}
+            </Text>
+          </View>
+        </View>
+      ) : null}
+
+      {!compact ? (
+        <View className="mb-3 mt-1 flex-row gap-2">
+          <Pressable
+            className="relative min-h-[44px] flex-row items-center justify-center gap-2 rounded-[12px] border border-input-border bg-card px-4"
+            accessibilityRole="button"
+          >
+            <Ionicons name="chatbubble-outline" size={18} color="#0f1720" />
+            <Text className="text-sm font-semibold text-foreground">
+              Mensagem
+            </Text>
+            {service.messageCount ? (
+              <View className="absolute -right-2 -top-2 h-5 w-5 items-center justify-center rounded-full bg-primary">
+                <Text className="text-[10px] font-bold text-white">
+                  {service.messageCount}
+                </Text>
+              </View>
+            ) : null}
+          </Pressable>
+          <Pressable
+            className="min-h-[44px] flex-1 items-center justify-center rounded-[12px] bg-primary px-4"
+            accessibilityRole="button"
+          >
+            <Text className="text-sm font-bold text-white">
+              {service.action}
+            </Text>
+          </Pressable>
+        </View>
+      ) : null}
+
+      <Pressable
+        className="min-h-[44px] flex-row items-center justify-center gap-2 rounded-[12px] bg-[#f7eced] px-4"
+        accessibilityRole="button"
+      >
+        <Ionicons name="document-text-outline" size={16} color="#b94b50" />
+        <Text className="text-sm font-semibold text-primary">
+          {compact ? "Ver Detalhes" : "Detalhe do Servico"}
+        </Text>
+      </Pressable>
+    </View>
+  );
+}
+
+function ProfessionalBottomTab() {
+  const items: Array<{
+    icon: IconName;
+    label: string;
+    active?: boolean;
+    badge?: string;
+  }> = [
+    { icon: "hammer-outline", label: "Oportunidades", active: true, badge: "3" },
+    { icon: "clipboard-outline", label: "Meus Projetos" },
+    { icon: "settings-outline", label: "Configuracoes" },
+  ];
+
+  return (
+    <View className="border-t border-input-border bg-card px-2 py-3">
+      <View className="flex-row items-center justify-around">
+        {items.map((item) => (
+          <Pressable
+            key={item.label}
+            className="items-center gap-1 px-3"
+            accessibilityRole="button"
+            accessibilityState={{ selected: item.active }}
+          >
+            <View className="relative">
+              <Ionicons
+                name={item.icon}
+                size={24}
+                color={item.active ? "#b94b50" : "#7a6568"}
+              />
+              {item.badge ? (
+                <View className="absolute -right-2 -top-1 h-4 w-4 items-center justify-center rounded-full bg-primary">
+                  <Text className="text-[9px] font-bold text-white">
+                    {item.badge}
+                  </Text>
+                </View>
+              ) : null}
+            </View>
+            <Text
+              className={`text-xs ${
+                item.active
+                  ? "font-semibold text-primary"
+                  : "text-muted-foreground"
+              }`}
+            >
+              {item.label}
+            </Text>
+          </Pressable>
+        ))}
+      </View>
+    </View>
+  );
+}
+
+function ProfessionalHomeScreen({ onBack }: { onBack: () => void }) {
+  const [activeTab, setActiveTab] = useState<ProfessionalTab>("requests");
+
+  return (
+    <View className="min-h-[812px] w-full max-w-[480px] bg-background">
+      <ProfessionalHomeHeader onBack={onBack} />
+      <ProfessionalTabToggle activeTab={activeTab} onChangeTab={setActiveTab} />
+
+      {activeTab === "requests" ? (
+        <View className="pb-2">
+          {serviceRequests.map((request) => (
+            <NewRequestCard key={request.title} request={request} />
+          ))}
+        </View>
+      ) : (
+        <View className="pb-2">
+          <ServiceFilterChips />
+          {professionalServices.map((service) => (
+            <ServiceOrderCard key={service.order} service={service} />
+          ))}
+        </View>
+      )}
+
+      <ProfessionalBottomTab />
+    </View>
+  );
+}
+
+function ProfessionalSetupScreen({
+  onBack,
+  onSave,
+}: {
+  onBack: () => void;
+  onSave: () => void;
+}) {
   const [name, setName] = useState("Joao Nonato");
   const [phone, setPhone] = useState("(92) 99123-4567");
   const [dailyRate, setDailyRate] = useState("R$ 150");
@@ -1315,6 +1854,7 @@ function ProfessionalSetupScreen({ onBack }: { onBack: () => void }) {
 
       <View className="absolute bottom-0 left-0 right-0 border-t border-input-border bg-card px-5 pb-8 pt-4">
         <Pressable
+          onPress={onSave}
           className="min-h-[56px] items-center justify-center rounded-[18px] bg-primary px-6"
           accessibilityRole="button"
         >
@@ -1564,7 +2104,12 @@ export default function App() {
               onProfilePress={() => setScreen("accountProfile")}
             />
           ) : screen === "professionalSetup" ? (
-            <ProfessionalSetupScreen onBack={() => setScreen("profileChoice")} />
+            <ProfessionalSetupScreen
+              onBack={() => setScreen("profileChoice")}
+              onSave={() => setScreen("professionalHome")}
+            />
+          ) : screen === "professionalHome" ? (
+            <ProfessionalHomeScreen onBack={() => setScreen("professionalSetup")} />
           ) : screen === "accountProfile" ? (
             <AccountProfileScreen
               onBack={() => setScreen("profileChoice")}
