@@ -26,10 +26,20 @@ type Screen =
   | "google"
   | "profileChoice"
   | "accountProfile"
-  | "professionalSetup";
+  | "professionalSetup"
+  | "professionalHome";
 type IconName = keyof typeof Ionicons.glyphMap;
 type ValidationStatus = "default" | "valid" | "error";
 type ProfileType = "cliente" | "profissional";
+
+type ServiceRequest = {
+  title: string;
+  location: string;
+  date: string;
+  description: string;
+  price: string;
+  negotiable?: boolean;
+};
 
 type FieldProps = {
   label: string;
@@ -1096,7 +1106,256 @@ function DayButton({
   );
 }
 
-function ProfessionalSetupScreen({ onBack }: { onBack: () => void }) {
+const serviceRequests: ServiceRequest[] = [
+  {
+    title: "Pintura Residencial",
+    location: "Centro",
+    date: "04 de dez.",
+    description:
+      "Pintura completa de casa de 3 quartos, incluindo teto e paredes internas.",
+    price: "R$ 1.800",
+    negotiable: true,
+  },
+  {
+    title: "Instalacao Eletrica",
+    location: "Jauary",
+    date: "05 de dez.",
+    description:
+      "Troca de fiacao e instalacao de novos pontos de energia em residencia.",
+    price: "R$ 950",
+    negotiable: true,
+  },
+  {
+    title: "Montagem de Moveis",
+    location: "Bela Vista",
+    date: "06 de dez.",
+    description:
+      "Montagem de guarda-roupa, cama e mesa de cabeceira em apartamento.",
+    price: "R$ 280",
+  },
+];
+
+function ProfessionalHomeHeader({ onBack }: { onBack: () => void }) {
+  return (
+    <View className="flex-row items-center justify-between border-b border-input-border bg-background px-4 py-3">
+      <Pressable
+        onPress={onBack}
+        className="h-9 w-9 items-center justify-center rounded-[12px] border border-input-border bg-card"
+        accessibilityRole="button"
+        accessibilityLabel="Voltar"
+      >
+        <Ionicons name="chevron-back" size={20} color="#0f1720" />
+      </Pressable>
+
+      <View className="flex-row items-center gap-2">
+        <View className="h-9 w-9 items-center justify-center overflow-hidden rounded-[8px] bg-primary">
+          <Image
+            source={logo}
+            className="h-full w-full"
+            resizeMode="cover"
+            accessibilityLabel="Logo Conecta Obras"
+          />
+        </View>
+        <View>
+          <Text className="text-xs font-bold leading-4 text-primary">
+            CONECTA OBRAS
+          </Text>
+          <Text className="text-xs font-bold leading-4 text-primary">
+            ITACOATIARA
+          </Text>
+        </View>
+      </View>
+
+      <View className="h-10 w-10 items-center justify-center overflow-hidden rounded-full border-2 border-primary bg-[#f7e8e9]">
+        <Ionicons name="person" size={22} color="#b94b50" />
+      </View>
+    </View>
+  );
+}
+
+function ProfessionalTabToggle() {
+  return (
+    <View className="mx-4 my-4 flex-row rounded-[16px] border border-input-border bg-card p-1">
+      <Pressable
+        className="min-h-[38px] flex-1 flex-row items-center justify-center gap-2 rounded-[12px] bg-primary px-3"
+        accessibilityRole="tab"
+        accessibilityState={{ selected: true }}
+      >
+        <Text className="text-sm font-semibold text-white">Novos Pedidos</Text>
+        <View className="h-5 w-5 items-center justify-center rounded-full bg-white">
+          <Text className="text-xs font-bold text-primary">2</Text>
+        </View>
+      </Pressable>
+      <Pressable
+        className="min-h-[38px] flex-1 items-center justify-center rounded-[12px] px-3"
+        accessibilityRole="tab"
+        accessibilityState={{ selected: false }}
+      >
+        <Text className="text-sm font-semibold text-muted-foreground">
+          Meus Servicos
+        </Text>
+      </Pressable>
+    </View>
+  );
+}
+
+function RequestMetaPill({
+  icon,
+  label,
+}: {
+  icon: IconName;
+  label: string;
+}) {
+  return (
+    <View className="flex-row items-center gap-1 rounded-full bg-[#f7eced] px-3 py-1.5">
+      <Ionicons name={icon} size={13} color="#b94b50" />
+      <Text className="text-xs font-semibold text-foreground">{label}</Text>
+    </View>
+  );
+}
+
+function NewRequestCard({ request }: { request: ServiceRequest }) {
+  return (
+    <View className="mx-4 mb-4 rounded-[8px] bg-card p-4 shadow-md shadow-black/10">
+      <Text className="mb-3 text-xl font-bold leading-6 text-foreground">
+        {request.title}
+      </Text>
+
+      <View className="mb-3 flex-row flex-wrap gap-2">
+        <RequestMetaPill icon="location" label={request.location} />
+        <RequestMetaPill icon="calendar" label={request.date} />
+      </View>
+
+      <Text className="mb-4 text-sm leading-6 text-muted-foreground">
+        {request.description}
+      </Text>
+
+      <View className="mb-4 flex-row items-center justify-between rounded-[8px] bg-[#f7eced] p-3">
+        <View className="flex-row items-center gap-3">
+          <View className="h-9 w-9 items-center justify-center rounded-[8px] bg-primary/10">
+            <Ionicons name="wallet-outline" size={18} color="#b94b50" />
+          </View>
+          <View>
+            <Text className="mb-1 text-xs leading-3 text-muted-foreground">
+              Valor estimado
+            </Text>
+            <Text className="text-xl font-bold leading-6 text-foreground">
+              {request.price}
+            </Text>
+          </View>
+        </View>
+
+        {request.negotiable ? (
+          <View className="rounded-[12px] border border-primary px-3 py-1">
+            <Text className="text-xs font-bold text-primary">Negociavel</Text>
+          </View>
+        ) : null}
+      </View>
+
+      <View className="flex-row gap-2">
+        <Pressable
+          className="min-h-[44px] flex-1 items-center justify-center rounded-[12px] border border-input-border bg-card px-4"
+          accessibilityRole="button"
+        >
+          <Text className="text-sm font-semibold text-muted-foreground">
+            Recusar
+          </Text>
+        </Pressable>
+        <Pressable
+          className="min-h-[44px] flex-1 items-center justify-center rounded-[12px] bg-primary px-4"
+          accessibilityRole="button"
+        >
+          <Text className="text-sm font-bold text-white">Aceitar</Text>
+        </Pressable>
+      </View>
+
+      <Pressable
+        className="mt-2 min-h-[44px] flex-row items-center justify-center gap-2 rounded-[12px] bg-[#f7eced] px-4"
+        accessibilityRole="button"
+      >
+        <Ionicons name="document-text-outline" size={15} color="#b94b50" />
+        <Text className="text-sm font-semibold text-primary">Ver detalhes</Text>
+      </Pressable>
+    </View>
+  );
+}
+
+function ProfessionalBottomTab() {
+  const items: Array<{
+    icon: IconName;
+    label: string;
+    active?: boolean;
+    badge?: string;
+  }> = [
+    { icon: "hammer-outline", label: "Oportunidades", active: true, badge: "3" },
+    { icon: "clipboard-outline", label: "Meus Projetos" },
+    { icon: "settings-outline", label: "Configuracoes" },
+  ];
+
+  return (
+    <View className="border-t border-input-border bg-card px-2 py-3">
+      <View className="flex-row items-center justify-around">
+        {items.map((item) => (
+          <Pressable
+            key={item.label}
+            className="items-center gap-1 px-3"
+            accessibilityRole="button"
+            accessibilityState={{ selected: item.active }}
+          >
+            <View className="relative">
+              <Ionicons
+                name={item.icon}
+                size={24}
+                color={item.active ? "#b94b50" : "#7a6568"}
+              />
+              {item.badge ? (
+                <View className="absolute -right-2 -top-1 h-4 w-4 items-center justify-center rounded-full bg-primary">
+                  <Text className="text-[9px] font-bold text-white">
+                    {item.badge}
+                  </Text>
+                </View>
+              ) : null}
+            </View>
+            <Text
+              className={`text-xs ${
+                item.active
+                  ? "font-semibold text-primary"
+                  : "text-muted-foreground"
+              }`}
+            >
+              {item.label}
+            </Text>
+          </Pressable>
+        ))}
+      </View>
+    </View>
+  );
+}
+
+function ProfessionalHomeScreen({ onBack }: { onBack: () => void }) {
+  return (
+    <View className="min-h-[812px] w-full max-w-[480px] bg-background">
+      <ProfessionalHomeHeader onBack={onBack} />
+      <ProfessionalTabToggle />
+
+      <View className="pb-2">
+        {serviceRequests.map((request) => (
+          <NewRequestCard key={request.title} request={request} />
+        ))}
+      </View>
+
+      <ProfessionalBottomTab />
+    </View>
+  );
+}
+
+function ProfessionalSetupScreen({
+  onBack,
+  onSave,
+}: {
+  onBack: () => void;
+  onSave: () => void;
+}) {
   const [name, setName] = useState("Joao Nonato");
   const [phone, setPhone] = useState("(92) 99123-4567");
   const [dailyRate, setDailyRate] = useState("R$ 150");
@@ -1315,6 +1574,7 @@ function ProfessionalSetupScreen({ onBack }: { onBack: () => void }) {
 
       <View className="absolute bottom-0 left-0 right-0 border-t border-input-border bg-card px-5 pb-8 pt-4">
         <Pressable
+          onPress={onSave}
           className="min-h-[56px] items-center justify-center rounded-[18px] bg-primary px-6"
           accessibilityRole="button"
         >
@@ -1564,7 +1824,12 @@ export default function App() {
               onProfilePress={() => setScreen("accountProfile")}
             />
           ) : screen === "professionalSetup" ? (
-            <ProfessionalSetupScreen onBack={() => setScreen("profileChoice")} />
+            <ProfessionalSetupScreen
+              onBack={() => setScreen("profileChoice")}
+              onSave={() => setScreen("professionalHome")}
+            />
+          ) : screen === "professionalHome" ? (
+            <ProfessionalHomeScreen onBack={() => setScreen("professionalSetup")} />
           ) : screen === "accountProfile" ? (
             <AccountProfileScreen
               onBack={() => setScreen("profileChoice")}
