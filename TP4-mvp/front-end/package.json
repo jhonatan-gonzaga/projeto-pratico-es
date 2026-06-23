@@ -1,0 +1,61 @@
+{
+  "name": "conecta-obras-front-end",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.ts",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "test": "jest",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@expo/vector-icons": "^15.0.3",
+    "expo": "~54.0.35",
+    "expo-linear-gradient": "~15.0.8",
+    "expo-status-bar": "~3.0.8",
+    "nativewind": "^4.2.5",
+    "react": "19.1.0",
+    "react-native": "0.81.5",
+    "react-native-reanimated": "~4.1.1",
+    "react-native-safe-area-context": "~5.6.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-native": "^5.4.3",
+    "@testing-library/react-native": "^12.9.0",
+    "@types/react": "~19.1.10",
+    "babel-preset-expo": "~54.0.8",
+    "jest": "^29.7.0",
+    "jest-expo": "~54.0.13",
+    "react-test-renderer": "19.1.0",
+    "tailwindcss": "^3.4.18",
+    "typescript": "~5.9.2"
+  },
+  "jest": {
+    "preset": "jest-expo",
+    "roots": [
+      "<rootDir>/src",
+      "<rootDir>/../tests"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/jest.setup.ts"
+    ],
+    "testMatch": [
+      "<rootDir>/../tests/**/*.test.ts",
+      "<rootDir>/../tests/**/*.test.tsx"
+    ],
+    "moduleNameMapper": {
+      "\\.(css)$": "<rootDir>/jest.style-mock.js",
+      "\\.(png|jpg|jpeg|webp)$": "<rootDir>/jest.asset-mock.js"
+    },
+    "moduleDirectories": [
+      "node_modules",
+      "<rootDir>/node_modules"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!((jest-)?react-native|@react-native|@react-native-community|expo|expo-modules-core|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|nativewind|react-native-css-interop)/)"
+    ]
+  }
+}
