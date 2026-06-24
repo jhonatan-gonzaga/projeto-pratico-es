@@ -1338,7 +1338,13 @@ function RequestMetaPill({
   );
 }
 
-function NewRequestCard({ request }: { request: ServiceRequest }) {
+function NewRequestCard({
+  onDetails,
+  request,
+}: {
+  onDetails: () => void;
+  request: ServiceRequest;
+}) {
   return (
     <View className="mx-4 mb-4 rounded-[8px] bg-card p-4 shadow-md shadow-black/10">
       <Text className="mb-3 text-xl font-bold leading-6 text-foreground">
@@ -1394,12 +1400,210 @@ function NewRequestCard({ request }: { request: ServiceRequest }) {
       </View>
 
       <Pressable
+        onPress={onDetails}
         className="mt-2 min-h-[44px] flex-row items-center justify-center gap-2 rounded-[12px] bg-[#f7eced] px-4"
         accessibilityRole="button"
       >
         <Ionicons name="document-text-outline" size={15} color="#b94b50" />
         <Text className="text-sm font-semibold text-primary">Ver detalhes</Text>
       </Pressable>
+    </View>
+  );
+}
+
+function DetailTag({ label, active }: { label: string; active?: boolean }) {
+  return (
+    <View
+      className={`rounded-[12px] px-3 py-1 ${
+        active ? "bg-primary" : "bg-[#f7eced]"
+      }`}
+    >
+      <Text
+        className={`text-sm font-medium ${
+          active ? "text-white" : "text-primary"
+        }`}
+      >
+        {label}
+      </Text>
+    </View>
+  );
+}
+
+function DetailInfoCard({
+  icon,
+  label,
+  subtitle,
+  value,
+}: {
+  icon: IconName;
+  label: string;
+  subtitle?: string;
+  value: string;
+}) {
+  return (
+    <View className="flex-1 rounded-[8px] bg-card p-4 shadow-sm shadow-black/5">
+      <View className="mb-1 flex-row items-center gap-1">
+        <Ionicons name={icon} size={16} color="#b94b50" />
+        <Text className="text-xs font-semibold uppercase tracking-[0.5px] text-muted-foreground">
+          {label}
+        </Text>
+      </View>
+      <Text className="text-lg font-bold text-foreground">{value}</Text>
+      {subtitle ? (
+        <Text className="mt-0.5 text-xs text-muted-foreground">{subtitle}</Text>
+      ) : null}
+    </View>
+  );
+}
+
+function RequestDetailsScreen({ onBack }: { onBack: () => void }) {
+  return (
+    <View className="min-h-[812px] w-full max-w-[480px] bg-background">
+      <ProjectHeader onBack={onBack} />
+
+      <View className="flex-1 px-4 pb-6 pt-5">
+        <Text className="mb-1 text-2xl font-bold text-foreground">
+          Pintura Residencial
+        </Text>
+        <View className="mb-4 flex-row flex-wrap gap-2">
+          <View className="flex-row items-center gap-1 rounded-[12px] bg-card px-3 py-1.5">
+            <Ionicons name="location" size={14} color="#b94b50" />
+            <Text className="text-sm text-foreground">Centro</Text>
+          </View>
+          <View className="flex-row items-center gap-1 rounded-[12px] bg-card px-3 py-1.5">
+            <Ionicons name="calendar" size={14} color="#b94b50" />
+            <Text className="text-sm text-foreground">04 de dez.</Text>
+          </View>
+        </View>
+
+        <View className="mb-4 rounded-[8px] bg-card p-4 shadow-sm shadow-black/5">
+          <View className="mb-3 flex-row items-center gap-2">
+            <Ionicons name="briefcase-outline" size={18} color="#b94b50" />
+            <Text className="text-xs font-semibold uppercase tracking-[1.2px] text-muted-foreground">
+              Categoria
+            </Text>
+          </View>
+          <View className="flex-row flex-wrap gap-2">
+            {[
+              "Pedreiro",
+              "Eletricista",
+              "Pintor",
+              "Encanador",
+              "Ajudante",
+              "Ar Condicionado",
+              "Carpinteiro",
+            ].map((category) => (
+              <DetailTag
+                key={category}
+                label={category}
+                active={category === "Pintor"}
+              />
+            ))}
+          </View>
+        </View>
+
+        <View className="mb-4 rounded-[8px] bg-card p-4 shadow-sm shadow-black/5">
+          <View className="mb-2 flex-row items-center gap-2">
+            <Ionicons name="reorder-three-outline" size={18} color="#b94b50" />
+            <Text className="text-xs font-semibold uppercase tracking-[1.2px] text-muted-foreground">
+              Descricao
+            </Text>
+          </View>
+          <Text className="text-sm leading-6 text-muted-foreground">
+            Pintura completa de casa de 3 quartos, incluindo teto e paredes
+            internas. Necessario preparar as paredes, cobrir moveis e entregar
+            acabamento limpo.
+          </Text>
+        </View>
+
+        <View className="mb-4 flex-row gap-3">
+          <DetailInfoCard
+            icon="calendar-outline"
+            label="Data"
+            value="04/12/2024"
+            subtitle="Prazo: 5 dias"
+          />
+          <DetailInfoCard
+            icon="wallet-outline"
+            label="Valor"
+            value="R$ 1.800"
+            subtitle="NEGOCIAVEL"
+          />
+        </View>
+
+        <View className="mb-4 rounded-[8px] bg-card p-4 shadow-sm shadow-black/5">
+          <View className="mb-3 flex-row items-center gap-2">
+            <Ionicons name="cash-outline" size={18} color="#b94b50" />
+            <Text className="text-xs font-semibold uppercase tracking-[1.2px] text-muted-foreground">
+              Propor Novo Valor
+            </Text>
+          </View>
+          <View className="flex-row items-center gap-2">
+            <View className="flex-1 flex-row items-center gap-2 rounded-[12px] border border-input-border bg-background px-3 py-3">
+              <Text className="text-sm font-medium text-muted-foreground">R$</Text>
+              <Text className="text-sm text-muted-foreground">Ex: 1.500,00</Text>
+            </View>
+            <Pressable
+              className="rounded-[12px] bg-primary px-5 py-3"
+              accessibilityRole="button"
+            >
+              <Text className="text-sm font-semibold text-white">Enviar</Text>
+            </Pressable>
+          </View>
+        </View>
+
+        <View className="mb-5 rounded-[8px] bg-card p-4 shadow-sm shadow-black/5">
+          <View className="mb-3 flex-row items-center gap-2">
+            <Ionicons name="image-outline" size={18} color="#b94b50" />
+            <Text className="text-xs font-semibold uppercase tracking-[1.2px] text-muted-foreground">
+              Imagens do Servico
+            </Text>
+          </View>
+          <Image
+            source={{
+              uri: "https://storage.googleapis.com/banani-generated-images/generated-images/115f5264-00fb-47c5-8131-0b9c0c0cc1f9.jpg",
+            }}
+            className="mb-2 h-[170px] w-full rounded-[12px]"
+            resizeMode="cover"
+            accessibilityLabel="Parede antes do servico"
+          />
+          <View className="flex-row gap-2">
+            <Image
+              source={{
+                uri: "https://storage.googleapis.com/banani-generated-images/generated-images/a7392f6c-4409-404d-b138-9700b3cdafb7.jpg",
+              }}
+              className="h-[92px] flex-1 rounded-[12px]"
+              resizeMode="cover"
+              accessibilityLabel="Parede pintada"
+            />
+            <Image
+              source={{
+                uri: "https://storage.googleapis.com/banani-generated-images/generated-images/8e2e8dc8-4a47-4485-a1d8-b3d82ae43a22.jpg",
+              }}
+              className="h-[92px] flex-1 rounded-[12px]"
+              resizeMode="cover"
+              accessibilityLabel="Materiais de pintura"
+            />
+          </View>
+        </View>
+
+        <View className="flex-row gap-3">
+          <Pressable
+            onPress={onBack}
+            className="min-h-[56px] flex-1 items-center justify-center rounded-[12px] bg-card shadow-sm"
+            accessibilityRole="button"
+          >
+            <Text className="font-semibold text-foreground">Recusar</Text>
+          </Pressable>
+          <Pressable
+            onPress={onBack}
+            className="min-h-[56px] flex-1 items-center justify-center rounded-[12px] bg-primary"
+            accessibilityRole="button"
+          >
+            <Text className="font-semibold text-white">Aceitar</Text>
+          </Pressable>
+        </View>
+      </View>
     </View>
   );
 }
@@ -1873,6 +2077,7 @@ function ProjectPhotoGrid({ onEditPhoto }: { onEditPhoto: () => void }) {
       </View>
 
       <Pressable
+        onPress={onEditPhoto}
         className="h-[130px] w-[48%] items-center justify-center gap-1.5 rounded-[12px] border-[1.5px] border-dashed border-primary/30 bg-[#fdf0f0] px-2"
         accessibilityRole="button"
       >
@@ -1890,21 +2095,19 @@ function ProjectPhotoGrid({ onEditPhoto }: { onEditPhoto: () => void }) {
         <Ionicons name="camera-outline" size={26} color="#ffffff" />
         <Text className="text-sm font-semibold text-white">Tirar nova foto</Text>
       </Pressable>
-
-      <Pressable
-        className="h-[100px] w-[48%] items-center justify-center gap-2 rounded-[12px] border-[1.5px] border-dashed border-primary/30 bg-[#fdf0f0]"
-        accessibilityRole="button"
-      >
-        <Ionicons name="images-outline" size={26} color="#b94b50" />
-        <Text className="text-sm font-semibold text-foreground">
-          Escolher mais imagens
-        </Text>
-      </Pressable>
     </View>
   );
 }
 
-function ProjectListCard({ project }: { project: ProjectItem }) {
+function ProjectListCard({
+  onEdit,
+  onViewResult,
+  project,
+}: {
+  onEdit: () => void;
+  onViewResult: () => void;
+  project: ProjectItem;
+}) {
   return (
     <View className="flex-row items-center gap-3 rounded-[8px] bg-card p-3 shadow-sm shadow-black/5">
       <Image
@@ -1928,6 +2131,7 @@ function ProjectListCard({ project }: { project: ProjectItem }) {
           </Text>
         </View>
         <Pressable
+          onPress={onViewResult}
           className="self-start flex-row items-center gap-1.5 rounded-full bg-[#f5e8e9] px-3 py-1.5"
           accessibilityRole="button"
         >
@@ -1940,6 +2144,7 @@ function ProjectListCard({ project }: { project: ProjectItem }) {
 
       <View className="gap-2">
         <Pressable
+          onPress={onEdit}
           className="h-9 w-9 items-center justify-center rounded-full bg-[#f0e8e9]"
           accessibilityRole="button"
           accessibilityLabel={`Editar ${project.title}`}
@@ -1961,11 +2166,15 @@ function ProjectListCard({ project }: { project: ProjectItem }) {
 function MyProjectsScreen({
   onAddProject,
   onBack,
+  onEditProject,
   onSelectArea,
+  onViewResult,
 }: {
   onAddProject: () => void;
   onBack: () => void;
+  onEditProject: () => void;
   onSelectArea: (area: ProfessionalArea) => void;
+  onViewResult: () => void;
 }) {
   return (
     <View className="min-h-[812px] w-full max-w-[480px] bg-background">
@@ -1992,7 +2201,12 @@ function MyProjectsScreen({
 
         <View className="gap-3">
           {projectItems.map((project) => (
-            <ProjectListCard key={project.title} project={project} />
+            <ProjectListCard
+              key={project.title}
+              project={project}
+              onEdit={onEditProject}
+              onViewResult={onViewResult}
+            />
           ))}
         </View>
       </View>
@@ -2001,6 +2215,562 @@ function MyProjectsScreen({
         activeArea="projects"
         onSelectArea={onSelectArea}
       />
+    </View>
+  );
+}
+
+function ResultImageBadge({
+  label,
+  color,
+}: {
+  label: string;
+  color: string;
+}) {
+  return (
+    <View
+      className="absolute left-1.5 top-1.5 rounded-[5px] px-1.5 py-0.5"
+      style={{ backgroundColor: color }}
+    >
+      <Text className="text-[10px] font-semibold text-white">{label}</Text>
+    </View>
+  );
+}
+
+function ProjectResultScreen({
+  onBack,
+  onEdit,
+}: {
+  onBack: () => void;
+  onEdit: () => void;
+}) {
+  return (
+    <View className="min-h-[900px] w-full max-w-[480px] bg-background pb-28">
+      <View className="flex-row items-center justify-between px-4 pb-4 pt-12">
+        <Pressable
+          onPress={onBack}
+          className="h-10 w-10 items-center justify-center rounded-[12px] bg-card shadow-sm"
+          accessibilityRole="button"
+          accessibilityLabel="Voltar"
+        >
+          <Ionicons name="arrow-back" size={20} color="#0f1720" />
+        </Pressable>
+
+        <View className="flex-row items-center gap-2">
+          <View className="h-8 w-8 items-center justify-center rounded-[8px] bg-primary">
+            <Ionicons name="hammer-outline" size={16} color="#ffffff" />
+          </View>
+          <View>
+            <Text className="text-[11px] font-semibold leading-3 text-foreground">
+              CONECTA OBRAS
+            </Text>
+            <Text className="text-[10px] leading-3 text-muted-foreground">
+              ITACOATIARA
+            </Text>
+          </View>
+        </View>
+
+        <View className="h-10 w-10 items-center justify-center overflow-hidden rounded-[12px] bg-[#f7e8e9] shadow-sm">
+          <Ionicons name="person" size={21} color="#b94b50" />
+        </View>
+      </View>
+
+      <View className="mx-4 overflow-hidden rounded-[20px]">
+        <Image
+          source={{
+            uri: "https://storage.googleapis.com/banani-generated-images/generated-images/4553595b-f1e6-4373-b3a1-849425e19812.jpg",
+          }}
+          className="h-[190px] w-full"
+          resizeMode="cover"
+          accessibilityLabel="Construcao de Casa"
+        />
+        <LinearGradient
+          colors={["transparent", "rgba(0,0,0,0.62)"]}
+          className="absolute bottom-0 left-0 right-0 px-4 pb-4 pt-10"
+        >
+          <Text className="text-2xl font-bold leading-8 text-white">
+            Construcao de Casa
+          </Text>
+          <View className="mt-1 flex-row items-center gap-1">
+            <Ionicons name="location" size={13} color="rgba(255,255,255,0.82)" />
+            <Text className="text-sm text-white/80">
+              Centro - Itacoatiara
+            </Text>
+          </View>
+        </LinearGradient>
+      </View>
+
+      <View className="mt-4 flex-row flex-wrap gap-2 px-4">
+        {["Construcao", "Eletrica", "Reparo"].map((tag) => (
+          <View
+            key={tag}
+            className="rounded-full border border-primary px-4 py-1"
+          >
+            <Text className="text-[13px] font-medium text-primary">{tag}</Text>
+          </View>
+        ))}
+      </View>
+
+      <View className="mx-4 mt-4 rounded-[16px] bg-card p-4 shadow-sm shadow-black/5">
+        <View className="mb-2 flex-row items-center gap-2">
+          <Ionicons name="reorder-three-outline" size={16} color="#b94b50" />
+          <Text className="text-xs font-semibold uppercase tracking-[0.4px] text-foreground">
+            Descricao
+          </Text>
+        </View>
+        <Text className="text-sm leading-6 text-muted-foreground">
+          Construcao completa de residencia unifamiliar com 3 quartos, sala,
+          cozinha e 2 banheiros. Execucao de fundacao, alvenaria, estrutura,
+          cobertura e acabamento interno.
+        </Text>
+      </View>
+
+      <View className="mx-4 mt-4 rounded-[16px] bg-card p-4 shadow-sm shadow-black/5">
+        <View className="mb-3 flex-row items-center justify-between">
+          <View className="flex-row items-center gap-2">
+            <Ionicons name="image-outline" size={16} color="#b94b50" />
+            <Text className="text-xs font-semibold uppercase tracking-[0.4px] text-foreground">
+              Fotos do Projeto
+            </Text>
+          </View>
+          <Text className="text-xs text-muted-foreground">3 fotos</Text>
+        </View>
+
+        <View className="mb-2 overflow-hidden rounded-[12px]">
+          <Image
+            source={{
+              uri: "https://storage.googleapis.com/banani-generated-images/generated-images/702a3dd3-9bc6-48fe-90c3-874bbc6cf337.jpg",
+            }}
+            className="h-[175px] w-full"
+            resizeMode="cover"
+            accessibilityLabel="Foto antes do projeto"
+          />
+          <View className="absolute left-2 top-2 rounded-[6px] bg-[#2a7a4f] px-2 py-1">
+            <Text className="text-[11px] font-semibold text-white">Antes</Text>
+          </View>
+        </View>
+
+        <View className="flex-row gap-2">
+          <View className="relative aspect-square flex-1 overflow-hidden rounded-[12px]">
+            <Image
+              source={{
+                uri: "https://storage.googleapis.com/banani-generated-images/generated-images/8710618e-4e64-4d2a-ae9f-53404d15a9f3.jpg",
+              }}
+              className="h-full w-full"
+              resizeMode="cover"
+              accessibilityLabel="Foto depois do projeto"
+            />
+            <ResultImageBadge label="Depois" color="#b94b50" />
+          </View>
+          <View className="relative aspect-square flex-1 overflow-hidden rounded-[12px]">
+            <Image
+              source={{
+                uri: "https://storage.googleapis.com/banani-generated-images/generated-images/2b1f4f99-1cc7-4f6c-aa9d-220857994a69.jpg",
+              }}
+              className="h-full w-full"
+              resizeMode="cover"
+              accessibilityLabel="Imagem adicional do projeto"
+            />
+            <ResultImageBadge label="Imagem Adicional" color="#5a6e8a" />
+          </View>
+          <View className="aspect-square flex-1 items-center justify-center rounded-[12px] bg-[#f0e8e9]">
+            <Ionicons name="add" size={18} color="#9a8080" />
+          </View>
+        </View>
+      </View>
+
+      <View className="absolute bottom-0 left-0 right-0 flex-row items-center justify-between bg-card px-4 py-4 shadow-lg shadow-black/10">
+        <Pressable
+          className="flex-row items-center gap-2"
+          accessibilityRole="button"
+        >
+          <Ionicons name="share-social-outline" size={18} color="#0f1720" />
+          <Text className="text-sm font-medium text-foreground">
+            Compartilhar
+          </Text>
+        </Pressable>
+        <Pressable
+          onPress={onEdit}
+          className="flex-row items-center gap-2 rounded-full bg-primary px-6 py-3"
+          accessibilityRole="button"
+        >
+          <Ionicons name="pencil" size={16} color="#ffffff" />
+          <Text className="text-sm font-semibold text-white">Editar</Text>
+        </Pressable>
+      </View>
+    </View>
+  );
+}
+
+function SettingsOption({
+  icon,
+  label,
+}: {
+  icon: IconName;
+  label: string;
+}) {
+  return (
+    <Pressable
+      className="flex-row items-center gap-4 px-4 py-4"
+      accessibilityRole="button"
+    >
+      <View className="h-10 w-10 items-center justify-center rounded-[12px] bg-[#fceaea]">
+        <Ionicons name={icon} size={18} color="#b94b50" />
+      </View>
+      <Text className="flex-1 text-[15px] font-medium text-foreground">
+        {label}
+      </Text>
+      <Ionicons name="chevron-forward" size={18} color="#b94b50" />
+    </Pressable>
+  );
+}
+
+function SettingsSection({
+  children,
+  title,
+}: {
+  children: React.ReactNode;
+  title: string;
+}) {
+  return (
+    <>
+      <View className="mb-2 px-1">
+        <Text className="text-xs font-semibold uppercase tracking-[1.6px] text-muted-foreground">
+          {title}
+        </Text>
+      </View>
+      <View className="mb-5 overflow-hidden rounded-[16px] bg-card shadow-sm shadow-black/5">
+        {children}
+      </View>
+    </>
+  );
+}
+
+function SettingsDivider() {
+  return <View className="mx-4 border-b border-input-border" />;
+}
+
+function SettingsScreen({
+  onBack,
+  onSelectArea,
+}: {
+  onBack: () => void;
+  onSelectArea: (area: ProfessionalArea) => void;
+}) {
+  return (
+    <View className="min-h-[900px] w-full max-w-[480px] bg-background">
+      <View className="flex-row items-center justify-between border-b border-input-border bg-background px-4 pb-4 pt-12">
+        <Pressable
+          onPress={onBack}
+          className="h-11 w-11 items-center justify-center rounded-[12px] bg-card shadow-sm"
+          accessibilityRole="button"
+          accessibilityLabel="Voltar"
+        >
+          <Ionicons name="arrow-back" size={20} color="#0f1720" />
+        </Pressable>
+
+        <View className="flex-row items-center gap-2">
+          <Image
+            source={logo}
+            className="h-11 w-11 rounded-[12px]"
+            resizeMode="contain"
+            accessibilityLabel="Conecta Obras Itacoatiara"
+          />
+          <View>
+            <Text className="text-sm font-bold leading-4 tracking-[0.5px] text-primary">
+              CONECTA OBRAS
+            </Text>
+            <Text className="text-sm font-bold leading-4 tracking-[0.5px] text-primary">
+              ITACOATIARA
+            </Text>
+          </View>
+        </View>
+
+        <View className="h-11 w-11 items-center justify-center overflow-hidden rounded-[12px] border-2 border-primary bg-[#f7e8e9]">
+          <Ionicons name="person" size={23} color="#b94b50" />
+        </View>
+      </View>
+
+      <View className="flex-1 px-4 pt-5">
+        <View className="mb-6 flex-row items-center gap-4 rounded-[16px] bg-card px-4 py-4 shadow-sm shadow-black/5">
+          <View className="h-16 w-16 items-center justify-center rounded-[14px] border-2 border-primary bg-[#f7e8e9]">
+            <Ionicons name="person" size={32} color="#b94b50" />
+          </View>
+          <View>
+            <Text className="text-lg font-bold text-foreground">Jhon Souza</Text>
+            <Text className="mt-0.5 text-sm text-muted-foreground">
+              jhon.souza@email.com
+            </Text>
+          </View>
+        </View>
+
+        <SettingsSection title="Preferencias">
+          <SettingsOption icon="notifications-outline" label="Notificacoes" />
+          <SettingsDivider />
+          <SettingsOption
+            icon="lock-closed-outline"
+            label="Privacidade e Seguranca"
+          />
+        </SettingsSection>
+
+        <SettingsSection title="Suporte">
+          <SettingsOption icon="help-circle-outline" label="Central de Ajuda" />
+          <SettingsDivider />
+          <SettingsOption icon="document-text-outline" label="Termos de Uso" />
+        </SettingsSection>
+
+        <View className="overflow-hidden rounded-[16px] bg-card shadow-sm shadow-black/5">
+          <Pressable
+            className="flex-row items-center justify-center gap-2 px-4 py-4"
+            accessibilityRole="button"
+          >
+            <Ionicons name="log-out-outline" size={18} color="#b94b50" />
+            <Text className="text-[15px] font-semibold text-primary">
+              Sair da Conta
+            </Text>
+          </Pressable>
+        </View>
+      </View>
+
+      <View className="mx-3 mb-4">
+        <ProfessionalBottomTab
+          activeArea="settings"
+          onSelectArea={onSelectArea}
+        />
+      </View>
+    </View>
+  );
+}
+
+function EditProjectPhotoGrid({ onEditPhoto }: { onEditPhoto: () => void }) {
+  const photos = [
+    {
+      label: "CAPA",
+      color: "#b94b50",
+      image:
+        "https://storage.googleapis.com/banani-generated-images/generated-images/59b1f7e0-fd40-4144-aa26-a53271da7969.jpg",
+    },
+    {
+      label: "ANTES",
+      color: "#5a6a7a",
+      image:
+        "https://storage.googleapis.com/banani-generated-images/generated-images/bd906ca1-8db2-4c0c-98a8-ca75f63726c7.jpg",
+    },
+    {
+      label: "DEPOIS",
+      color: "#3a8a5a",
+      image:
+        "https://storage.googleapis.com/banani-generated-images/generated-images/8d181b67-7364-44b6-82de-1785a9037616.jpg",
+    },
+  ];
+
+  return (
+    <>
+      <View className="mb-2 flex-row gap-2">
+        {photos.map((photo) => (
+          <View key={photo.label} className="relative flex-1">
+            <Image
+              source={{ uri: photo.image }}
+              className="h-[88px] w-full rounded-[12px]"
+              resizeMode="cover"
+              accessibilityLabel={`Foto ${photo.label.toLowerCase()}`}
+            />
+            <View
+              className="absolute left-1.5 top-1.5 rounded-full px-1.5 py-0.5"
+              style={{ backgroundColor: photo.color }}
+            >
+              <Text className="text-[9px] font-bold text-white">
+                {photo.label}
+              </Text>
+            </View>
+            <Pressable
+              onPress={onEditPhoto}
+              className="absolute right-1.5 top-1.5 h-5 w-5 items-center justify-center rounded-full bg-card shadow-sm"
+              accessibilityRole="button"
+              accessibilityLabel={`Editar foto ${photo.label.toLowerCase()}`}
+            >
+              <Ionicons name="pencil" size={10} color="#b94b50" />
+            </Pressable>
+          </View>
+        ))}
+      </View>
+
+      <View className="mt-3 flex-row gap-2">
+        <Pressable
+          className="h-[72px] flex-1 items-center justify-center gap-1.5 rounded-[12px] bg-primary"
+          accessibilityRole="button"
+        >
+          <Ionicons name="camera-outline" size={20} color="#ffffff" />
+          <Text className="text-xs font-semibold text-white">
+            Tirar nova foto
+          </Text>
+        </Pressable>
+        <Pressable
+          className="h-[72px] flex-1 items-center justify-center gap-1.5 rounded-[12px] border-[1.5px] border-dashed border-primary/30 bg-[#fdf0f0]"
+          accessibilityRole="button"
+        >
+          <Ionicons name="images-outline" size={20} color="#b94b50" />
+          <Text className="text-xs font-semibold text-foreground">
+            Adicionar fotos
+          </Text>
+        </Pressable>
+      </View>
+    </>
+  );
+}
+
+function EditProjectScreen({ onBack }: { onBack: () => void }) {
+  const [title, setTitle] = useState("Construcao de Residencia");
+  const [neighborhood, setNeighborhood] = useState("Centro");
+  const [details, setDetails] = useState(
+    "Construcao de uma residencia de 2 andares no bairro centro, com acabamento padrao medio.",
+  );
+  const [isEditingPhoto, setIsEditingPhoto] = useState(false);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([
+    "Eletrica",
+    "Reparo",
+  ]);
+  const categories = [
+    "Construcao",
+    "Eletrica",
+    "Encanamento",
+    "Pintura",
+    "Reparo",
+    "Ar Condicionado",
+  ];
+
+  const toggleCategory = (category: string) => {
+    setSelectedCategories((current) =>
+      current.includes(category)
+        ? current.filter((item) => item !== category)
+        : [...current, category],
+    );
+  };
+
+  if (isEditingPhoto) {
+    return <PhotoDetailsScreen onBack={() => setIsEditingPhoto(false)} />;
+  }
+
+  return (
+    <View className="min-h-[812px] w-full max-w-[480px] bg-background">
+      <ProjectHeader onBack={onBack} />
+
+      <View className="flex-row items-center gap-2 px-4 pb-1 pt-5">
+        <Ionicons name="pencil" size={18} color="#b94b50" />
+        <Text className="text-xl font-bold text-foreground">Editar Projeto</Text>
+      </View>
+      <Text className="px-4 pb-4 text-sm text-muted-foreground">
+        Atualize as informacoes do seu projeto
+      </Text>
+
+      <View className="gap-4 px-4 pb-6">
+        <ProjectSection icon="document-text-outline" title="Informacoes Basicas">
+          <View className="gap-3">
+            <ProjectInput
+              label="Titulo do projeto"
+              placeholder="Construcao de Residencia"
+              value={title}
+              onChangeText={setTitle}
+            />
+            <ProjectInput
+              label="Em qual Bairro?"
+              placeholder="Centro"
+              value={neighborhood}
+              onChangeText={setNeighborhood}
+            />
+          </View>
+        </ProjectSection>
+
+        <ProjectSection icon="construct-outline" title="Toque no que voce fez:">
+          <View className="flex-row flex-wrap gap-2">
+            {categories.map((category) => (
+              <ProjectCategoryChip
+                key={category}
+                label={category}
+                selected={selectedCategories.includes(category)}
+                onPress={() => toggleCategory(category)}
+              />
+            ))}
+          </View>
+        </ProjectSection>
+
+        <ProjectSection
+          icon="reorder-three-outline"
+          title="Detalhes (se quiser escrever)"
+        >
+          <View className="relative min-h-[100px] rounded-[12px] bg-[#f5e8e9] px-4 py-3">
+            <TextInput
+              value={details}
+              onChangeText={setDetails}
+              multiline
+              className="min-h-[74px] pr-10 text-sm text-foreground"
+              placeholderTextColor="#8a8a96"
+              accessibilityLabel="Detalhes do projeto"
+            />
+            <Pressable
+              className="absolute bottom-3 right-3 h-8 w-8 items-center justify-center rounded-full bg-card shadow-sm"
+              accessibilityRole="button"
+              accessibilityLabel="Gravar audio"
+            >
+              <Ionicons name="mic-outline" size={16} color="#b94b50" />
+            </Pressable>
+          </View>
+        </ProjectSection>
+
+        <ProjectSection icon="image-outline" title="Fotos do Projeto">
+          <View className="mb-1 flex-row items-start justify-between">
+            <Text className="text-sm font-bold text-foreground">
+              3 fotos adicionadas
+            </Text>
+            <View className="rounded-full bg-[#f5e8e9] px-2 py-0.5">
+              <Text className="text-xs font-semibold text-primary">3/10</Text>
+            </View>
+          </View>
+          <Text className="mb-3 text-xs leading-5 text-muted-foreground">
+            Toque em uma foto para editar ou remover.
+          </Text>
+          <EditProjectPhotoGrid onEditPhoto={() => setIsEditingPhoto(true)} />
+        </ProjectSection>
+
+        <View className="rounded-[8px] bg-card p-4 shadow-sm shadow-black/5">
+          <View className="mb-3 flex-row items-center gap-2">
+            <Ionicons name="warning-outline" size={17} color="#b94b50" />
+            <Text className="text-base font-bold text-foreground">
+              Zona de Perigo
+            </Text>
+          </View>
+          <Pressable
+            className="min-h-[48px] flex-row items-center justify-center gap-2 rounded-[12px] bg-[#f5e8e9]"
+            accessibilityRole="button"
+          >
+            <Ionicons name="trash-outline" size={16} color="#b94b50" />
+            <Text className="text-sm font-semibold text-primary">
+              Excluir este projeto
+            </Text>
+          </Pressable>
+        </View>
+      </View>
+
+      <View className="flex-row gap-3 border-t border-black/5 bg-background px-4 pb-8 pt-2">
+        <Pressable
+          onPress={onBack}
+          className="min-h-[56px] flex-1 items-center justify-center rounded-[12px] bg-card shadow-sm"
+          accessibilityRole="button"
+        >
+          <Text className="text-base font-semibold text-foreground">
+            Cancelar
+          </Text>
+        </Pressable>
+        <Pressable
+          onPress={onBack}
+          className="min-h-[56px] flex-[2] flex-row items-center justify-center gap-2 rounded-[12px] bg-primary"
+          accessibilityRole="button"
+        >
+          <Ionicons name="save-outline" size={18} color="#ffffff" />
+          <Text className="text-base font-semibold text-white">
+            Salvar Alteracoes
+          </Text>
+        </Pressable>
+      </View>
     </View>
   );
 }
@@ -2204,9 +2974,47 @@ function ProfessionalHomeScreen({ onBack }: { onBack: () => void }) {
   const [activeArea, setActiveArea] =
     useState<ProfessionalArea>("opportunities");
   const [isAddingProject, setIsAddingProject] = useState(false);
+  const [isEditingProject, setIsEditingProject] = useState(false);
+  const [isViewingProjectResult, setIsViewingProjectResult] = useState(false);
+  const [isViewingRequestDetails, setIsViewingRequestDetails] = useState(false);
+
+  if (activeArea === "opportunities" && isViewingRequestDetails) {
+    return <RequestDetailsScreen onBack={() => setIsViewingRequestDetails(false)} />;
+  }
 
   if (activeArea === "projects" && isAddingProject) {
     return <AddProjectScreen onBack={() => setIsAddingProject(false)} />;
+  }
+
+  if (activeArea === "projects" && isEditingProject) {
+    return <EditProjectScreen onBack={() => setIsEditingProject(false)} />;
+  }
+
+  if (activeArea === "projects" && isViewingProjectResult) {
+    return (
+      <ProjectResultScreen
+        onBack={() => setIsViewingProjectResult(false)}
+        onEdit={() => {
+          setIsViewingProjectResult(false);
+          setIsEditingProject(true);
+        }}
+      />
+    );
+  }
+
+  if (activeArea === "settings") {
+    return (
+      <SettingsScreen
+        onBack={() => setActiveArea("opportunities")}
+        onSelectArea={(area) => {
+          setIsAddingProject(false);
+          setIsEditingProject(false);
+          setIsViewingProjectResult(false);
+          setIsViewingRequestDetails(false);
+          setActiveArea(area);
+        }}
+      />
+    );
   }
 
   if (activeArea === "projects") {
@@ -2214,8 +3022,13 @@ function ProfessionalHomeScreen({ onBack }: { onBack: () => void }) {
       <MyProjectsScreen
         onAddProject={() => setIsAddingProject(true)}
         onBack={() => setActiveArea("opportunities")}
+        onEditProject={() => setIsEditingProject(true)}
+        onViewResult={() => setIsViewingProjectResult(true)}
         onSelectArea={(area) => {
           setIsAddingProject(false);
+          setIsEditingProject(false);
+          setIsViewingProjectResult(false);
+          setIsViewingRequestDetails(false);
           setActiveArea(area);
         }}
       />
@@ -2230,7 +3043,11 @@ function ProfessionalHomeScreen({ onBack }: { onBack: () => void }) {
       {activeTab === "requests" ? (
         <View className="pb-2">
           {serviceRequests.map((request) => (
-            <NewRequestCard key={request.title} request={request} />
+            <NewRequestCard
+              key={request.title}
+              request={request}
+              onDetails={() => setIsViewingRequestDetails(true)}
+            />
           ))}
         </View>
       ) : (
@@ -2244,7 +3061,10 @@ function ProfessionalHomeScreen({ onBack }: { onBack: () => void }) {
 
       <ProfessionalBottomTab
         activeArea={activeArea}
-        onSelectArea={setActiveArea}
+        onSelectArea={(area) => {
+          setIsViewingRequestDetails(false);
+          setActiveArea(area);
+        }}
       />
     </View>
   );
