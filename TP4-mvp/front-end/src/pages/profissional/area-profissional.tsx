@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 
 import type {
   ProfessionalArea,
@@ -20,7 +20,13 @@ import { OportunidadeMeusServicosScreen } from "./oportunidade-meus-servicos";
 import { OportunidadesNovosPedidosScreen } from "./oportunidades-novos-pedidos";
 import { ProjectResultScreen } from "./resultado-projeto";
 
-export function ProfessionalHomeScreen({ onBack }: { onBack: () => void }) {
+export function ProfessionalHomeScreen({
+  onBack,
+  onProfilePress,
+}: {
+  onBack: () => void;
+  onProfilePress: () => void;
+}) {
   const [activeTab, setActiveTab] = useState<ProfessionalTab>("requests");
   const [activeArea, setActiveArea] =
     useState<ProfessionalArea>("opportunities");
@@ -39,16 +45,29 @@ export function ProfessionalHomeScreen({ onBack }: { onBack: () => void }) {
 
   if (activeArea === "opportunities" && isViewingRequestDetails) {
     return (
-      <RequestDetailsScreen onBack={() => setIsViewingRequestDetails(false)} />
+      <RequestDetailsScreen
+        onBack={() => setIsViewingRequestDetails(false)}
+        onProfilePress={onProfilePress}
+      />
     );
   }
 
   if (activeArea === "projects" && isAddingProject) {
-    return <AddProjectScreen onBack={() => setIsAddingProject(false)} />;
+    return (
+      <AddProjectScreen
+        onBack={() => setIsAddingProject(false)}
+        onProfilePress={onProfilePress}
+      />
+    );
   }
 
   if (activeArea === "projects" && isEditingProject) {
-    return <EditProjectScreen onBack={() => setIsEditingProject(false)} />;
+    return (
+      <EditProjectScreen
+        onBack={() => setIsEditingProject(false)}
+        onProfilePress={onProfilePress}
+      />
+    );
   }
 
   if (activeArea === "projects" && isViewingProjectResult) {
@@ -59,6 +78,7 @@ export function ProfessionalHomeScreen({ onBack }: { onBack: () => void }) {
           setIsViewingProjectResult(false);
           setIsEditingProject(true);
         }}
+        onProfilePress={onProfilePress}
       />
     );
   }
@@ -67,6 +87,7 @@ export function ProfessionalHomeScreen({ onBack }: { onBack: () => void }) {
     return (
       <SettingsScreen
         onBack={() => setActiveArea("opportunities")}
+        onProfilePress={onProfilePress}
         onSelectArea={selectArea}
       />
     );
@@ -78,6 +99,7 @@ export function ProfessionalHomeScreen({ onBack }: { onBack: () => void }) {
         onAddProject={() => setIsAddingProject(true)}
         onBack={() => setActiveArea("opportunities")}
         onEditProject={() => setIsEditingProject(true)}
+        onProfilePress={onProfilePress}
         onViewResult={() => setIsViewingProjectResult(true)}
         onSelectArea={selectArea}
       />
@@ -85,17 +107,23 @@ export function ProfessionalHomeScreen({ onBack }: { onBack: () => void }) {
   }
 
   return (
-    <View className="min-h-[812px] w-full max-w-[480px] bg-background">
-      <ProfessionalHomeHeader onBack={onBack} />
+    <View className="h-full w-full max-w-[480px] self-center bg-background">
+      <ProfessionalHomeHeader onBack={onBack} onProfilePress={onProfilePress} />
       <ProfessionalTabToggle activeTab={activeTab} onChangeTab={setActiveTab} />
 
-      {activeTab === "requests" ? (
-        <OportunidadesNovosPedidosScreen
-          onDetails={() => setIsViewingRequestDetails(true)}
-        />
-      ) : (
-        <OportunidadeMeusServicosScreen />
-      )}
+      <ScrollView
+        className="flex-1"
+        contentContainerClassName="pb-4"
+        showsVerticalScrollIndicator={false}
+      >
+        {activeTab === "requests" ? (
+          <OportunidadesNovosPedidosScreen
+            onDetails={() => setIsViewingRequestDetails(true)}
+          />
+        ) : (
+          <OportunidadeMeusServicosScreen />
+        )}
+      </ScrollView>
 
       <ProfessionalBottomTab activeArea={activeArea} onSelectArea={selectArea} />
     </View>

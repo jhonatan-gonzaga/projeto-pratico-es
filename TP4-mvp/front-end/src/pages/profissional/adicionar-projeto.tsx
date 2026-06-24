@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
-import { Image, Pressable, Text, TextInput, View } from "react-native";
+import { Image, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
 import { professionalServices, projectItems, serviceRequests } from "../../components/profissional/data";
 import { formatBRPhone } from "../../components/profissional/utils";
@@ -35,7 +35,13 @@ import {
 } from "../../components/profissional/components";
 
 import { PhotoDetailsScreen } from "./detalhes-foto";
-export function AddProjectScreen({ onBack }: { onBack: () => void }) {
+export function AddProjectScreen({
+  onBack,
+  onProfilePress,
+}: {
+  onBack: () => void;
+  onProfilePress: () => void;
+}) {
   const [title, setTitle] = useState("");
   const [neighborhood, setNeighborhood] = useState("");
   const [details, setDetails] = useState("");
@@ -62,14 +68,24 @@ export function AddProjectScreen({ onBack }: { onBack: () => void }) {
   };
 
   if (isEditingPhoto) {
-    return <PhotoDetailsScreen onBack={() => setIsEditingPhoto(false)} />;
+    return (
+      <PhotoDetailsScreen
+        onBack={() => setIsEditingPhoto(false)}
+        onProfilePress={onProfilePress}
+      />
+    );
   }
 
   return (
-    <View className="min-h-[812px] w-full max-w-[480px] bg-background">
-      <ProjectHeader onBack={onBack} />
+    <View className="h-full w-full max-w-[480px] self-center bg-background">
+      <ProjectHeader onBack={onBack} onProfilePress={onProfilePress} />
 
-      <View className="gap-4 px-4 pb-6 pt-5">
+      <ScrollView
+        className="flex-1"
+        contentContainerClassName="gap-4 px-4 pb-6 pt-5"
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
         <ProjectSection icon="document-text-outline" title="Informacoes Basicas">
           <View className="gap-3">
             <ProjectInput
@@ -139,7 +155,7 @@ export function AddProjectScreen({ onBack }: { onBack: () => void }) {
           </Text>
           <ProjectPhotoGrid onEditPhoto={() => setIsEditingPhoto(true)} />
         </ProjectSection>
-      </View>
+      </ScrollView>
 
       <View className="flex-row gap-3 border-t border-black/5 bg-background px-4 pb-6 pt-2">
         <Pressable

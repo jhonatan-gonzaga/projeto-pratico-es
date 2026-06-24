@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
-import { Image, Pressable, Text, TextInput, View } from "react-native";
+import { Image, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
 import { professionalServices, projectItems, serviceRequests } from "../../components/profissional/data";
 import { formatBRPhone } from "../../components/profissional/utils";
@@ -34,7 +34,13 @@ import {
   SetupTextField,
 } from "../../components/profissional/components";
 
-export function PhotoDetailsScreen({ onBack }: { onBack: () => void }) {
+export function PhotoDetailsScreen({
+  onBack,
+  onProfilePress,
+}: {
+  onBack: () => void;
+  onProfilePress: () => void;
+}) {
   const [selectedType, setSelectedType] = useState("Capa do projeto");
   const photoTypes = [
     {
@@ -56,10 +62,14 @@ export function PhotoDetailsScreen({ onBack }: { onBack: () => void }) {
   ];
 
   return (
-    <View className="min-h-[812px] w-full max-w-[480px] bg-background">
-      <ProjectHeader onBack={onBack} />
+    <View className="h-full w-full max-w-[480px] self-center bg-background">
+      <ProjectHeader onBack={onBack} onProfilePress={onProfilePress} />
 
-      <View className="gap-4 px-4 pb-6 pt-5">
+      <ScrollView
+        className="flex-1"
+        contentContainerClassName="gap-4 px-4 pb-6 pt-5"
+        showsVerticalScrollIndicator={false}
+      >
         <View className="flex-row items-center justify-between">
           <Text className="text-base font-bold text-foreground">
             Detalhes da Foto
@@ -108,7 +118,7 @@ export function PhotoDetailsScreen({ onBack }: { onBack: () => void }) {
             ))}
           </View>
         </View>
-      </View>
+      </ScrollView>
 
       <View className="gap-3 px-4 pb-8 pt-2">
         <Pressable

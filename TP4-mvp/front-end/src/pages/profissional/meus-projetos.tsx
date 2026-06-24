@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
-import { Image, Pressable, Text, TextInput, View } from "react-native";
+import { Image, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
 import { professionalServices, projectItems, serviceRequests } from "../../components/profissional/data";
 import { formatBRPhone } from "../../components/profissional/utils";
@@ -38,20 +38,26 @@ export function MyProjectsScreen({
   onAddProject,
   onBack,
   onEditProject,
+  onProfilePress,
   onSelectArea,
   onViewResult,
 }: {
   onAddProject: () => void;
   onBack: () => void;
   onEditProject: () => void;
+  onProfilePress: () => void;
   onSelectArea: (area: ProfessionalArea) => void;
   onViewResult: () => void;
 }) {
   return (
-    <View className="min-h-[812px] w-full max-w-[480px] bg-background">
-      <ProjectHeader onBack={onBack} />
+    <View className="h-full w-full max-w-[480px] self-center bg-background">
+      <ProjectHeader onBack={onBack} onProfilePress={onProfilePress} />
 
-      <View className="flex-1 gap-5 px-4 pb-4 pt-5">
+      <ScrollView
+        className="flex-1"
+        contentContainerClassName="gap-5 px-4 pb-4 pt-5"
+        showsVerticalScrollIndicator={false}
+      >
         <Pressable
           onPress={onAddProject}
           className="min-h-[56px] flex-row items-center justify-center gap-2 rounded-[12px] bg-primary px-4"
@@ -80,7 +86,7 @@ export function MyProjectsScreen({
             />
           ))}
         </View>
-      </View>
+      </ScrollView>
 
       <ProfessionalBottomTab
         activeArea="projects"
