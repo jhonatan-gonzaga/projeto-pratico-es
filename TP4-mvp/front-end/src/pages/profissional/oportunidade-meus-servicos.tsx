@@ -1,6 +1,5 @@
 import { View } from "react-native";
 
-import { professionalServices } from "../../components/profissional/data";
 import type { ProfessionalService } from "../../components/profissional/types";
 import {
   ServiceFilterChips,
@@ -10,19 +9,24 @@ import {
 export function OportunidadeMeusServicosScreen({
   onDetails,
   onMessage,
+  onPrimaryAction,
+  services,
 }: {
   onDetails: (service: ProfessionalService) => void;
   onMessage: (service: ProfessionalService) => void;
+  onPrimaryAction: (service: ProfessionalService) => void;
+  services: ProfessionalService[];
 }) {
   return (
     <View className="pb-2">
       <ServiceFilterChips />
-      {professionalServices.map((service) => (
+      {services.map((service) => (
         <ServiceOrderCard
           key={service.order}
           service={service}
           onDetails={() => onDetails(service)}
           onMessage={() => onMessage(service)}
+          onPrimaryAction={() => onPrimaryAction(service)}
         />
       ))}
     </View>

@@ -14,13 +14,28 @@ export function ServiceDetailsScreen({
   onBack,
   onMessage,
   onProfilePress,
+  onStatusAction,
   service,
 }: {
   onBack: () => void;
   onMessage: () => void;
   onProfilePress: () => void;
+  onStatusAction: () => void;
   service: ProfessionalService;
 }) {
+  const actionLabel =
+    service.status === "completed"
+      ? "Reabrir Servico"
+      : service.status === "pending"
+        ? "Iniciar Servico"
+        : "Enviar mensagem";
+  const actionIcon =
+    service.status === "completed"
+      ? "refresh-outline"
+      : service.status === "pending"
+        ? "play-outline"
+        : "chatbubble-outline";
+
   return (
     <View className="h-full w-full max-w-[480px] self-center bg-background">
       <ProjectHeader onBack={onBack} onProfilePress={onProfilePress} />
@@ -146,17 +161,13 @@ export function ServiceDetailsScreen({
         </View>
 
         <Pressable
-          onPress={service.status === "completed" ? undefined : onMessage}
+          onPress={service.status === "inProgress" ? onMessage : onStatusAction}
           className="min-h-[52px] flex-row items-center justify-center gap-2 rounded-[12px] bg-primary px-4"
           accessibilityRole="button"
         >
-          <Ionicons
-            name={service.status === "completed" ? "refresh-outline" : "chatbubble-outline"}
-            size={17}
-            color="#ffffff"
-          />
+          <Ionicons name={actionIcon} size={17} color="#ffffff" />
           <Text className="text-base font-semibold text-white">
-            {service.status === "completed" ? "Reabrir Servico" : "Enviar mensagem"}
+            {actionLabel}
           </Text>
         </Pressable>
       </ScrollView>

@@ -51,6 +51,7 @@ export function AccountProfileScreen({
   const [name, setName] = useState("Maria da Silva");
   const [phone, setPhone] = useState("(11) 99999-9999");
   const [email, setEmail] = useState("maria@email.com");
+  const [hasProfilePhoto, setHasProfilePhoto] = useState(false);
 
   const confirmDeleteAccount = () => {
     Alert.alert(
@@ -100,9 +101,14 @@ export function AccountProfileScreen({
       <View className="z-10 items-center pb-6 pt-4">
         <View className="relative mb-3">
           <View className="h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-card bg-[#f7e8e9]">
-            <Ionicons name="person" size={46} color="#b94b50" />
+            {hasProfilePhoto ? (
+              <Text className="text-2xl font-bold text-primary">MS</Text>
+            ) : (
+              <Ionicons name="person" size={46} color="#b94b50" />
+            )}
           </View>
           <Pressable
+            onPress={() => setHasProfilePhoto((current) => !current)}
             className="absolute bottom-0 right-0 h-8 w-8 items-center justify-center rounded-full border-2 border-card bg-primary"
             accessibilityRole="button"
             accessibilityLabel="Trocar foto de perfil"

@@ -42,6 +42,13 @@ export function PhotoDetailsScreen({
   onProfilePress: () => void;
 }) {
   const [selectedType, setSelectedType] = useState("Capa do projeto");
+  const [photoIndex, setPhotoIndex] = useState(0);
+  const [isDeleted, setIsDeleted] = useState(false);
+  const simulatedPhotos = [
+    "https://storage.googleapis.com/banani-generated-images/generated-images/ed993d53-08a8-4be3-b552-c60fca359c15.jpg",
+    "https://storage.googleapis.com/banani-generated-images/generated-images/8710618e-4e64-4d2a-ae9f-53404d15a9f3.jpg",
+    "https://storage.googleapis.com/banani-generated-images/generated-images/2b1f4f99-1cc7-4f6c-aa9d-220857994a69.jpg",
+  ];
   const photoTypes = [
     {
       label: "Capa do projeto",
@@ -80,15 +87,26 @@ export function PhotoDetailsScreen({
         </View>
 
         <View className="relative h-[260px] overflow-hidden rounded-[12px]">
-          <Image
-            source={{
-              uri: "https://storage.googleapis.com/banani-generated-images/generated-images/ed993d53-08a8-4be3-b552-c60fca359c15.jpg",
-            }}
-            className="h-full w-full"
-            resizeMode="cover"
-            accessibilityLabel="Foto do projeto"
-          />
+          {isDeleted ? (
+            <View className="h-full w-full items-center justify-center gap-2 bg-[#f5e8e9]">
+              <Ionicons name="image-outline" size={40} color="#b94b50" />
+              <Text className="text-sm font-semibold text-primary">
+                Foto removida
+              </Text>
+            </View>
+          ) : (
+            <Image
+              source={{ uri: simulatedPhotos[photoIndex] }}
+              className="h-full w-full"
+              resizeMode="cover"
+              accessibilityLabel="Foto do projeto"
+            />
+          )}
           <Pressable
+            onPress={() => {
+              setIsDeleted(false);
+              setPhotoIndex((current) => (current + 1) % simulatedPhotos.length);
+            }}
             className="absolute bottom-3 right-3 flex-row items-center gap-1.5 rounded-full bg-card px-4 py-2 shadow-md shadow-black/10"
             accessibilityRole="button"
           >
@@ -132,7 +150,7 @@ export function PhotoDetailsScreen({
           </Text>
         </Pressable>
         <Pressable
-          onPress={onBack}
+          onPress={() => setIsDeleted(true)}
           className="min-h-[56px] flex-row items-center justify-center gap-2 rounded-[12px] bg-[#f5e8e9] px-4"
           accessibilityRole="button"
         >
