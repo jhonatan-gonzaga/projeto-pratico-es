@@ -50,6 +50,7 @@ export function ProfessionalSetupScreen({
   const [street, setStreet] = useState("");
   const [number, setNumber] = useState("");
   const [about, setAbout] = useState("");
+  const [hasProfilePhoto, setHasProfilePhoto] = useState(false);
   const [startTime, setStartTime] = useState("08:00");
   const [endTime, setEndTime] = useState("18:00");
   const [specialties, setSpecialties] = useState<string[]>([
@@ -113,9 +114,14 @@ export function ProfessionalSetupScreen({
         <View className="items-center gap-2">
           <View className="relative">
             <View className="h-24 w-24 items-center justify-center rounded-full border-[3px] border-primary bg-[#f7e8e9]">
-              <Ionicons name="person" size={46} color="#b94b50" />
+              {hasProfilePhoto ? (
+                <Text className="text-2xl font-bold text-primary">JN</Text>
+              ) : (
+                <Ionicons name="person" size={46} color="#b94b50" />
+              )}
             </View>
             <Pressable
+              onPress={() => setHasProfilePhoto((current) => !current)}
               className="absolute bottom-0.5 right-0.5 h-7 w-7 items-center justify-center rounded-full bg-primary shadow-sm"
               accessibilityRole="button"
               accessibilityLabel="Alterar foto"
@@ -233,6 +239,11 @@ export function ProfessionalSetupScreen({
             />
             <View className="items-end">
               <Pressable
+                onPress={() =>
+                  setAbout(
+                    "Texto gerado por audio simulado: profissional com experiencia em obras residenciais, pintura, reparos e acabamento.",
+                  )
+                }
                 className="h-10 w-10 items-center justify-center rounded-full bg-[#f7e8e9]"
                 accessibilityRole="button"
                 accessibilityLabel="Gravar audio"

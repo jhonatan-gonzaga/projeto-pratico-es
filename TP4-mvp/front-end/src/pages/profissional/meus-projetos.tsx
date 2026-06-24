@@ -3,9 +3,9 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
 import { Image, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
-import { professionalServices, projectItems, serviceRequests } from "../../components/profissional/data";
+import { professionalServices, serviceRequests } from "../../components/profissional/data";
 import { formatBRPhone } from "../../components/profissional/utils";
-import type { ProfessionalArea, ProfessionalTab } from "../../components/profissional/types";
+import type { ProfessionalArea, ProfessionalTab, ProjectItem } from "../../components/profissional/types";
 import {
   ChoiceChip,
   CustomerAvatar,
@@ -37,15 +37,19 @@ import {
 export function MyProjectsScreen({
   onAddProject,
   onBack,
+  onDeleteProject,
   onEditProject,
   onProfilePress,
+  projects,
   onSelectArea,
   onViewResult,
 }: {
   onAddProject: () => void;
   onBack: () => void;
-  onEditProject: () => void;
+  onDeleteProject: (project: ProjectItem) => void;
+  onEditProject: (project: ProjectItem) => void;
   onProfilePress: () => void;
+  projects: ProjectItem[];
   onSelectArea: (area: ProfessionalArea) => void;
   onViewResult: () => void;
 }) {
@@ -73,15 +77,18 @@ export function MyProjectsScreen({
           <Text className="text-xl font-bold text-foreground">
             Meus Projetos
           </Text>
-          <Text className="text-sm text-muted-foreground">3 projetos</Text>
+          <Text className="text-sm text-muted-foreground">
+            {projects.length} projetos
+          </Text>
         </View>
 
         <View className="gap-3">
-          {projectItems.map((project) => (
+          {projects.map((project) => (
             <ProjectListCard
               key={project.title}
               project={project}
-              onEdit={onEditProject}
+              onDelete={() => onDeleteProject(project)}
+              onEdit={() => onEditProject(project)}
               onViewResult={onViewResult}
             />
           ))}

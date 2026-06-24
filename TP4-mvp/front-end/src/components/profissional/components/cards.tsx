@@ -21,10 +21,14 @@ export function RequestMetaPill({
 }
 
 export function NewRequestCard({
+  onAccept,
   onDetails,
+  onReject,
   request,
 }: {
+  onAccept: () => void;
   onDetails: () => void;
+  onReject: () => void;
   request: ServiceRequest;
 }) {
   return (
@@ -66,6 +70,7 @@ export function NewRequestCard({
 
       <View className="flex-row gap-2">
         <Pressable
+          onPress={onReject}
           className="min-h-[44px] flex-1 items-center justify-center rounded-[12px] border border-input-border bg-card px-4"
           accessibilityRole="button"
         >
@@ -74,6 +79,7 @@ export function NewRequestCard({
           </Text>
         </Pressable>
         <Pressable
+          onPress={onAccept}
           className="min-h-[44px] flex-1 items-center justify-center rounded-[12px] bg-primary px-4"
           accessibilityRole="button"
         >
@@ -156,10 +162,12 @@ export function CustomerAvatar({ name }: { name: string }) {
 export function ServiceOrderCard({
   onDetails,
   onMessage,
+  onPrimaryAction,
   service,
 }: {
   onDetails?: () => void;
   onMessage?: () => void;
+  onPrimaryAction?: () => void;
   service: ProfessionalService;
 }) {
   const compact = service.status === "completed";
@@ -229,6 +237,7 @@ export function ServiceOrderCard({
           </Pressable>
         ) : null}
         <Pressable
+          onPress={onPrimaryAction}
           className="min-h-[44px] flex-1 items-center justify-center rounded-[12px] bg-primary px-4"
           accessibilityRole="button"
         >
@@ -308,10 +317,12 @@ export function ProjectPhotoGrid({ onEditPhoto }: { onEditPhoto: () => void }) {
 }
 
 export function ProjectListCard({
+  onDelete,
   onEdit,
   onViewResult,
   project,
 }: {
+  onDelete: () => void;
   onEdit: () => void;
   onViewResult: () => void;
   project: ProjectItem;
@@ -360,6 +371,7 @@ export function ProjectListCard({
           <Ionicons name="pencil" size={15} color="#0f1720" />
         </Pressable>
         <Pressable
+          onPress={onDelete}
           className="h-9 w-9 items-center justify-center rounded-full bg-[#f5e8e9]"
           accessibilityRole="button"
           accessibilityLabel={`Excluir ${project.title}`}

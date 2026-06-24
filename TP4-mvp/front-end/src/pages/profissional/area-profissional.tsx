@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { ScrollView, View } from "react-native";
 
+import { professionalServices, projectItems, serviceRequests } from "../../components/profissional/data";
 import type {
   ProfessionalArea,
   ProfessionalService,
   ProfessionalTab,
+  ProjectItem,
   ServiceRequest,
 } from "../../components/profissional/types";
 import {
@@ -34,6 +36,13 @@ export function ProfessionalHomeScreen({
   const [activeTab, setActiveTab] = useState<ProfessionalTab>("requests");
   const [activeArea, setActiveArea] =
     useState<ProfessionalArea>("opportunities");
+  const [requests, setRequests] = useState<ServiceRequest[]>(serviceRequests);
+  const [services, setServices] =
+    useState<ProfessionalService[]>(professionalServices);
+  const [projects, setProjects] = useState<ProjectItem[]>(projectItems);
+  const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(
+    null,
+  );
   const [isAddingProject, setIsAddingProject] = useState(false);
   const [isEditingProject, setIsEditingProject] = useState(false);
   const [isViewingProjectResult, setIsViewingProjectResult] = useState(false);
@@ -54,6 +63,7 @@ export function ProfessionalHomeScreen({
     setIsViewingRequestDetails(false);
     setSelectedRequest(null);
     setSelectedService(null);
+    setSelectedProject(null);
     setServiceView(null);
     setActiveArea(area);
   };
@@ -66,15 +76,91 @@ export function ProfessionalHomeScreen({
     setServiceView(view);
   };
 
+  const rejectRequest = (request: ServiceRequest) => {
+    setRequests((current) =>
+      current.filter((item) => item.title !== request.title),
+    );
+    setIsViewingRequestDetails(false);
+    setSelectedRequest(null);
+  };
+
+  const acceptRequest = (request: ServiceRequest) => {
+    const nextService: ProfessionalService = {
+      title: request.title,
+      status: "pending",
+      order: `SRV-${String(1100 + services.length)}`,
+      customer: "Cliente Simulado",
+      price: request.price,
+      date: request.date,
+      time: request.time,
+      deadline: request.deadline,
+      address: `${request.location} - Itacoatiara`,
+      messageCount: "1",
+      action: "Iniciar Servico",
+    };
+
+    setRequests((current) =>
+      current.filter((item) => item.title !== request.title),
+    );
+    setServices((current) => [nextService, ...current]);
+    setSelectedRequest(null);
+    setIsViewingRequestDetails(false);
+    setActiveTab("services");
+  };
+
+  const updateService = (
+    service: ProfessionalService,
+    changes: Partial<ProfessionalService>,
+  ) => {
+    const updatedService = { ...service, ...changes };
+
+    setServices((current) =>
+      current.map((item) =>
+        item.order === service.order ? { ...item, ...changes } : item,
+      ),
+    );
+
+    if (selectedService?.order === service.order) {
+      setSelectedService(updatedService);
+    }
+  };
+
+  const runServicePrimaryAction = (service: ProfessionalService) => {
+    if (service.status === "completed") {
+      updateService(service, {
+        status: "inProgress",
+        action: "Finalizar Servico",
+        messageCount: "1",
+      });
+      return;
+    }
+
+    if (service.status === "pending") {
+      updateService(service, {
+        status: "inProgress",
+        action: "Finalizar Servico",
+      });
+      return;
+    }
+
+    updateService(service, {
+      status: "completed",
+      action: "Reabrir Servico",
+      messageCount: undefined,
+    });
+  };
+
   if (activeArea === "opportunities" && isViewingRequestDetails && selectedRequest) {
     return (
       <RequestDetailsScreen
         request={selectedRequest}
+        onAccept={() => acceptRequest(selectedRequest)}
         onBack={() => {
           setIsViewingRequestDetails(false);
           setSelectedRequest(null);
         }}
         onProfilePress={onProfilePress}
+        onReject={() => rejectRequest(selectedRequest)}
       />
     );
   }
@@ -86,6 +172,7 @@ export function ProfessionalHomeScreen({
         onBack={() => setServiceView(null)}
         onMessage={() => setServiceView("message")}
         onProfilePress={onProfilePress}
+        onStatusAction={() => runServicePrimaryAction(selectedService)}
       />
     );
   }
@@ -105,15 +192,32 @@ export function ProfessionalHomeScreen({
       <AddProjectScreen
         onBack={() => setIsAddingProject(false)}
         onProfilePress={onProfilePress}
+        onSave={(project) => {
+          setProjects((current) => [project, ...current]);
+          setIsAddingProject(false);
+        }}
       />
     );
   }
 
-  if (activeArea === "projects" && isEditingProject) {
+  if (activeArea === "projects" && isEditingProject && selectedProject) {
     return (
       <EditProjectScreen
-        onBack={() => setIsEditingProject(false)}
+        project={selectedProject}
+        onBack={() => {
+          setIsEditingProject(false);
+          setSelectedProject(null);
+        }}
         onProfilePress={onProfilePress}
+        onSave={(project) => {
+          setProjects((current) =>
+            current.map((item) =>
+              item.title === selectedProject.title ? project : item,
+            ),
+          );
+          setSelectedProject(project);
+          setIsEditingProject(false);
+        }}
       />
     );
   }
@@ -146,8 +250,17 @@ export function ProfessionalHomeScreen({
       <MyProjectsScreen
         onAddProject={() => setIsAddingProject(true)}
         onBack={() => setActiveArea("opportunities")}
-        onEditProject={() => setIsEditingProject(true)}
+        onDeleteProject={(project) =>
+          setProjects((current) =>
+            current.filter((item) => item.title !== project.title),
+          )
+        }
+        onEditProject={(project) => {
+          setSelectedProject(project);
+          setIsEditingProject(true);
+        }}
         onProfilePress={onProfilePress}
+        projects={projects}
         onViewResult={() => setIsViewingProjectResult(true)}
         onSelectArea={selectArea}
       />
@@ -166,15 +279,20 @@ export function ProfessionalHomeScreen({
       >
         {activeTab === "requests" ? (
           <OportunidadesNovosPedidosScreen
+            requests={requests}
+            onAccept={acceptRequest}
             onDetails={(request) => {
               setSelectedRequest(request);
               setIsViewingRequestDetails(true);
             }}
+            onReject={rejectRequest}
           />
         ) : (
           <OportunidadeMeusServicosScreen
+            services={services}
             onDetails={(service) => openServiceView(service, "details")}
             onMessage={(service) => openServiceView(service, "message")}
+            onPrimaryAction={runServicePrimaryAction}
           />
         )}
       </ScrollView>

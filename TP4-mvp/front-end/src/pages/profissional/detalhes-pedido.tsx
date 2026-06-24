@@ -35,15 +35,20 @@ import {
 } from "../../components/profissional/components";
 
 export function RequestDetailsScreen({
+  onAccept,
   onBack,
   onProfilePress,
+  onReject,
   request,
 }: {
+  onAccept: () => void;
   onBack: () => void;
   onProfilePress: () => void;
+  onReject: () => void;
   request: ServiceRequest;
 }) {
   const [proposedValue, setProposedValue] = useState("");
+  const [proposalSent, setProposalSent] = useState(false);
 
   return (
     <View className="h-full w-full max-w-[480px] self-center bg-background">
@@ -158,12 +163,15 @@ export function RequestDetailsScreen({
               </View>
               <Pressable
                 disabled={!proposedValue.trim()}
+                onPress={() => setProposalSent(true)}
                 className={`rounded-[12px] px-5 py-3 ${
                   proposedValue.trim() ? "bg-primary" : "bg-[#d7c7c9]"
                 }`}
                 accessibilityRole="button"
               >
-                <Text className="text-sm font-semibold text-white">Enviar</Text>
+                <Text className="text-sm font-semibold text-white">
+                  {proposalSent ? "Enviado" : "Enviar"}
+                </Text>
               </Pressable>
             </View>
           </View>
@@ -206,14 +214,14 @@ export function RequestDetailsScreen({
 
         <View className="flex-row gap-3">
           <Pressable
-            onPress={onBack}
+            onPress={onReject}
             className="min-h-[56px] flex-1 items-center justify-center rounded-[12px] bg-card shadow-sm"
             accessibilityRole="button"
           >
             <Text className="font-semibold text-foreground">Recusar</Text>
           </Pressable>
           <Pressable
-            onPress={onBack}
+            onPress={onAccept}
             className="min-h-[56px] flex-1 items-center justify-center rounded-[12px] bg-primary"
             accessibilityRole="button"
           >
