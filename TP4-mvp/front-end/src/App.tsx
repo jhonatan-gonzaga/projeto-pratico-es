@@ -16,6 +16,7 @@ import {
 } from "./pages";
 
 type ReturnScreen = "login" | "signup";
+type ProfileReturnScreen = "profileChoice" | "professionalSetup" | "professionalHome";
 type Screen =
   | ReturnScreen
   | "phone"
@@ -28,6 +29,10 @@ type Screen =
 export default function App() {
   const [screen, setScreen] = useState<Screen>("login");
   const [previousScreen, setPreviousScreen] = useState<ReturnScreen>("signup");
+  const [profileReturnScreen, setProfileReturnScreen] =
+    useState<ProfileReturnScreen>("profileChoice");
+  const isProfessionalScreen =
+    screen === "professionalSetup" || screen === "professionalHome";
 
   const openPhoneScreen = (from: ReturnScreen) => {
     setPreviousScreen(from);
@@ -39,20 +44,13 @@ export default function App() {
     setScreen("google");
   };
 
-  return (
-    <SafeAreaView className="flex-1 bg-background">
-      <StatusBar style="dark" />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-        className="flex-1"
-      >
-        <ScrollView
-          className="flex-1"
-          contentContainerClassName="min-h-[812px] items-center"
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
-        >
-          {screen === "login" ? (
+  const openAccountProfile = (from: ProfileReturnScreen) => {
+    setProfileReturnScreen(from);
+    setScreen("accountProfile");
+  };
+
+  const currentScreen =
+    screen === "login" ? (
             <LoginScreen
               onCreateAccount={() => setScreen("signup")}
               onGoogle={() => openGoogleScreen("login")}
@@ -76,26 +74,49 @@ export default function App() {
                   setScreen("professionalSetup");
                 }
               }}
-              onProfilePress={() => setScreen("accountProfile")}
+              onProfilePress={() => openAccountProfile("profileChoice")}
             />
           ) : screen === "professionalSetup" ? (
             <ProfessionalSetupScreen
               onBack={() => setScreen("profileChoice")}
+              onProfilePress={() => openAccountProfile("professionalSetup")}
               onSave={() => setScreen("professionalHome")}
             />
           ) : screen === "professionalHome" ? (
-            <ProfessionalHomeScreen onBack={() => setScreen("professionalSetup")} />
+            <ProfessionalHomeScreen
+              onBack={() => setScreen("professionalSetup")}
+              onProfilePress={() => openAccountProfile("professionalHome")}
+            />
           ) : screen === "accountProfile" ? (
             <AccountProfileScreen
-              onBack={() => setScreen("profileChoice")}
-              onSave={() => setScreen("profileChoice")}
+              onBack={() => setScreen(profileReturnScreen)}
+              onSave={() => setScreen(profileReturnScreen)}
               onSignOut={() => setScreen("login")}
               onDeleteAccount={() => setScreen("signup")}
             />
           ) : (
             <GoogleSignInScreen onBack={() => setScreen(previousScreen)} />
-          )}
+          );
+
+  return (
+    <SafeAreaView className="flex-1 bg-background">
+      <StatusBar style="dark" />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        className="flex-1"
+      >
+        {isProfessionalScreen ? (
+          currentScreen
+        ) : (
+          <ScrollView
+            className="flex-1"
+            contentContainerClassName="min-h-[812px] items-center"
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
+            {currentScreen}
         </ScrollView>
+        )}
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
-import { Image, Pressable, Text, TextInput, View } from "react-native";
+import { Image, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
 import { professionalServices, projectItems, serviceRequests } from "../../components/profissional/data";
 import { formatBRPhone } from "../../components/profissional/utils";
@@ -34,12 +34,22 @@ import {
   SetupTextField,
 } from "../../components/profissional/components";
 
-export function RequestDetailsScreen({ onBack }: { onBack: () => void }) {
+export function RequestDetailsScreen({
+  onBack,
+  onProfilePress,
+}: {
+  onBack: () => void;
+  onProfilePress: () => void;
+}) {
   return (
-    <View className="min-h-[812px] w-full max-w-[480px] bg-background">
-      <ProjectHeader onBack={onBack} />
+    <View className="h-full w-full max-w-[480px] self-center bg-background">
+      <ProjectHeader onBack={onBack} onProfilePress={onProfilePress} />
 
-      <View className="flex-1 px-4 pb-6 pt-5">
+      <ScrollView
+        className="flex-1"
+        contentContainerClassName="px-4 pb-6 pt-5"
+        showsVerticalScrollIndicator={false}
+      >
         <Text className="mb-1 text-2xl font-bold text-foreground">
           Pintura Residencial
         </Text>
@@ -181,7 +191,7 @@ export function RequestDetailsScreen({ onBack }: { onBack: () => void }) {
             <Text className="font-semibold text-white">Aceitar</Text>
           </Pressable>
         </View>
-      </View>
+      </ScrollView>
     </View>
   );
 }
