@@ -42,6 +42,7 @@ type ServiceRequest = {
 };
 
 type ProfessionalTab = "requests" | "services";
+type ProfessionalArea = "opportunities" | "projects" | "settings";
 type ServiceStatus = "inProgress" | "completed" | "pending";
 
 type ProfessionalService = {
@@ -55,6 +56,12 @@ type ProfessionalService = {
   address?: string;
   messageCount?: string;
   action?: string;
+};
+
+type ProjectItem = {
+  title: string;
+  location: string;
+  image: string;
 };
 
 type FieldProps = {
@@ -1207,6 +1214,27 @@ const statusMeta: Record<
   },
 };
 
+const projectItems: ProjectItem[] = [
+  {
+    title: "Construcao de Residencia",
+    location: "Centro",
+    image:
+      "https://storage.googleapis.com/banani-generated-images/generated-images/38608ed7-42db-41b0-a4fd-f573925de860.jpg",
+  },
+  {
+    title: "Construcao de Comercial",
+    location: "Centro",
+    image:
+      "https://storage.googleapis.com/banani-generated-images/generated-images/2258a051-4e89-4651-90cb-3b82da7d20ab.jpg",
+  },
+  {
+    title: "Construcao de Muro",
+    location: "Centro",
+    image:
+      "https://storage.googleapis.com/banani-generated-images/generated-images/295aaf2d-1944-4391-a5fd-688e289811c1.jpg",
+  },
+];
+
 function ProfessionalHomeHeader({ onBack }: { onBack: () => void }) {
   return (
     <View className="flex-row items-center justify-between border-b border-input-border bg-background px-4 py-3">
@@ -1549,16 +1577,585 @@ function ServiceOrderCard({ service }: { service: ProfessionalService }) {
   );
 }
 
-function ProfessionalBottomTab() {
+function ProjectHeader({ onBack }: { onBack: () => void }) {
+  return (
+    <>
+      <View className="flex-row items-center justify-between bg-background px-4 pb-4 pt-11">
+        <Pressable
+          onPress={onBack}
+          className="h-10 w-10 items-center justify-center rounded-full bg-card shadow-sm"
+          accessibilityRole="button"
+          accessibilityLabel="Voltar"
+        >
+          <Ionicons name="arrow-back" size={18} color="#0f1720" />
+        </Pressable>
+
+        <View className="flex-row items-center gap-2">
+          <View className="h-9 w-9 items-center justify-center rounded-[6px] bg-primary">
+            <Ionicons name="business-outline" size={18} color="#ffffff" />
+          </View>
+          <View className="items-center">
+            <Text className="text-xs font-bold leading-4 text-primary">
+              CONECTA OBRAS
+            </Text>
+            <Text className="text-xs font-bold leading-4 text-primary">
+              ITACOATIARA
+            </Text>
+          </View>
+        </View>
+
+        <View className="h-10 w-10 items-center justify-center overflow-hidden rounded-full border-2 border-primary bg-[#f7e8e9]">
+          <Ionicons name="person" size={22} color="#b94b50" />
+        </View>
+      </View>
+      <View className="h-px bg-black/5" />
+    </>
+  );
+}
+
+function ProjectSection({
+  children,
+  icon,
+  title,
+}: {
+  children: React.ReactNode;
+  icon: IconName;
+  title: string;
+}) {
+  return (
+    <View className="rounded-[8px] bg-card p-4 shadow-sm shadow-black/5">
+      <View className="mb-4 flex-row items-center gap-2">
+        <Ionicons name={icon} size={18} color="#b94b50" />
+        <Text className="text-base font-bold text-foreground">{title}</Text>
+      </View>
+      {children}
+    </View>
+  );
+}
+
+function ProjectInput({
+  label,
+  placeholder,
+  value,
+  onChangeText,
+}: {
+  label: string;
+  placeholder: string;
+  value: string;
+  onChangeText: (value: string) => void;
+}) {
+  return (
+    <View>
+      <Text className="mb-1.5 text-xs text-muted-foreground">{label}</Text>
+      <TextInput
+        value={value}
+        onChangeText={onChangeText}
+        className="min-h-[46px] rounded-[12px] bg-[#f5e8e9] px-4 py-3 text-sm text-foreground"
+        placeholder={placeholder}
+        placeholderTextColor="#8a8a96"
+        accessibilityLabel={label}
+      />
+    </View>
+  );
+}
+
+function ProjectCategoryChip({
+  label,
+  selected,
+  onPress,
+}: {
+  label: string;
+  selected: boolean;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      className={`rounded-full px-4 py-2 ${
+        selected ? "bg-primary" : "bg-[#f5e8e9]"
+      }`}
+      accessibilityRole="button"
+      accessibilityState={{ selected }}
+    >
+      <Text
+        className={`text-sm font-medium ${
+          selected ? "text-white" : "text-foreground"
+        }`}
+      >
+        {label}
+      </Text>
+    </Pressable>
+  );
+}
+
+function PhotoTypeOption({
+  description,
+  label,
+  onPress,
+  selected,
+}: {
+  description: string;
+  label: string;
+  onPress: () => void;
+  selected: boolean;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      className={`flex-row items-center justify-between gap-3 rounded-[12px] px-4 py-3 ${
+        selected ? "border-[1.5px] border-primary bg-card" : "bg-[#fdf5f5]"
+      }`}
+      accessibilityRole="radio"
+      accessibilityState={{ selected }}
+    >
+      <View className="flex-1">
+        <Text
+          className={`text-sm font-bold ${
+            selected ? "text-primary" : "text-foreground"
+          }`}
+        >
+          {label}
+        </Text>
+        <Text className="mt-0.5 text-xs leading-4 text-muted-foreground">
+          {description}
+        </Text>
+      </View>
+      <View
+        className={`h-6 w-6 items-center justify-center rounded-full border-2 ${
+          selected ? "border-primary" : "border-[#c0b0b1]"
+        }`}
+      >
+        {selected ? <View className="h-3 w-3 rounded-full bg-primary" /> : null}
+      </View>
+    </Pressable>
+  );
+}
+
+function PhotoDetailsScreen({ onBack }: { onBack: () => void }) {
+  const [selectedType, setSelectedType] = useState("Capa do projeto");
+  const photoTypes = [
+    {
+      label: "Capa do projeto",
+      description: "A imagem principal que aparecera primeiro",
+    },
+    {
+      label: "Antes",
+      description: "Mostra como era o local antes do servico",
+    },
+    {
+      label: "Depois",
+      description: "Mostra o resultado finalizado",
+    },
+    {
+      label: "Imagem adicional",
+      description: "Outros angulos e detalhes do projeto",
+    },
+  ];
+
+  return (
+    <View className="min-h-[812px] w-full max-w-[480px] bg-background">
+      <View className="flex-row items-center justify-between px-4 pb-4 pt-11">
+        <Pressable
+          onPress={onBack}
+          className="h-10 w-10 items-center justify-center rounded-full bg-card shadow-sm"
+          accessibilityRole="button"
+          accessibilityLabel="Fechar detalhes da foto"
+        >
+          <Ionicons name="close" size={18} color="#0f1720" />
+        </Pressable>
+        <Text className="text-base font-bold text-foreground">
+          Detalhes da Foto
+        </Text>
+        <Pressable onPress={onBack} accessibilityRole="button">
+          <Text className="text-base font-semibold text-primary">Salvar</Text>
+        </Pressable>
+      </View>
+      <View className="h-px bg-black/5" />
+
+      <View className="gap-4 px-4 pb-6 pt-5">
+        <View className="relative h-[260px] overflow-hidden rounded-[12px]">
+          <Image
+            source={{
+              uri: "https://storage.googleapis.com/banani-generated-images/generated-images/ed993d53-08a8-4be3-b552-c60fca359c15.jpg",
+            }}
+            className="h-full w-full"
+            resizeMode="cover"
+            accessibilityLabel="Foto do projeto"
+          />
+          <Pressable
+            className="absolute bottom-3 right-3 flex-row items-center gap-1.5 rounded-full bg-card px-4 py-2 shadow-md shadow-black/10"
+            accessibilityRole="button"
+          >
+            <Ionicons name="refresh-outline" size={14} color="#0f1720" />
+            <Text className="text-sm font-semibold text-foreground">
+              Trocar foto
+            </Text>
+          </Pressable>
+        </View>
+
+        <View className="gap-3 rounded-[8px] bg-card p-4 shadow-sm shadow-black/5">
+          <View className="mb-1 flex-row items-center gap-2">
+            <Ionicons name="pricetag-outline" size={17} color="#b94b50" />
+            <Text className="text-base font-bold text-foreground">
+              Como deseja classificar esta foto?
+            </Text>
+          </View>
+          <View className="gap-3" accessibilityRole="radiogroup">
+            {photoTypes.map((type) => (
+              <PhotoTypeOption
+                key={type.label}
+                label={type.label}
+                description={type.description}
+                selected={selectedType === type.label}
+                onPress={() => setSelectedType(type.label)}
+              />
+            ))}
+          </View>
+        </View>
+      </View>
+
+      <View className="gap-3 px-4 pb-8 pt-2">
+        <Pressable
+          onPress={onBack}
+          className="min-h-[56px] flex-row items-center justify-center gap-2 rounded-[12px] bg-primary px-4"
+          accessibilityRole="button"
+        >
+          <Ionicons name="save-outline" size={18} color="#ffffff" />
+          <Text className="text-base font-semibold text-white">
+            Salvar alteracoes
+          </Text>
+        </Pressable>
+        <Pressable
+          onPress={onBack}
+          className="min-h-[56px] flex-row items-center justify-center gap-2 rounded-[12px] bg-[#f5e8e9] px-4"
+          accessibilityRole="button"
+        >
+          <Ionicons name="trash-outline" size={18} color="#b94b50" />
+          <Text className="text-base font-semibold text-primary">
+            Excluir foto
+          </Text>
+        </Pressable>
+      </View>
+    </View>
+  );
+}
+
+function ProjectPhotoGrid({ onEditPhoto }: { onEditPhoto: () => void }) {
+  return (
+    <View className="flex-row flex-wrap gap-2">
+      <View className="w-[48%]">
+        <Image
+          source={{
+            uri: "https://storage.googleapis.com/banani-generated-images/generated-images/3a22084a-7d43-47ce-bda1-718b62bd262d.jpg",
+          }}
+          className="h-[130px] w-full rounded-[12px]"
+          resizeMode="cover"
+          accessibilityLabel="Foto principal do projeto"
+        />
+        <View className="mt-1.5 flex-row items-center justify-between px-0.5">
+          <View>
+            <Text className="text-xs font-semibold text-foreground">
+              Foto prin...
+            </Text>
+            <Text className="text-xs text-muted-foreground">
+              Capa do projeto
+            </Text>
+          </View>
+          <Pressable
+            onPress={onEditPhoto}
+            className="h-7 w-7 items-center justify-center rounded-full bg-[#f5e8e9]"
+            accessibilityRole="button"
+            accessibilityLabel="Editar foto principal"
+          >
+            <Ionicons name="pencil" size={12} color="#b94b50" />
+          </Pressable>
+        </View>
+      </View>
+
+      <Pressable
+        className="h-[130px] w-[48%] items-center justify-center gap-1.5 rounded-[12px] border-[1.5px] border-dashed border-primary/30 bg-[#fdf0f0] px-2"
+        accessibilityRole="button"
+      >
+        <Ionicons name="images-outline" size={28} color="#b94b50" />
+        <Text className="text-center text-xs font-semibold leading-4 text-foreground">
+          Adicionar mais fotos
+        </Text>
+        <Text className="text-xs text-muted-foreground">Galeria ou camera</Text>
+      </Pressable>
+
+      <Pressable
+        className="h-[100px] w-[48%] items-center justify-center gap-2 rounded-[12px] bg-primary"
+        accessibilityRole="button"
+      >
+        <Ionicons name="camera-outline" size={26} color="#ffffff" />
+        <Text className="text-sm font-semibold text-white">Tirar nova foto</Text>
+      </Pressable>
+
+      <Pressable
+        className="h-[100px] w-[48%] items-center justify-center gap-2 rounded-[12px] border-[1.5px] border-dashed border-primary/30 bg-[#fdf0f0]"
+        accessibilityRole="button"
+      >
+        <Ionicons name="images-outline" size={26} color="#b94b50" />
+        <Text className="text-sm font-semibold text-foreground">
+          Escolher mais imagens
+        </Text>
+      </Pressable>
+    </View>
+  );
+}
+
+function ProjectListCard({ project }: { project: ProjectItem }) {
+  return (
+    <View className="flex-row items-center gap-3 rounded-[8px] bg-card p-3 shadow-sm shadow-black/5">
+      <Image
+        source={{ uri: project.image }}
+        className="h-20 w-20 rounded-[6px]"
+        resizeMode="cover"
+        accessibilityLabel={project.title}
+      />
+
+      <View className="min-w-0 flex-1">
+        <Text
+          className="text-base font-semibold text-foreground"
+          numberOfLines={1}
+        >
+          {project.title}
+        </Text>
+        <View className="mb-3 mt-0.5 flex-row items-center gap-1">
+          <Ionicons name="location" size={12} color="#8a8a96" />
+          <Text className="text-xs text-muted-foreground">
+            {project.location}
+          </Text>
+        </View>
+        <Pressable
+          className="self-start flex-row items-center gap-1.5 rounded-full bg-[#f5e8e9] px-3 py-1.5"
+          accessibilityRole="button"
+        >
+          <Ionicons name="image-outline" size={13} color="#b94b50" />
+          <Text className="text-xs font-medium text-primary">
+            Ver resultado
+          </Text>
+        </Pressable>
+      </View>
+
+      <View className="gap-2">
+        <Pressable
+          className="h-9 w-9 items-center justify-center rounded-full bg-[#f0e8e9]"
+          accessibilityRole="button"
+          accessibilityLabel={`Editar ${project.title}`}
+        >
+          <Ionicons name="pencil" size={15} color="#0f1720" />
+        </Pressable>
+        <Pressable
+          className="h-9 w-9 items-center justify-center rounded-full bg-[#f5e8e9]"
+          accessibilityRole="button"
+          accessibilityLabel={`Excluir ${project.title}`}
+        >
+          <Ionicons name="trash-outline" size={15} color="#b94b50" />
+        </Pressable>
+      </View>
+    </View>
+  );
+}
+
+function MyProjectsScreen({
+  onAddProject,
+  onBack,
+  onSelectArea,
+}: {
+  onAddProject: () => void;
+  onBack: () => void;
+  onSelectArea: (area: ProfessionalArea) => void;
+}) {
+  return (
+    <View className="min-h-[812px] w-full max-w-[480px] bg-background">
+      <ProjectHeader onBack={onBack} />
+
+      <View className="flex-1 gap-5 px-4 pb-4 pt-5">
+        <Pressable
+          onPress={onAddProject}
+          className="min-h-[56px] flex-row items-center justify-center gap-2 rounded-[12px] bg-primary px-4"
+          accessibilityRole="button"
+        >
+          <Ionicons name="add" size={20} color="#ffffff" />
+          <Text className="text-base font-semibold text-white">
+            Adicionar Novo Projeto
+          </Text>
+        </Pressable>
+
+        <View className="flex-row items-center justify-between">
+          <Text className="text-xl font-bold text-foreground">
+            Meus Projetos
+          </Text>
+          <Text className="text-sm text-muted-foreground">3 projetos</Text>
+        </View>
+
+        <View className="gap-3">
+          {projectItems.map((project) => (
+            <ProjectListCard key={project.title} project={project} />
+          ))}
+        </View>
+      </View>
+
+      <ProfessionalBottomTab
+        activeArea="projects"
+        onSelectArea={onSelectArea}
+      />
+    </View>
+  );
+}
+
+function AddProjectScreen({ onBack }: { onBack: () => void }) {
+  const [title, setTitle] = useState("");
+  const [neighborhood, setNeighborhood] = useState("");
+  const [details, setDetails] = useState("");
+  const [isEditingPhoto, setIsEditingPhoto] = useState(false);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([
+    "Eletrica",
+    "Reparo",
+  ]);
+  const categories = [
+    "Construcao",
+    "Eletrica",
+    "Encanamento",
+    "Pintura",
+    "Reparo",
+    "Ar Condicionado",
+  ];
+
+  const toggleCategory = (category: string) => {
+    setSelectedCategories((current) =>
+      current.includes(category)
+        ? current.filter((item) => item !== category)
+        : [...current, category],
+    );
+  };
+
+  if (isEditingPhoto) {
+    return <PhotoDetailsScreen onBack={() => setIsEditingPhoto(false)} />;
+  }
+
+  return (
+    <View className="min-h-[812px] w-full max-w-[480px] bg-background">
+      <ProjectHeader onBack={onBack} />
+
+      <View className="gap-4 px-4 pb-6 pt-5">
+        <ProjectSection icon="document-text-outline" title="Informacoes Basicas">
+          <View className="gap-3">
+            <ProjectInput
+              label="Titulo do projeto"
+              placeholder="Ex: Reforma Completa"
+              value={title}
+              onChangeText={setTitle}
+            />
+            <ProjectInput
+              label="Em qual Bairro?"
+              placeholder="Ex: Centro"
+              value={neighborhood}
+              onChangeText={setNeighborhood}
+            />
+          </View>
+        </ProjectSection>
+
+        <ProjectSection icon="construct-outline" title="Toque no que voce fez:">
+          <View className="flex-row flex-wrap gap-2">
+            {categories.map((category) => (
+              <ProjectCategoryChip
+                key={category}
+                label={category}
+                selected={selectedCategories.includes(category)}
+                onPress={() => toggleCategory(category)}
+              />
+            ))}
+          </View>
+        </ProjectSection>
+
+        <ProjectSection
+          icon="reorder-three-outline"
+          title="Detalhes (se quiser escrever)"
+        >
+          <View className="relative min-h-[100px] rounded-[12px] bg-[#f5e8e9] px-4 py-3">
+            <TextInput
+              value={details}
+              onChangeText={setDetails}
+              multiline
+              className="min-h-[74px] pr-10 text-sm text-foreground"
+              placeholder="Escreva Mais detalhes do projeto...."
+              placeholderTextColor="#8a8a96"
+              accessibilityLabel="Detalhes do projeto"
+            />
+            <Pressable
+              className="absolute bottom-3 right-3 h-8 w-8 items-center justify-center rounded-full bg-card shadow-sm"
+              accessibilityRole="button"
+              accessibilityLabel="Gravar audio"
+            >
+              <Ionicons name="mic-outline" size={16} color="#b94b50" />
+            </Pressable>
+          </View>
+        </ProjectSection>
+
+        <ProjectSection icon="image-outline" title="Fotos do Projeto">
+          <View className="mb-1 flex-row items-start justify-between">
+            <Text className="text-sm font-bold text-foreground">
+              1 foto adicionada
+            </Text>
+            <View className="rounded-full bg-[#f5e8e9] px-2 py-0.5">
+              <Text className="text-xs font-semibold text-primary">1/10</Text>
+            </View>
+          </View>
+          <Text className="mb-3 text-xs leading-5 text-muted-foreground">
+            Voce pode adicionar mais imagens do mesmo projeto para mostrar
+            outros angulos e detalhes.
+          </Text>
+          <ProjectPhotoGrid onEditPhoto={() => setIsEditingPhoto(true)} />
+        </ProjectSection>
+      </View>
+
+      <View className="flex-row gap-3 border-t border-black/5 bg-background px-4 pb-6 pt-2">
+        <Pressable
+          onPress={onBack}
+          className="min-h-[56px] flex-1 items-center justify-center rounded-[12px] bg-card shadow-sm"
+          accessibilityRole="button"
+        >
+          <Text className="text-base font-semibold text-foreground">
+            Cancelar
+          </Text>
+        </Pressable>
+        <Pressable
+          onPress={onBack}
+          className="min-h-[56px] flex-[2] items-center justify-center rounded-[12px] bg-primary"
+          accessibilityRole="button"
+        >
+          <Text className="text-base font-semibold text-white">
+            Adicionar Projeto
+          </Text>
+        </Pressable>
+      </View>
+    </View>
+  );
+}
+
+function ProfessionalBottomTab({
+  activeArea,
+  onSelectArea,
+}: {
+  activeArea: ProfessionalArea;
+  onSelectArea: (area: ProfessionalArea) => void;
+}) {
   const items: Array<{
+    area: ProfessionalArea;
     icon: IconName;
     label: string;
-    active?: boolean;
     badge?: string;
   }> = [
-    { icon: "hammer-outline", label: "Oportunidades", active: true, badge: "3" },
-    { icon: "clipboard-outline", label: "Meus Projetos" },
-    { icon: "settings-outline", label: "Configuracoes" },
+    {
+      area: "opportunities",
+      icon: "hammer-outline",
+      label: "Oportunidades",
+      badge: "3",
+    },
+    { area: "projects", icon: "clipboard-outline", label: "Meus Projetos" },
+    { area: "settings", icon: "settings-outline", label: "Configuracoes" },
   ];
 
   return (
@@ -1567,17 +2164,18 @@ function ProfessionalBottomTab() {
         {items.map((item) => (
           <Pressable
             key={item.label}
+            onPress={() => onSelectArea(item.area)}
             className="items-center gap-1 px-3"
             accessibilityRole="button"
-            accessibilityState={{ selected: item.active }}
+            accessibilityState={{ selected: activeArea === item.area }}
           >
             <View className="relative">
               <Ionicons
                 name={item.icon}
                 size={24}
-                color={item.active ? "#b94b50" : "#7a6568"}
+                color={activeArea === item.area ? "#b94b50" : "#7a6568"}
               />
-              {item.badge ? (
+              {item.badge && activeArea === item.area ? (
                 <View className="absolute -right-2 -top-1 h-4 w-4 items-center justify-center rounded-full bg-primary">
                   <Text className="text-[9px] font-bold text-white">
                     {item.badge}
@@ -1587,7 +2185,7 @@ function ProfessionalBottomTab() {
             </View>
             <Text
               className={`text-xs ${
-                item.active
+                activeArea === item.area
                   ? "font-semibold text-primary"
                   : "text-muted-foreground"
               }`}
@@ -1603,6 +2201,26 @@ function ProfessionalBottomTab() {
 
 function ProfessionalHomeScreen({ onBack }: { onBack: () => void }) {
   const [activeTab, setActiveTab] = useState<ProfessionalTab>("requests");
+  const [activeArea, setActiveArea] =
+    useState<ProfessionalArea>("opportunities");
+  const [isAddingProject, setIsAddingProject] = useState(false);
+
+  if (activeArea === "projects" && isAddingProject) {
+    return <AddProjectScreen onBack={() => setIsAddingProject(false)} />;
+  }
+
+  if (activeArea === "projects") {
+    return (
+      <MyProjectsScreen
+        onAddProject={() => setIsAddingProject(true)}
+        onBack={() => setActiveArea("opportunities")}
+        onSelectArea={(area) => {
+          setIsAddingProject(false);
+          setActiveArea(area);
+        }}
+      />
+    );
+  }
 
   return (
     <View className="min-h-[812px] w-full max-w-[480px] bg-background">
@@ -1624,7 +2242,10 @@ function ProfessionalHomeScreen({ onBack }: { onBack: () => void }) {
         </View>
       )}
 
-      <ProfessionalBottomTab />
+      <ProfessionalBottomTab
+        activeArea={activeArea}
+        onSelectArea={setActiveArea}
+      />
     </View>
   );
 }
