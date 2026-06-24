@@ -153,7 +153,15 @@ export function CustomerAvatar({ name }: { name: string }) {
   );
 }
 
-export function ServiceOrderCard({ service }: { service: ProfessionalService }) {
+export function ServiceOrderCard({
+  onDetails,
+  onMessage,
+  service,
+}: {
+  onDetails?: () => void;
+  onMessage?: () => void;
+  service: ProfessionalService;
+}) {
   const compact = service.status === "completed";
 
   return (
@@ -181,7 +189,7 @@ export function ServiceOrderCard({ service }: { service: ProfessionalService }) 
         </Text>
       </View>
 
-      <View className={`flex-row gap-2 ${compact ? "mb-4" : "mb-2"}`}>
+      <View className={`flex-row gap-2 ${compact ? "mb-3" : "mb-2"}`}>
         <ServiceInfoBox icon="calendar" label="DATA" value={service.date} />
         <ServiceInfoBox icon="time-outline" label="HORARIO" value={service.time} />
       </View>
@@ -200,9 +208,10 @@ export function ServiceOrderCard({ service }: { service: ProfessionalService }) 
         </View>
       ) : null}
 
-      {!compact ? (
-        <View className="mb-3 mt-1 flex-row gap-2">
+      <View className="mb-3 mt-1 flex-row gap-2">
+        {!compact ? (
           <Pressable
+            onPress={onMessage}
             className="relative min-h-[44px] flex-row items-center justify-center gap-2 rounded-[12px] border border-input-border bg-card px-4"
             accessibilityRole="button"
           >
@@ -218,18 +227,19 @@ export function ServiceOrderCard({ service }: { service: ProfessionalService }) 
               </View>
             ) : null}
           </Pressable>
-          <Pressable
-            className="min-h-[44px] flex-1 items-center justify-center rounded-[12px] bg-primary px-4"
-            accessibilityRole="button"
-          >
-            <Text className="text-sm font-bold text-white">
-              {service.action}
-            </Text>
-          </Pressable>
-        </View>
-      ) : null}
+        ) : null}
+        <Pressable
+          className="min-h-[44px] flex-1 items-center justify-center rounded-[12px] bg-primary px-4"
+          accessibilityRole="button"
+        >
+          <Text className="text-sm font-bold text-white">
+            {compact ? "Reabrir Servico" : service.action}
+          </Text>
+        </Pressable>
+      </View>
 
       <Pressable
+        onPress={onDetails}
         className="min-h-[44px] flex-row items-center justify-center gap-2 rounded-[12px] bg-[#f7eced] px-4"
         accessibilityRole="button"
       >
@@ -381,12 +391,15 @@ export function ResultImageBadge({
 export function SettingsOption({
   icon,
   label,
+  onPress,
 }: {
   icon: IconName;
   label: string;
+  onPress?: () => void;
 }) {
   return (
     <Pressable
+      onPress={onPress}
       className="flex-row items-center gap-4 px-4 py-4"
       accessibilityRole="button"
     >
@@ -481,8 +494,10 @@ export function EditProjectPhotoGrid({ onEditPhoto }: { onEditPhoto: () => void 
 
       <View className="mt-3 flex-row gap-2">
         <Pressable
+          onPress={onEditPhoto}
           className="h-[72px] flex-1 items-center justify-center gap-1.5 rounded-[12px] bg-primary"
           accessibilityRole="button"
+          accessibilityLabel="Tirar nova foto do projeto"
         >
           <Ionicons name="camera-outline" size={20} color="#ffffff" />
           <Text className="text-xs font-semibold text-white">
@@ -490,8 +505,10 @@ export function EditProjectPhotoGrid({ onEditPhoto }: { onEditPhoto: () => void 
           </Text>
         </Pressable>
         <Pressable
+          onPress={onEditPhoto}
           className="h-[72px] flex-1 items-center justify-center gap-1.5 rounded-[12px] border-[1.5px] border-dashed border-primary/30 bg-[#fdf0f0]"
           accessibilityRole="button"
+          accessibilityLabel="Adicionar fotos ao projeto"
         >
           <Ionicons name="images-outline" size={20} color="#b94b50" />
           <Text className="text-xs font-semibold text-foreground">
@@ -502,4 +519,3 @@ export function EditProjectPhotoGrid({ onEditPhoto }: { onEditPhoto: () => void 
     </>
   );
 }
-

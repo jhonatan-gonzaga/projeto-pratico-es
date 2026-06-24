@@ -6,6 +6,8 @@ export type ServiceRequest = {
   title: string;
   location: string;
   date: string;
+  time: string;
+  deadline: string;
   description: string;
   price: string;
   negotiable?: boolean;
@@ -23,6 +25,7 @@ export type ProfessionalService = {
   price: string;
   date: string;
   time: string;
+  deadline: string;
   address?: string;
   messageCount?: string;
   action?: string;

@@ -150,9 +150,6 @@ export function ProjectResultScreen({
             />
             <ResultImageBadge label="Imagem Adicional" color="#5a6e8a" />
           </View>
-          <View className="aspect-square flex-1 items-center justify-center rounded-[12px] bg-[#f0e8e9]">
-            <Ionicons name="add" size={18} color="#9a8080" />
-          </View>
         </View>
       </View>
 

@@ -1,5 +1,11 @@
 export { RequestDetailsScreen } from "./detalhes-pedido";
+export { ServiceDetailsScreen } from "./detalhes-servico";
 export { PhotoDetailsScreen } from "./detalhes-foto";
+export { ServiceMessageScreen } from "./mensagem-servico";
+export { NotificationsScreen } from "./notificacoes";
+export { PrivacySecurityScreen } from "./privacidade-seguranca";
+export { HelpCenterScreen } from "./central-ajuda";
+export { TermsOfUseScreen } from "./termos-uso";
 export { MyProjectsScreen } from "./meus-projetos";
 export { ProjectResultScreen } from "./resultado-projeto";
 export { SettingsScreen } from "./configuracao";

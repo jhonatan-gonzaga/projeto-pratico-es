@@ -33,6 +33,12 @@ import {
   SetupSection,
   SetupTextField,
 } from "../../components/profissional/components";
+import { HelpCenterScreen } from "./central-ajuda";
+import { NotificationsScreen } from "./notificacoes";
+import { PrivacySecurityScreen } from "./privacidade-seguranca";
+import { TermsOfUseScreen } from "./termos-uso";
+
+type SettingsPage = "home" | "notifications" | "privacy" | "help" | "terms";
 
 export function SettingsScreen({
   onBack,
@@ -43,6 +49,44 @@ export function SettingsScreen({
   onProfilePress: () => void;
   onSelectArea: (area: ProfessionalArea) => void;
 }) {
+  const [settingsPage, setSettingsPage] = useState<SettingsPage>("home");
+
+  if (settingsPage === "notifications") {
+    return (
+      <NotificationsScreen
+        onBack={() => setSettingsPage("home")}
+        onProfilePress={onProfilePress}
+      />
+    );
+  }
+
+  if (settingsPage === "privacy") {
+    return (
+      <PrivacySecurityScreen
+        onBack={() => setSettingsPage("home")}
+        onProfilePress={onProfilePress}
+      />
+    );
+  }
+
+  if (settingsPage === "help") {
+    return (
+      <HelpCenterScreen
+        onBack={() => setSettingsPage("home")}
+        onProfilePress={onProfilePress}
+      />
+    );
+  }
+
+  if (settingsPage === "terms") {
+    return (
+      <TermsOfUseScreen
+        onBack={() => setSettingsPage("home")}
+        onProfilePress={onProfilePress}
+      />
+    );
+  }
+
   return (
     <View className="h-full w-full max-w-[480px] self-center bg-background">
       <ProjectHeader onBack={onBack} onProfilePress={onProfilePress} />
@@ -65,18 +109,31 @@ export function SettingsScreen({
         </View>
 
         <SettingsSection title="Preferencias">
-          <SettingsOption icon="notifications-outline" label="Notificacoes" />
+          <SettingsOption
+            icon="notifications-outline"
+            label="Notificacoes"
+            onPress={() => setSettingsPage("notifications")}
+          />
           <SettingsDivider />
           <SettingsOption
             icon="lock-closed-outline"
             label="Privacidade e Seguranca"
+            onPress={() => setSettingsPage("privacy")}
           />
         </SettingsSection>
 
         <SettingsSection title="Suporte">
-          <SettingsOption icon="help-circle-outline" label="Central de Ajuda" />
+          <SettingsOption
+            icon="help-circle-outline"
+            label="Central de Ajuda"
+            onPress={() => setSettingsPage("help")}
+          />
           <SettingsDivider />
-          <SettingsOption icon="document-text-outline" label="Termos de Uso" />
+          <SettingsOption
+            icon="document-text-outline"
+            label="Termos de Uso"
+            onPress={() => setSettingsPage("terms")}
+          />
         </SettingsSection>
 
         <View className="overflow-hidden rounded-[16px] bg-card shadow-sm shadow-black/5">
