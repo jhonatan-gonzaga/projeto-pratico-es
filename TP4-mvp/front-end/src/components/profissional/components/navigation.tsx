@@ -6,7 +6,13 @@ import type { IconName, ProfessionalArea, ProfessionalService, ProfessionalTab, 
 
 const logo = require("../../../../assets/logotipo.png");
 
-export function ProfessionalHeader({ onBack }: { onBack: () => void }) {
+export function ProfessionalHeader({
+  onBack,
+  onProfilePress,
+}: {
+  onBack: () => void;
+  onProfilePress?: () => void;
+}) {
   return (
     <>
       <View className="flex-row items-center justify-between bg-background px-4 pb-4 pt-11">
@@ -28,18 +34,29 @@ export function ProfessionalHeader({ onBack }: { onBack: () => void }) {
           />
         </View>
 
-        <View className="h-10 w-10 items-center justify-center overflow-hidden rounded-full border-2 border-primary bg-[#f7e8e9]">
+        <Pressable
+          onPress={onProfilePress}
+          className="h-10 w-10 items-center justify-center overflow-hidden rounded-full border-2 border-primary bg-[#f7e8e9]"
+          accessibilityRole="button"
+          accessibilityLabel="Abrir perfil"
+        >
           <Ionicons name="person" size={22} color="#b94b50" />
-        </View>
+        </Pressable>
       </View>
       <View className="h-px bg-black/5" />
     </>
   );
 }
 
-export function ProfessionalHomeHeader({ onBack }: { onBack: () => void }) {
+export function ProfessionalHomeHeader({
+  onBack,
+  onProfilePress,
+}: {
+  onBack: () => void;
+  onProfilePress?: () => void;
+}) {
   return (
-    <ProfessionalHeader onBack={onBack} />
+    <ProfessionalHeader onBack={onBack} onProfilePress={onProfilePress} />
   );
 }
 
@@ -93,9 +110,15 @@ export function ProfessionalTabToggle({
   );
 }
 
-export function ProjectHeader({ onBack }: { onBack: () => void }) {
+export function ProjectHeader({
+  onBack,
+  onProfilePress,
+}: {
+  onBack: () => void;
+  onProfilePress?: () => void;
+}) {
   return (
-    <ProfessionalHeader onBack={onBack} />
+    <ProfessionalHeader onBack={onBack} onProfilePress={onProfilePress} />
   );
 }
 

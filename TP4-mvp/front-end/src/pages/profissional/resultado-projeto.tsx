@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
-import { Image, Pressable, Text, TextInput, View } from "react-native";
+import { Image, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
 import { professionalServices, projectItems, serviceRequests } from "../../components/profissional/data";
 import { formatBRPhone } from "../../components/profissional/utils";
@@ -37,38 +37,45 @@ import {
 export function ProjectResultScreen({
   onBack,
   onEdit,
+  onProfilePress,
 }: {
   onBack: () => void;
   onEdit: () => void;
+  onProfilePress: () => void;
 }) {
   return (
-    <View className="min-h-[900px] w-full max-w-[480px] bg-background pb-28">
-      <ProjectHeader onBack={onBack} />
+    <View className="h-full w-full max-w-[480px] self-center bg-background">
+      <ProjectHeader onBack={onBack} onProfilePress={onProfilePress} />
 
-      <View className="mx-4 overflow-hidden rounded-[20px]">
-        <Image
-          source={{
-            uri: "https://storage.googleapis.com/banani-generated-images/generated-images/4553595b-f1e6-4373-b3a1-849425e19812.jpg",
-          }}
-          className="h-[190px] w-full"
-          resizeMode="cover"
-          accessibilityLabel="Construcao de Casa"
-        />
-        <LinearGradient
-          colors={["transparent", "rgba(0,0,0,0.62)"]}
-          className="absolute bottom-0 left-0 right-0 px-4 pb-4 pt-10"
-        >
-          <Text className="text-2xl font-bold leading-8 text-white">
-            Construcao de Casa
-          </Text>
-          <View className="mt-1 flex-row items-center gap-1">
-            <Ionicons name="location" size={13} color="rgba(255,255,255,0.82)" />
-            <Text className="text-sm text-white/80">
-              Centro - Itacoatiara
+      <ScrollView
+        className="flex-1"
+        contentContainerClassName="pb-28"
+        showsVerticalScrollIndicator={false}
+      >
+        <View className="mx-4 overflow-hidden rounded-[20px]">
+          <Image
+            source={{
+              uri: "https://storage.googleapis.com/banani-generated-images/generated-images/4553595b-f1e6-4373-b3a1-849425e19812.jpg",
+            }}
+            className="h-[190px] w-full"
+            resizeMode="cover"
+            accessibilityLabel="Construcao de Casa"
+          />
+          <LinearGradient
+            colors={["transparent", "rgba(0,0,0,0.62)"]}
+            className="absolute bottom-0 left-0 right-0 px-4 pb-4 pt-10"
+          >
+            <Text className="text-2xl font-bold leading-8 text-white">
+              Construcao de Casa
             </Text>
-          </View>
-        </LinearGradient>
-      </View>
+            <View className="mt-1 flex-row items-center gap-1">
+              <Ionicons name="location" size={13} color="rgba(255,255,255,0.82)" />
+              <Text className="text-sm text-white/80">
+                Centro - Itacoatiara
+              </Text>
+            </View>
+          </LinearGradient>
+        </View>
 
       <View className="mt-4 flex-row flex-wrap gap-2 px-4">
         {["Construcao", "Eletrica", "Reparo"].map((tag) => (
@@ -149,7 +156,9 @@ export function ProjectResultScreen({
         </View>
       </View>
 
-      <View className="absolute bottom-0 left-0 right-0 flex-row items-center justify-between bg-card px-4 py-4 shadow-lg shadow-black/10">
+      </ScrollView>
+
+      <View className="flex-row items-center justify-between bg-card px-4 py-4 shadow-lg shadow-black/10">
         <Pressable
           className="flex-row items-center gap-2"
           accessibilityRole="button"

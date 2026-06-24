@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
-import { Image, Pressable, Text, TextInput, View } from "react-native";
+import { Image, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
 import { professionalServices, projectItems, serviceRequests } from "../../components/profissional/data";
 import { formatBRPhone } from "../../components/profissional/utils";
@@ -36,9 +36,11 @@ import {
 
 export function ProfessionalSetupScreen({
   onBack,
+  onProfilePress,
   onSave,
 }: {
   onBack: () => void;
+  onProfilePress: () => void;
   onSave: () => void;
 }) {
   const [name, setName] = useState("Joao Nonato");
@@ -99,10 +101,15 @@ export function ProfessionalSetupScreen({
   };
 
   return (
-    <View className="min-h-[812px] w-full max-w-[480px] bg-background">
-      <ProjectHeader onBack={onBack} />
+    <View className="h-full w-full max-w-[480px] self-center bg-background">
+      <ProjectHeader onBack={onBack} onProfilePress={onProfilePress} />
 
-      <View className="gap-7 px-5 pb-[120px] pt-3">
+      <ScrollView
+        className="flex-1"
+        contentContainerClassName="gap-7 px-5 pb-[120px] pt-3"
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
         <View className="items-center gap-2">
           <View className="relative">
             <View className="h-24 w-24 items-center justify-center rounded-full border-[3px] border-primary bg-[#f7e8e9]">
@@ -235,7 +242,7 @@ export function ProfessionalSetupScreen({
             </View>
           </View>
         </SetupSection>
-      </View>
+      </ScrollView>
 
       <View className="absolute bottom-0 left-0 right-0 border-t border-input-border bg-card px-5 pb-8 pt-4">
         <Pressable

@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
-import { Image, Pressable, Text, TextInput, View } from "react-native";
+import { Image, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
 import { professionalServices, projectItems, serviceRequests } from "../../components/profissional/data";
 import { formatBRPhone } from "../../components/profissional/utils";
@@ -36,16 +36,22 @@ import {
 
 export function SettingsScreen({
   onBack,
+  onProfilePress,
   onSelectArea,
 }: {
   onBack: () => void;
+  onProfilePress: () => void;
   onSelectArea: (area: ProfessionalArea) => void;
 }) {
   return (
-    <View className="min-h-[900px] w-full max-w-[480px] bg-background">
-      <ProjectHeader onBack={onBack} />
+    <View className="h-full w-full max-w-[480px] self-center bg-background">
+      <ProjectHeader onBack={onBack} onProfilePress={onProfilePress} />
 
-      <View className="flex-1 px-4 pt-5">
+      <ScrollView
+        className="flex-1"
+        contentContainerClassName="px-4 pb-4 pt-5"
+        showsVerticalScrollIndicator={false}
+      >
         <View className="mb-6 flex-row items-center gap-4 rounded-[16px] bg-card px-4 py-4 shadow-sm shadow-black/5">
           <View className="h-16 w-16 items-center justify-center rounded-[14px] border-2 border-primary bg-[#f7e8e9]">
             <Ionicons name="person" size={32} color="#b94b50" />
@@ -84,14 +90,12 @@ export function SettingsScreen({
             </Text>
           </Pressable>
         </View>
-      </View>
+      </ScrollView>
 
-      <View className="mx-3 mb-4">
-        <ProfessionalBottomTab
-          activeArea="settings"
-          onSelectArea={onSelectArea}
-        />
-      </View>
+      <ProfessionalBottomTab
+        activeArea="settings"
+        onSelectArea={onSelectArea}
+      />
     </View>
   );
 }

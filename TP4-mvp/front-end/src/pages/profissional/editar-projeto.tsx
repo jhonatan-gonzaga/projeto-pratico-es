@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
-import { Image, Pressable, Text, TextInput, View } from "react-native";
+import { Image, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
 import { professionalServices, projectItems, serviceRequests } from "../../components/profissional/data";
 import { formatBRPhone } from "../../components/profissional/utils";
@@ -35,7 +35,13 @@ import {
 } from "../../components/profissional/components";
 
 import { PhotoDetailsScreen } from "./detalhes-foto";
-export function EditProjectScreen({ onBack }: { onBack: () => void }) {
+export function EditProjectScreen({
+  onBack,
+  onProfilePress,
+}: {
+  onBack: () => void;
+  onProfilePress: () => void;
+}) {
   const [title, setTitle] = useState("Construcao de Residencia");
   const [neighborhood, setNeighborhood] = useState("Centro");
   const [details, setDetails] = useState(
@@ -64,22 +70,34 @@ export function EditProjectScreen({ onBack }: { onBack: () => void }) {
   };
 
   if (isEditingPhoto) {
-    return <PhotoDetailsScreen onBack={() => setIsEditingPhoto(false)} />;
+    return (
+      <PhotoDetailsScreen
+        onBack={() => setIsEditingPhoto(false)}
+        onProfilePress={onProfilePress}
+      />
+    );
   }
 
   return (
-    <View className="min-h-[812px] w-full max-w-[480px] bg-background">
-      <ProjectHeader onBack={onBack} />
+    <View className="h-full w-full max-w-[480px] self-center bg-background">
+      <ProjectHeader onBack={onBack} onProfilePress={onProfilePress} />
 
-      <View className="flex-row items-center gap-2 px-4 pb-1 pt-5">
-        <Ionicons name="pencil" size={18} color="#b94b50" />
-        <Text className="text-xl font-bold text-foreground">Editar Projeto</Text>
-      </View>
-      <Text className="px-4 pb-4 text-sm text-muted-foreground">
-        Atualize as informacoes do seu projeto
-      </Text>
+      <ScrollView
+        className="flex-1"
+        contentContainerClassName="gap-4 px-4 pb-6 pt-5"
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <View>
+          <View className="flex-row items-center gap-2 pb-1">
+            <Ionicons name="pencil" size={18} color="#b94b50" />
+            <Text className="text-xl font-bold text-foreground">Editar Projeto</Text>
+          </View>
+          <Text className="text-sm text-muted-foreground">
+            Atualize as informacoes do seu projeto
+          </Text>
+        </View>
 
-      <View className="gap-4 px-4 pb-6">
         <ProjectSection icon="document-text-outline" title="Informacoes Basicas">
           <View className="gap-3">
             <ProjectInput
@@ -165,7 +183,7 @@ export function EditProjectScreen({ onBack }: { onBack: () => void }) {
             </Text>
           </Pressable>
         </View>
-      </View>
+      </ScrollView>
 
       <View className="flex-row gap-3 border-t border-black/5 bg-background px-4 pb-8 pt-2">
         <Pressable
