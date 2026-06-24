@@ -1,0 +1,11 @@
+export { RequestDetailsScreen } from "./detalhes-pedido";
+export { PhotoDetailsScreen } from "./detalhes-foto";
+export { MyProjectsScreen } from "./meus-projetos";
+export { ProjectResultScreen } from "./resultado-projeto";
+export { SettingsScreen } from "./configuracao";
+export { EditProjectScreen } from "./editar-projeto";
+export { AddProjectScreen } from "./adicionar-projeto";
+export { ProfessionalHomeScreen } from "./area-profissional";
+export { ProfessionalSetupScreen } from "./cadastrar-profissional";
+export { OportunidadeMeusServicosScreen } from "./oportunidade-meus-servicos";
+export { OportunidadesNovosPedidosScreen } from "./oportunidades-novos-pedidos";
