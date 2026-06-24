@@ -5,7 +5,7 @@ import { Image, Pressable, ScrollView, Text, TextInput, View } from "react-nativ
 
 import { professionalServices, projectItems, serviceRequests } from "../../components/profissional/data";
 import { formatBRPhone } from "../../components/profissional/utils";
-import type { ProfessionalArea, ProfessionalTab } from "../../components/profissional/types";
+import type { ProfessionalArea, ProfessionalTab, ServiceRequest } from "../../components/profissional/types";
 import {
   ChoiceChip,
   CustomerAvatar,
@@ -37,10 +37,14 @@ import {
 export function RequestDetailsScreen({
   onBack,
   onProfilePress,
+  request,
 }: {
   onBack: () => void;
   onProfilePress: () => void;
+  request: ServiceRequest;
 }) {
+  const [proposedValue, setProposedValue] = useState("");
+
   return (
     <View className="h-full w-full max-w-[480px] self-center bg-background">
       <ProjectHeader onBack={onBack} onProfilePress={onProfilePress} />
@@ -51,16 +55,20 @@ export function RequestDetailsScreen({
         showsVerticalScrollIndicator={false}
       >
         <Text className="mb-1 text-2xl font-bold text-foreground">
-          Pintura Residencial
+          {request.title}
         </Text>
         <View className="mb-4 flex-row flex-wrap gap-2">
           <View className="flex-row items-center gap-1 rounded-[12px] bg-card px-3 py-1.5">
             <Ionicons name="location" size={14} color="#b94b50" />
-            <Text className="text-sm text-foreground">Centro</Text>
+            <Text className="text-sm text-foreground">{request.location}</Text>
           </View>
           <View className="flex-row items-center gap-1 rounded-[12px] bg-card px-3 py-1.5">
             <Ionicons name="calendar" size={14} color="#b94b50" />
-            <Text className="text-sm text-foreground">04 de dez.</Text>
+            <Text className="text-sm text-foreground">{request.date}</Text>
+          </View>
+          <View className="flex-row items-center gap-1 rounded-[12px] bg-card px-3 py-1.5">
+            <Ionicons name="time-outline" size={14} color="#b94b50" />
+            <Text className="text-sm text-foreground">{request.time}</Text>
           </View>
         </View>
 
@@ -98,47 +106,68 @@ export function RequestDetailsScreen({
             </Text>
           </View>
           <Text className="text-sm leading-6 text-muted-foreground">
-            Pintura completa de casa de 3 quartos, incluindo teto e paredes
-            internas. Necessario preparar as paredes, cobrir moveis e entregar
-            acabamento limpo.
+            {request.description}
           </Text>
         </View>
 
-        <View className="mb-4 flex-row gap-3">
-          <DetailInfoCard
-            icon="calendar-outline"
-            label="Data"
-            value="04/12/2024"
-            subtitle="Prazo: 5 dias"
-          />
-          <DetailInfoCard
-            icon="wallet-outline"
-            label="Valor"
-            value="R$ 1.800"
-            subtitle="NEGOCIAVEL"
-          />
+        <View className="mb-4 gap-3">
+          <View className="flex-row gap-3">
+            <DetailInfoCard
+              icon="calendar-outline"
+              label="Data"
+              value={request.date}
+              subtitle={`Prazo: ${request.deadline}`}
+            />
+            <DetailInfoCard
+              icon="time-outline"
+              label="Horario"
+              value={request.time}
+              subtitle="Previsto"
+            />
+          </View>
+          <View className="flex-row">
+            <DetailInfoCard
+              icon="wallet-outline"
+              label="Valor"
+              value={request.price}
+              subtitle={request.negotiable ? "NEGOCIAVEL" : "VALOR FIXO"}
+            />
+          </View>
         </View>
 
-        <View className="mb-4 rounded-[8px] bg-card p-4 shadow-sm shadow-black/5">
-          <View className="mb-3 flex-row items-center gap-2">
-            <Ionicons name="cash-outline" size={18} color="#b94b50" />
-            <Text className="text-xs font-semibold uppercase tracking-[1.2px] text-muted-foreground">
-              Propor Novo Valor
-            </Text>
-          </View>
-          <View className="flex-row items-center gap-2">
-            <View className="flex-1 flex-row items-center gap-2 rounded-[12px] border border-input-border bg-background px-3 py-3">
-              <Text className="text-sm font-medium text-muted-foreground">R$</Text>
-              <Text className="text-sm text-muted-foreground">Ex: 1.500,00</Text>
+        {request.negotiable ? (
+          <View className="mb-4 rounded-[8px] bg-card p-4 shadow-sm shadow-black/5">
+            <View className="mb-3 flex-row items-center gap-2">
+              <Ionicons name="cash-outline" size={18} color="#b94b50" />
+              <Text className="text-xs font-semibold uppercase tracking-[1.2px] text-muted-foreground">
+                Propor Novo Valor
+              </Text>
             </View>
-            <Pressable
-              className="rounded-[12px] bg-primary px-5 py-3"
-              accessibilityRole="button"
-            >
-              <Text className="text-sm font-semibold text-white">Enviar</Text>
-            </Pressable>
+            <View className="flex-row items-center gap-2">
+              <View className="flex-1 flex-row items-center gap-2 rounded-[12px] border border-input-border bg-background px-3 py-3">
+                <Text className="text-sm font-medium text-muted-foreground">R$</Text>
+                <TextInput
+                  value={proposedValue}
+                  onChangeText={setProposedValue}
+                  keyboardType="numeric"
+                  className="flex-1 p-0 text-sm text-foreground"
+                  placeholder="Ex: 1.500,00"
+                  placeholderTextColor="#8a8a96"
+                  accessibilityLabel="Propor novo valor"
+                />
+              </View>
+              <Pressable
+                disabled={!proposedValue.trim()}
+                className={`rounded-[12px] px-5 py-3 ${
+                  proposedValue.trim() ? "bg-primary" : "bg-[#d7c7c9]"
+                }`}
+                accessibilityRole="button"
+              >
+                <Text className="text-sm font-semibold text-white">Enviar</Text>
+              </Pressable>
+            </View>
           </View>
-        </View>
+        ) : null}
 
         <View className="mb-5 rounded-[8px] bg-card p-4 shadow-sm shadow-black/5">
           <View className="mb-3 flex-row items-center gap-2">
