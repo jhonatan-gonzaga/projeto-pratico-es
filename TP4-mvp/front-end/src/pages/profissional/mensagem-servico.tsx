@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import { useState } from "react";
 import { Linking, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
 import type { ProfessionalService } from "../../components/profissional/types";
@@ -17,8 +18,49 @@ export function ServiceMessageScreen({
   onProfilePress: () => void;
   service: ProfessionalService;
 }) {
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState([
+    {
+      id: "1",
+      fromMe: false,
+      text: "Bom dia! Podemos confirmar o horario do servico?",
+      time: "08:12",
+    },
+    {
+      id: "2",
+      fromMe: true,
+      text: "Bom dia, posso sim. Chego no endereco as 8h.",
+      time: "08:15",
+    },
+    {
+      id: "3",
+      fromMe: false,
+      text: "Perfeito. Vou deixar o material separado.",
+      time: "08:18",
+    },
+  ]);
+
   const openWhatsapp = () => {
     Linking.openURL("https://wa.me/5592999999999");
+  };
+
+  const sendMessage = () => {
+    const trimmed = message.trim();
+
+    if (!trimmed) {
+      return;
+    }
+
+    setMessages((current) => [
+      ...current,
+      {
+        id: `${Date.now()}`,
+        fromMe: true,
+        text: trimmed,
+        time: "Agora",
+      },
+    ]);
+    setMessage("");
   };
 
   return (
@@ -45,28 +87,31 @@ export function ServiceMessageScreen({
         contentContainerClassName="gap-3 px-4 py-5"
         showsVerticalScrollIndicator={false}
       >
-        <View className="max-w-[78%] self-start rounded-[16px] rounded-tl-[4px] bg-card px-4 py-3 shadow-sm shadow-black/5">
-          <Text className="text-sm leading-5 text-foreground">
-            Bom dia! Podemos confirmar o horario do servico?
-          </Text>
-          <Text className="mt-1 text-[11px] text-muted-foreground">08:12</Text>
-        </View>
-
-        <View className="max-w-[78%] self-end rounded-[16px] rounded-tr-[4px] bg-primary px-4 py-3">
-          <Text className="text-sm leading-5 text-white">
-            Bom dia, posso sim. Chego no endereco as 8h.
-          </Text>
-          <Text className="mt-1 text-right text-[11px] text-white/80">
-            08:15
-          </Text>
-        </View>
-
-        <View className="max-w-[78%] self-start rounded-[16px] rounded-tl-[4px] bg-card px-4 py-3 shadow-sm shadow-black/5">
-          <Text className="text-sm leading-5 text-foreground">
-            Perfeito. Vou deixar o material separado.
-          </Text>
-          <Text className="mt-1 text-[11px] text-muted-foreground">08:18</Text>
-        </View>
+        {messages.map((item) => (
+          <View
+            key={item.id}
+            className={`max-w-[78%] rounded-[16px] px-4 py-3 ${
+              item.fromMe
+                ? "self-end rounded-tr-[4px] bg-primary"
+                : "self-start rounded-tl-[4px] bg-card shadow-sm shadow-black/5"
+            }`}
+          >
+            <Text
+              className={`text-sm leading-5 ${
+                item.fromMe ? "text-white" : "text-foreground"
+              }`}
+            >
+              {item.text}
+            </Text>
+            <Text
+              className={`mt-1 text-[11px] ${
+                item.fromMe ? "text-right text-white/80" : "text-muted-foreground"
+              }`}
+            >
+              {item.time}
+            </Text>
+          </View>
+        ))}
 
         <Pressable
           onPress={openWhatsapp}
@@ -82,12 +127,15 @@ export function ServiceMessageScreen({
 
       <View className="flex-row items-center gap-2 border-t border-input-border bg-card px-4 py-3">
         <TextInput
+          value={message}
+          onChangeText={setMessage}
           className="min-h-[44px] flex-1 rounded-[12px] bg-background px-4 text-sm text-foreground"
           placeholder="Digite uma mensagem..."
           placeholderTextColor="#8a8a96"
           accessibilityLabel="Mensagem"
         />
         <Pressable
+          onPress={sendMessage}
           className="h-11 w-11 items-center justify-center rounded-full bg-primary"
           accessibilityRole="button"
           accessibilityLabel="Enviar mensagem"

@@ -5,7 +5,7 @@ import { Image, Pressable, ScrollView, Text, TextInput, View } from "react-nativ
 
 import { professionalServices, projectItems, serviceRequests } from "../../components/profissional/data";
 import { formatBRPhone } from "../../components/profissional/utils";
-import type { ProfessionalArea, ProfessionalTab } from "../../components/profissional/types";
+import type { ProfessionalArea, ProfessionalTab, ProjectItem } from "../../components/profissional/types";
 import {
   ChoiceChip,
   CustomerAvatar,
@@ -38,12 +38,16 @@ import { PhotoDetailsScreen } from "./detalhes-foto";
 export function EditProjectScreen({
   onBack,
   onProfilePress,
+  onSave,
+  project,
 }: {
   onBack: () => void;
   onProfilePress: () => void;
+  onSave: (project: ProjectItem) => void;
+  project: ProjectItem;
 }) {
-  const [title, setTitle] = useState("Construcao de Residencia");
-  const [neighborhood, setNeighborhood] = useState("Centro");
+  const [title, setTitle] = useState(project.title);
+  const [neighborhood, setNeighborhood] = useState(project.location);
   const [details, setDetails] = useState(
     "Construcao de uma residencia de 2 andares no bairro centro, com acabamento padrao medio.",
   );
@@ -142,6 +146,11 @@ export function EditProjectScreen({
               accessibilityLabel="Detalhes do projeto"
             />
             <Pressable
+              onPress={() =>
+                setDetails(
+                  "Texto gerado por audio simulado: projeto atualizado com novas fotos, detalhes do acabamento e observacoes do servico.",
+                )
+              }
               className="absolute bottom-3 right-3 h-8 w-8 items-center justify-center rounded-full bg-card shadow-sm"
               accessibilityRole="button"
               accessibilityLabel="Gravar audio"
@@ -196,7 +205,13 @@ export function EditProjectScreen({
           </Text>
         </Pressable>
         <Pressable
-          onPress={onBack}
+          onPress={() =>
+            onSave({
+              ...project,
+              title: title || project.title,
+              location: neighborhood || project.location,
+            })
+          }
           className="min-h-[56px] flex-[2] flex-row items-center justify-center gap-2 rounded-[12px] bg-primary"
           accessibilityRole="button"
         >

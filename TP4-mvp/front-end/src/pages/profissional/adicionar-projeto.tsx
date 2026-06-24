@@ -5,7 +5,7 @@ import { Image, Pressable, ScrollView, Text, TextInput, View } from "react-nativ
 
 import { professionalServices, projectItems, serviceRequests } from "../../components/profissional/data";
 import { formatBRPhone } from "../../components/profissional/utils";
-import type { ProfessionalArea, ProfessionalTab } from "../../components/profissional/types";
+import type { ProfessionalArea, ProfessionalTab, ProjectItem } from "../../components/profissional/types";
 import {
   ChoiceChip,
   CustomerAvatar,
@@ -38,9 +38,11 @@ import { PhotoDetailsScreen } from "./detalhes-foto";
 export function AddProjectScreen({
   onBack,
   onProfilePress,
+  onSave,
 }: {
   onBack: () => void;
   onProfilePress: () => void;
+  onSave: (project: ProjectItem) => void;
 }) {
   const [title, setTitle] = useState("");
   const [neighborhood, setNeighborhood] = useState("");
@@ -131,6 +133,11 @@ export function AddProjectScreen({
               accessibilityLabel="Detalhes do projeto"
             />
             <Pressable
+              onPress={() =>
+                setDetails(
+                  "Texto gerado por audio simulado: reforma realizada com acabamento, revisao eletrica e pintura do ambiente.",
+                )
+              }
               className="absolute bottom-3 right-3 h-8 w-8 items-center justify-center rounded-full bg-card shadow-sm"
               accessibilityRole="button"
               accessibilityLabel="Gravar audio"
@@ -168,7 +175,14 @@ export function AddProjectScreen({
           </Text>
         </Pressable>
         <Pressable
-          onPress={onBack}
+          onPress={() =>
+            onSave({
+              title: title || "Novo Projeto Simulado",
+              location: neighborhood || "Centro",
+              image:
+                "https://storage.googleapis.com/banani-generated-images/generated-images/3a22084a-7d43-47ce-bda1-718b62bd262d.jpg",
+            })
+          }
           className="min-h-[56px] flex-[2] items-center justify-center rounded-[12px] bg-primary"
           accessibilityRole="button"
         >
