@@ -45,29 +45,69 @@ function FilterChip({ label, selected, onPress }: FilterChipProps) {
   );
 }
 
-function PriceBox({ value, label }: { value: string; label: string }) {
+type PriceInputProps = {
+  value: string;
+  label: string;
+  placeholder: string;
+  onChangeText: (value: string) => void;
+};
+
+function normalizePrice(value: string) {
+  return value.replace(/\D/g, "");
+}
+
+function PriceInput({ value, label, placeholder, onChangeText }: PriceInputProps) {
   return (
-    <Pressable
+    <View
       className="h-[52px] flex-1 flex-row items-center gap-2 rounded-2xl bg-card px-4 shadow-sm shadow-black/5"
-      accessibilityRole="button"
-      accessibilityLabel={label}
     >
       <Text className="text-sm font-medium text-muted-foreground">R$</Text>
-      <Text className="text-base font-semibold text-foreground">{value}</Text>
-    </Pressable>
+      <TextInput
+        value={value}
+        onChangeText={(text) => onChangeText(normalizePrice(text))}
+        className="h-full flex-1 text-base font-semibold text-foreground"
+        placeholder={placeholder}
+        placeholderTextColor="#7a6568"
+        keyboardType="number-pad"
+        returnKeyType="done"
+        accessibilityLabel={label}
+      />
+    </View>
   );
 }
 
 export function ClientSearchPage({ onNavigate }: ClientSearchPageProps) {
   const [query, setQuery] = useState("");
-  const [category, setCategory] = useState("Todos");
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(["Todos"]);
   const [sortBy, setSortBy] = useState("Relevancia");
+  const [minPrice, setMinPrice] = useState("0");
+  const [maxPrice, setMaxPrice] = useState("500");
   const [rating, setRating] = useState("Qualquer");
+
+  const toggleCategory = (item: string) => {
+    if (item === "Todos") {
+      setSelectedCategories(["Todos"]);
+      return;
+    }
+
+    setSelectedCategories((current) => {
+      const withoutAll = current.filter((categoryItem) => categoryItem !== "Todos");
+
+      if (withoutAll.includes(item)) {
+        const nextCategories = withoutAll.filter((categoryItem) => categoryItem !== item);
+        return nextCategories.length > 0 ? nextCategories : ["Todos"];
+      }
+
+      return [...withoutAll, item];
+    });
+  };
 
   const clearFilters = () => {
     setQuery("");
-    setCategory("Todos");
+    setSelectedCategories(["Todos"]);
     setSortBy("Relevancia");
+    setMinPrice("0");
+    setMaxPrice("500");
     setRating("Qualquer");
   };
 
@@ -114,8 +154,8 @@ export function ClientSearchPage({ onNavigate }: ClientSearchPageProps) {
               <FilterChip
                 key={item}
                 label={item}
-                selected={category === item}
-                onPress={() => setCategory(item)}
+                selected={selectedCategories.includes(item)}
+                onPress={() => toggleCategory(item)}
               />
             ))}
           </View>
@@ -140,9 +180,19 @@ export function ClientSearchPage({ onNavigate }: ClientSearchPageProps) {
             Faixa de Preco (por dia)
           </Text>
           <View className="flex-row items-center gap-3">
-            <PriceBox value="0" label="Preco minimo" />
+            <PriceInput
+              value={minPrice}
+              label="Preco minimo"
+              placeholder="0"
+              onChangeText={setMinPrice}
+            />
             <Text className="text-lg text-muted-foreground">-</Text>
-            <PriceBox value="500+" label="Preco maximo" />
+            <PriceInput
+              value={maxPrice}
+              label="Preco maximo"
+              placeholder="500"
+              onChangeText={setMaxPrice}
+            />
           </View>
         </View>
 
