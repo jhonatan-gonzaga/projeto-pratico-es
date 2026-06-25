@@ -59,7 +59,7 @@ const professionals = [
 
 export function ClientHomePage({ onOpenProfessional }: { onOpenProfessional?: () => void }) {
   return (
-    <View className="min-h-[812px] w-full max-w-[480px] bg-background">
+    <View className="relative flex-1 w-full max-w-[480px] bg-background">
       <View className="flex-row items-center justify-between px-5 pt-5 pb-3">
         <Pressable
           className="h-9 w-9 items-center justify-center rounded-[24px] bg-card shadow-sm shadow-black/10"
@@ -92,8 +92,8 @@ export function ClientHomePage({ onOpenProfessional }: { onOpenProfessional?: ()
       </View>
 
       <ScrollView
-        className="px-5"
-        contentContainerClassName="pb-4"
+        className="flex-1 px-5"
+        contentContainerClassName="pb-32"
         showsVerticalScrollIndicator={false}
       >
         <Text className="mb-4 text-3xl font-bold leading-tight text-foreground">
@@ -159,7 +159,9 @@ export function ClientHomePage({ onOpenProfessional }: { onOpenProfessional?: ()
         </View>
       </ScrollView>
 
-      <ClientBottomNav />
+      <View className="absolute inset-x-0 bottom-0 px-5 pb-7">
+        <ClientBottomNav />
+      </View>
     </View>
   );
 }

@@ -2,7 +2,7 @@ import "./global.css";
 
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
-import { KeyboardAvoidingView, Platform, ScrollView } from "react-native";
+import { KeyboardAvoidingView, Platform, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { ProfessionalHomeScreen, ProfessionalSetupScreen } from "./components/profissional";
@@ -123,14 +123,7 @@ export default function App() {
         {isProfessionalScreen ? (
           currentScreen
         ) : (
-          <ScrollView
-            className="flex-1"
-            contentContainerClassName="min-h-[812px] items-center"
-            keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={false}
-          >
-            {currentScreen}
-        </ScrollView>
+          <View className="flex-1 items-center">{currentScreen}</View>
         )}
       </KeyboardAvoidingView>
     </SafeAreaView>
