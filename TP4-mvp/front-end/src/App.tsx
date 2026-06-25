@@ -8,6 +8,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ProfessionalHomeScreen, ProfessionalSetupScreen } from "./components/profissional";
 import {
   AccountProfileScreen,
+  ClientHomePage,
   GoogleSignInScreen,
   LoginScreen,
   PhoneVerificationScreen,
@@ -16,7 +17,11 @@ import {
 } from "./pages";
 
 type ReturnScreen = "login" | "signup";
-type ProfileReturnScreen = "profileChoice" | "professionalSetup" | "professionalHome";
+type ProfileReturnScreen =
+  | "profileChoice"
+  | "professionalSetup"
+  | "professionalHome"
+  | "clientHome";
 type Screen =
   | ReturnScreen
   | "phone"
@@ -24,7 +29,8 @@ type Screen =
   | "profileChoice"
   | "accountProfile"
   | "professionalSetup"
-  | "professionalHome";
+  | "professionalHome"
+  | "clientHome";
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>("login");
@@ -72,10 +78,14 @@ export default function App() {
               onContinue={(profile) => {
                 if (profile === "profissional") {
                   setScreen("professionalSetup");
+                } else {
+                  setScreen("clientHome");
                 }
               }}
               onProfilePress={() => openAccountProfile("profileChoice")}
             />
+          ) : screen === "clientHome" ? (
+            <ClientHomePage />
           ) : screen === "professionalSetup" ? (
             <ProfessionalSetupScreen
               onBack={() => setScreen("profileChoice")}
