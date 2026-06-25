@@ -57,7 +57,7 @@ const professionals = [
   },
 ];
 
-export function ClientHomePage() {
+export function ClientHomePage({ onOpenProfessional }: { onOpenProfessional?: () => void }) {
   return (
     <View className="min-h-[812px] w-full max-w-[480px] bg-background">
       <View className="flex-row items-center justify-between px-5 pt-5 pb-3">
@@ -144,7 +144,7 @@ export function ClientHomePage() {
             Profissionais em destaque
           </Text>
           <View className="flex-row flex-wrap justify-between gap-3">
-            {professionals.map((professional) => (
+            {professionals.map((professional, index) => (
               <ProfessionalCard
                 key={professional.name}
                 name={professional.name}
@@ -152,6 +152,7 @@ export function ClientHomePage() {
                 price={professional.price}
                 rating={professional.rating}
                 avatarUri={professional.avatarUri}
+                onPress={index === 0 ? onOpenProfessional : undefined}
               />
             ))}
           </View>

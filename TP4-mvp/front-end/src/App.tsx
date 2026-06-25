@@ -9,6 +9,7 @@ import { ProfessionalHomeScreen, ProfessionalSetupScreen } from "./components/pr
 import {
   AccountProfileScreen,
   ClientHomePage,
+  ClientProfilePage,
   GoogleSignInScreen,
   LoginScreen,
   PhoneVerificationScreen,
@@ -21,7 +22,8 @@ type ProfileReturnScreen =
   | "profileChoice"
   | "professionalSetup"
   | "professionalHome"
-  | "clientHome";
+  | "clientHome"
+  | "clientProfile";
 type Screen =
   | ReturnScreen
   | "phone"
@@ -30,7 +32,8 @@ type Screen =
   | "accountProfile"
   | "professionalSetup"
   | "professionalHome"
-  | "clientHome";
+  | "clientHome"
+  | "clientProfile";
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>("login");
@@ -85,7 +88,9 @@ export default function App() {
               onProfilePress={() => openAccountProfile("profileChoice")}
             />
           ) : screen === "clientHome" ? (
-            <ClientHomePage />
+            <ClientHomePage onOpenProfessional={() => setScreen("clientProfile")} />
+          ) : screen === "clientProfile" ? (
+            <ClientProfilePage onBack={() => setScreen("clientHome")} />
           ) : screen === "professionalSetup" ? (
             <ProfessionalSetupScreen
               onBack={() => setScreen("profileChoice")}
