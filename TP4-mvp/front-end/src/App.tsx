@@ -88,7 +88,10 @@ export default function App() {
               onProfilePress={() => openAccountProfile("profileChoice")}
             />
           ) : screen === "clientHome" ? (
-            <ClientHomePage onOpenProfessional={() => setScreen("clientProfile")} />
+            <ClientHomePage
+            onOpenProfessional={() => setScreen("clientProfile")}
+            onBack={() => setScreen("profileChoice")}
+          />
           ) : screen === "clientProfile" ? (
             <ClientProfilePage onBack={() => setScreen("clientHome")} />
           ) : screen === "professionalSetup" ? (

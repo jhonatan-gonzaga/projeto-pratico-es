@@ -57,12 +57,19 @@ const professionals = [
   },
 ];
 
-export function ClientHomePage({ onOpenProfessional }: { onOpenProfessional?: () => void }) {
+export function ClientHomePage({
+  onOpenProfessional,
+  onBack,
+}: {
+  onOpenProfessional?: () => void;
+  onBack?: () => void;
+}) {
   return (
     <View className="relative flex-1 w-full max-w-[480px] bg-background">
       <View className="flex-row items-center justify-between px-5 pt-5 pb-3">
         <Pressable
           className="h-9 w-9 items-center justify-center rounded-[24px] bg-card shadow-sm shadow-black/10"
+          onPress={onBack}
           accessibilityRole="button"
           accessibilityLabel="Voltar"
         >
