@@ -102,7 +102,7 @@ export function ClientProfilePage({
           <View className="rounded-full overflow-hidden border-[3px] border-primary">
             <Image
               source={{ uri: "https://storage.googleapis.com/banani-avatars/avatar/male/35-50/European/0" }}
-              className="h-22 w-22"
+              className="h-24 w-24"
               resizeMode="cover"
               accessibilityLabel="Foto do profissional"
             />
@@ -303,7 +303,7 @@ export function ClientProfilePage({
         </View>
       </ScrollView>
 
-      <View className="absolute inset-x-0 bottom-0 px-5 pb-7">
+      <View className="absolute inset-x-0 bottom-0 px-5 pb-2">
         <ClientBottomNav />
       </View>
     </View>

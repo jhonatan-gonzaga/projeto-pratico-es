@@ -166,7 +166,7 @@ export function ClientHomePage({
         </View>
       </ScrollView>
 
-      <View className="absolute inset-x-0 bottom-0 px-5 pb-7">
+      <View className="absolute inset-x-0 bottom-0 px-5 pb-2">
         <ClientBottomNav />
       </View>
     </View>
