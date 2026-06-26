@@ -321,11 +321,13 @@ export function ProjectListCard({
   onEdit,
   onViewResult,
   project,
+  readOnly = false,
 }: {
-  onDelete: () => void;
-  onEdit: () => void;
+  onDelete?: () => void;
+  onEdit?: () => void;
   onViewResult: () => void;
   project: ProjectItem;
+  readOnly?: boolean;
 }) {
   return (
     <View className="flex-row items-center gap-3 rounded-[8px] bg-card p-3 shadow-sm shadow-black/5">
@@ -361,24 +363,26 @@ export function ProjectListCard({
         </Pressable>
       </View>
 
-      <View className="gap-2">
-        <Pressable
-          onPress={onEdit}
-          className="h-9 w-9 items-center justify-center rounded-full bg-[#f0e8e9]"
-          accessibilityRole="button"
-          accessibilityLabel={`Editar ${project.title}`}
-        >
-          <Ionicons name="pencil" size={15} color="#0f1720" />
-        </Pressable>
-        <Pressable
-          onPress={onDelete}
-          className="h-9 w-9 items-center justify-center rounded-full bg-[#f5e8e9]"
-          accessibilityRole="button"
-          accessibilityLabel={`Excluir ${project.title}`}
-        >
-          <Ionicons name="trash-outline" size={15} color="#b94b50" />
-        </Pressable>
-      </View>
+      {readOnly ? null : (
+        <View className="gap-2">
+          <Pressable
+            onPress={onEdit}
+            className="h-9 w-9 items-center justify-center rounded-full bg-[#f0e8e9]"
+            accessibilityRole="button"
+            accessibilityLabel={`Editar ${project.title}`}
+          >
+            <Ionicons name="pencil" size={15} color="#0f1720" />
+          </Pressable>
+          <Pressable
+            onPress={onDelete}
+            className="h-9 w-9 items-center justify-center rounded-full bg-[#f5e8e9]"
+            accessibilityRole="button"
+            accessibilityLabel={`Excluir ${project.title}`}
+          >
+            <Ionicons name="trash-outline" size={15} color="#b94b50" />
+          </Pressable>
+        </View>
+      )}
     </View>
   );
 }

@@ -1,7 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Image, Pressable, ScrollView, Text, View } from "react-native";
+import { Image, Linking, Pressable, ScrollView, Text, View } from "react-native";
+import { useState } from "react";
 
 import { ClientBottomNav } from "../../components/cliente";
+import { projectItems } from "../../components/profissional/data";
+import { MyProjectsScreen } from "../profissional/meus-projetos";
+import { ProjectResultScreen } from "../profissional/resultado-projeto";
+import { ClientMessageScreen } from "./mensagem-profissional";
 
 const availabilityDays = [
   { label: "S", available: true },
@@ -68,6 +73,54 @@ export function ClientProfilePage({
 }: {
   onBack: () => void;
 }) {
+  const [isShowingPortfolio, setIsShowingPortfolio] = useState(false);
+  const [isViewingProjectResult, setIsViewingProjectResult] = useState(false);
+  const [isShowingMessages, setIsShowingMessages] = useState(false);
+
+  const handleOpenPortfolio = () => setIsShowingPortfolio(true);
+  const handleClosePortfolio = () => setIsShowingPortfolio(false);
+  const handleOpenProjectResult = () => setIsViewingProjectResult(true);
+
+  if (isShowingMessages) {
+    return <ClientMessageScreen onBack={() => setIsShowingMessages(false)} />;
+  }
+
+  if (isViewingProjectResult) {
+    return (
+      <ProjectResultScreen
+        onBack={() => setIsViewingProjectResult(false)}
+        readOnly
+      />
+    );
+  }
+
+  if (isShowingPortfolio) {
+    return (
+      <MyProjectsScreen
+        onBack={handleClosePortfolio}
+        projects={projectItems}
+        onViewResult={() => setIsViewingProjectResult(true)}
+        readOnly
+      />
+    );
+  }
+
+  const handleOpenWhatsApp = async () => {
+    const phoneNumber = "+5511999999999";
+    const whatsappUrl = `whatsapp://send?phone=${phoneNumber}`;
+
+    try {
+      const supported = await Linking.canOpenURL(whatsappUrl);
+      if (supported) {
+        await Linking.openURL(whatsappUrl);
+      } else {
+        await Linking.openURL(`https://api.whatsapp.com/send?phone=${phoneNumber}`);
+      }
+    } catch (error) {
+      console.warn("Não foi possível abrir o WhatsApp:", error);
+    }
+  };
+
   return (
     <View className="relative flex-1 w-full max-w-[480px] bg-background">
       <View className="flex-row items-center justify-between px-4 pt-5 pb-4">
@@ -145,6 +198,7 @@ export function ClientProfilePage({
 
           <View className="mt-3 flex-row w-full gap-3">
             <Pressable
+              onPress={() => setIsShowingMessages(true)}
               className="flex-1 rounded-xl bg-primary py-3.5 flex-row items-center justify-center gap-2"
               accessibilityRole="button"
               accessibilityLabel="Enviar mensagem"
@@ -154,6 +208,7 @@ export function ClientProfilePage({
             </Pressable>
             <Pressable
               className="flex-1 rounded-xl bg-[#25d366] py-3.5 flex-row items-center justify-center gap-2"
+              onPress={handleOpenWhatsApp}
               accessibilityRole="button"
               accessibilityLabel="Abrir WhatsApp"
             >
@@ -194,7 +249,12 @@ export function ClientProfilePage({
 
           <View className="flex-row justify-between gap-1">
             {availabilityDays.map((day, index) => (
-              <View key={`${day.label}-${index}`} className="flex-1 items-center gap-1.5">
+              <View
+                key={`${day.label}-${index}`}
+                className="flex-1 items-center gap-1.5"
+                accessibilityRole="text"
+                accessibilityLabel={`Dia ${day.label} ${day.available ? "disponível" : "indisponível"}`}
+              >
                 <View
                   className={`h-8 w-8 items-center justify-center rounded-full ${
                     day.available ? "bg-primary" : "bg-secondary"
@@ -241,7 +301,12 @@ export function ClientProfilePage({
         <View className="mt-5">
           <View className="flex-row items-center justify-between mb-3">
             <Text className="text-base font-bold text-foreground">Portfólio</Text>
-            <Pressable className="flex-row items-center gap-1" accessibilityRole="button">
+            <Pressable
+              onPress={handleOpenPortfolio}
+              className="flex-row items-center gap-1"
+              accessibilityRole="button"
+              accessibilityLabel="Abrir portfólio"
+            >
               <Text className="text-sm font-semibold text-primary">Ver tudo</Text>
               <Ionicons name="chevron-forward" size={14} color="#b94b50" />
             </Pressable>
@@ -249,7 +314,13 @@ export function ClientProfilePage({
 
           <View className="flex-row flex-wrap justify-between gap-3">
             {portfolioItems.map((item) => (
-              <View key={item.label} className="w-[48%] overflow-hidden rounded-xl shadow-sm shadow-black/10">
+              <Pressable
+                key={item.label}
+                onPress={handleOpenProjectResult}
+                className="w-[48%] overflow-hidden rounded-xl shadow-sm shadow-black/10"
+                accessibilityRole="button"
+                accessibilityLabel={`Abrir projeto ${item.label}`}
+              >
                 <Image
                   source={{ uri: item.uri }}
                   className="h-[110px] w-full object-cover"
@@ -259,7 +330,7 @@ export function ClientProfilePage({
                 <View className="bg-card px-3 py-2">
                   <Text className="text-xs font-semibold text-foreground">{item.label}</Text>
                 </View>
-              </View>
+              </Pressable>
             ))}
           </View>
         </View>

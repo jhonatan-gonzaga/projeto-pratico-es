@@ -43,15 +43,17 @@ export function MyProjectsScreen({
   projects,
   onSelectArea,
   onViewResult,
+  readOnly = false,
 }: {
-  onAddProject: () => void;
+  onAddProject?: () => void;
   onBack: () => void;
-  onDeleteProject: (project: ProjectItem) => void;
-  onEditProject: (project: ProjectItem) => void;
-  onProfilePress: () => void;
+  onDeleteProject?: (project: ProjectItem) => void;
+  onEditProject?: (project: ProjectItem) => void;
+  onProfilePress?: () => void;
   projects: ProjectItem[];
-  onSelectArea: (area: ProfessionalArea) => void;
-  onViewResult: () => void;
+  onSelectArea?: (area: ProfessionalArea) => void;
+  onViewResult: (project: ProjectItem) => void;
+  readOnly?: boolean;
 }) {
   return (
     <View className="h-full w-full max-w-[480px] self-center bg-background">
@@ -62,20 +64,22 @@ export function MyProjectsScreen({
         contentContainerClassName="gap-5 px-4 pb-4 pt-5"
         showsVerticalScrollIndicator={false}
       >
-        <Pressable
-          onPress={onAddProject}
-          className="min-h-[56px] flex-row items-center justify-center gap-2 rounded-[12px] bg-primary px-4"
-          accessibilityRole="button"
-        >
-          <Ionicons name="add" size={20} color="#ffffff" />
-          <Text className="text-base font-semibold text-white">
-            Adicionar Novo Projeto
-          </Text>
-        </Pressable>
+        {readOnly ? null : (
+          <Pressable
+            onPress={onAddProject}
+            className="min-h-[56px] flex-row items-center justify-center gap-2 rounded-[12px] bg-primary px-4"
+            accessibilityRole="button"
+          >
+            <Ionicons name="add" size={20} color="#ffffff" />
+            <Text className="text-base font-semibold text-white">
+              Adicionar Novo Projeto
+            </Text>
+          </Pressable>
+        )}
 
         <View className="flex-row items-center justify-between">
           <Text className="text-xl font-bold text-foreground">
-            Meus Projetos
+            {readOnly ? "Portfólio" : "Meus Projetos"}
           </Text>
           <Text className="text-sm text-muted-foreground">
             {projects.length} projetos
@@ -87,18 +91,21 @@ export function MyProjectsScreen({
             <ProjectListCard
               key={project.title}
               project={project}
-              onDelete={() => onDeleteProject(project)}
-              onEdit={() => onEditProject(project)}
-              onViewResult={onViewResult}
+              onDelete={onDeleteProject ? () => onDeleteProject(project) : undefined}
+              onEdit={onEditProject ? () => onEditProject(project) : undefined}
+              onViewResult={() => onViewResult(project)}
+              readOnly={readOnly}
             />
           ))}
         </View>
       </ScrollView>
 
-      <ProfessionalBottomTab
-        activeArea="projects"
-        onSelectArea={onSelectArea}
-      />
+      {readOnly || !onSelectArea ? null : (
+        <ProfessionalBottomTab
+          activeArea="projects"
+          onSelectArea={onSelectArea}
+        />
+      )}
     </View>
   );
 }

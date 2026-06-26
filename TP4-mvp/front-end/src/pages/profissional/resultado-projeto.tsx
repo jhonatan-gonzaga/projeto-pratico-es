@@ -38,10 +38,12 @@ export function ProjectResultScreen({
   onBack,
   onEdit,
   onProfilePress,
+  readOnly = false,
 }: {
   onBack: () => void;
-  onEdit: () => void;
-  onProfilePress: () => void;
+  onEdit?: () => void;
+  onProfilePress?: () => void;
+  readOnly?: boolean;
 }) {
   return (
     <View className="h-full w-full max-w-[480px] self-center bg-background">
@@ -165,14 +167,16 @@ export function ProjectResultScreen({
             Compartilhar
           </Text>
         </Pressable>
-        <Pressable
-          onPress={onEdit}
-          className="flex-row items-center gap-2 rounded-full bg-primary px-6 py-3"
-          accessibilityRole="button"
-        >
-          <Ionicons name="pencil" size={16} color="#ffffff" />
-          <Text className="text-sm font-semibold text-white">Editar</Text>
-        </Pressable>
+        {readOnly ? null : (
+          <Pressable
+            onPress={onEdit}
+            className="flex-row items-center gap-2 rounded-full bg-primary px-6 py-3"
+            accessibilityRole="button"
+          >
+            <Ionicons name="pencil" size={16} color="#ffffff" />
+            <Text className="text-sm font-semibold text-white">Editar</Text>
+          </Pressable>
+        )}
       </View>
     </View>
   );
