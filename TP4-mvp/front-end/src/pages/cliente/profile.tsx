@@ -3,115 +3,302 @@ import { Image, Pressable, ScrollView, Text, View } from "react-native";
 
 import { ClientBottomNav } from "../../components/cliente";
 
+const availabilityDays = [
+  { label: "S", available: true },
+  { label: "T", available: true },
+  { label: "Q", available: false },
+  { label: "Q", available: true },
+  { label: "S", available: true },
+  { label: "S", available: false },
+  { label: "D", available: false },
+];
+
+const specializations = [
+  "Construção",
+  "Elétrica",
+  "Encanamento",
+  "Pintura",
+  "Reparo",
+];
+
+const portfolioItems = [
+  {
+    label: "Pintura",
+    uri: "https://storage.googleapis.com/banani-generated-images/generated-images/08de1ae8-bbd2-4896-aace-c871f42c87de.jpg",
+  },
+  {
+    label: "Construção",
+    uri: "https://storage.googleapis.com/banani-generated-images/generated-images/25cb0462-d71b-43d5-9eb9-e76966027a00.jpg",
+  },
+  {
+    label: "Elétrica",
+    uri: "https://storage.googleapis.com/banani-generated-images/generated-images/9caf63aa-e77f-4db7-9a50-600da3d15d3d.jpg",
+  },
+  {
+    label: "Encanamento",
+    uri: "https://storage.googleapis.com/banani-generated-images/generated-images/dcfdc144-9568-4d58-acce-aaaf1e921982.jpg",
+  },
+  {
+    label: "Reparo",
+    uri: "https://storage.googleapis.com/banani-generated-images/generated-images/47017bff-305f-4aa7-b64b-d81070213515.jpg",
+  },
+];
+
+const reviews = [
+  {
+    name: "Mariana Silva",
+    avatarUri: "https://storage.googleapis.com/banani-avatars/avatar/female/25-35/Hispanic/2",
+    when: "Há 2 dias",
+    rating: "5.0",
+    comment:
+      "Ótimo profissional! Fez a pintura da minha casa inteira em tempo recorde e com muita qualidade. Recomendo muito o trabalho do Luiz.",
+  },
+  {
+    name: "Roberto Gomes",
+    avatarUri: "https://storage.googleapis.com/banani-avatars/avatar/male/35-50/African/3",
+    when: "Há 1 semana",
+    rating: "4.5",
+    comment:
+      "Trabalho muito bom na parte elétrica e reparos gerais. Foi muito atencioso do começo ao fim. Com certeza contratarei novamente.",
+  },
+];
+
 export function ClientProfilePage({
   onBack,
 }: {
   onBack: () => void;
 }) {
-  const portfolioImages = [
-    "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=800&q=80",
-  ];
-
   return (
     <View className="relative flex-1 w-full max-w-[480px] bg-background">
-      <View className="flex-row items-center justify-between px-5 pt-5 pb-3">
+      <View className="flex-row items-center justify-between px-4 pt-5 pb-4">
         <Pressable
-          className="h-9 w-9 items-center justify-center rounded-[24px] bg-card shadow-sm shadow-black/10"
           onPress={onBack}
+          className="h-10 w-10 items-center justify-center rounded-full bg-card shadow-sm shadow-black/10"
           accessibilityRole="button"
           accessibilityLabel="Voltar"
         >
           <Ionicons name="arrow-back" size={18} color="#0f1720" />
         </Pressable>
-        <Text className="text-lg font-bold text-foreground">Perfil do Profissional</Text>
-        <View className="h-9 w-9" />
+
+        <Text className="text-base font-bold text-foreground">Perfil do Profissional</Text>
+
+        <Pressable
+          className="h-10 w-10 items-center justify-center rounded-full bg-card shadow-sm shadow-black/10"
+          accessibilityRole="button"
+          accessibilityLabel="Compartilhar"
+        >
+          <Ionicons name="share-social-outline" size={18} color="#0f1720" />
+        </Pressable>
       </View>
 
+      <View className="h-px bg-black/5" />
+
       <ScrollView
-        className="flex-1 px-5"
-        contentContainerClassName="pb-32"
+        className="flex-1 px-4"
+        contentContainerClassName="pb-32 pt-5"
         showsVerticalScrollIndicator={false}
       >
-        <View className="mb-5 rounded-[24px] bg-card p-5 shadow-sm shadow-black/5">
-          <Image
-            source={{ uri: "https://storage.googleapis.com/banani-avatars/avatar/male/35-50/European/0" }}
-            className="mb-4 h-52 w-full rounded-[22px]"
-            resizeMode="cover"
-            accessibilityLabel="Foto do profissional"
-          />
+        <View className="items-center gap-2">
+          <View className="rounded-full overflow-hidden border-[3px] border-primary">
+            <Image
+              source={{ uri: "https://storage.googleapis.com/banani-avatars/avatar/male/35-50/European/0" }}
+              className="h-22 w-22"
+              resizeMode="cover"
+              accessibilityLabel="Foto do profissional"
+            />
+          </View>
 
-          <View className="mb-4 flex-row items-center justify-between">
-            <View>
-              <Text className="text-2xl font-bold text-foreground">Jhon Souza</Text>
-              <Text className="text-sm text-muted-foreground">Pintor profissional</Text>
+          <View className="text-center">
+            <Text className="text-xl font-bold text-foreground">Jhon Souza</Text>
+            <Text className="text-sm text-muted-foreground">Pintor</Text>
+          </View>
+
+          <View className="mt-1 flex-row w-full gap-3">
+            <View className="flex-1 rounded-xl bg-card py-3 items-center gap-1.5 shadow-sm shadow-black/10">
+              <View className="flex-row items-center gap-1">
+                <Ionicons name="star" size={14} color="#f59e0b" />
+                <Text className="text-base font-bold text-foreground">4.8</Text>
+              </View>
+              <Text className="text-xs text-muted-foreground">124 avaliações</Text>
             </View>
-            <View className="items-end">
-              <Text className="text-lg font-bold text-primary">R$ 200,00</Text>
-              <Text className="text-xs text-muted-foreground">por dia</Text>
+
+            <View className="flex-1 rounded-xl bg-card py-3 items-center gap-1.5 shadow-sm shadow-black/10">
+              <View className="flex-row items-center gap-1">
+                <Ionicons name="briefcase-outline" size={14} color="#b94b50" />
+                <Text className="text-base font-bold text-foreground">89</Text>
+              </View>
+              <Text className="text-xs text-muted-foreground">serviços</Text>
+            </View>
+
+            <View className="flex-1 rounded-xl bg-card py-3 items-center gap-1.5 shadow-sm shadow-black/10">
+              <View className="flex-row items-center gap-1">
+                <Ionicons name="location-outline" size={14} color="#b94b50" />
+              </View>
+              <Text className="text-xs text-muted-foreground">Centro</Text>
             </View>
           </View>
 
-          <View className="mb-4 flex-row items-center gap-3">
-            <View className="flex-row items-center gap-1 rounded-full bg-primary/10 px-3 py-1">
-              <Ionicons name="star" size={14} color="#2563eb" />
-              <Text className="text-sm font-semibold text-primary">4.8</Text>
-            </View>
-            <View className="flex-row items-center gap-1 rounded-full bg-card px-3 py-1">
-              <Ionicons name="clipboard" size={14} color="#4b5563" />
-              <Text className="text-sm font-semibold text-muted-foreground">28 trabalhos</Text>
-            </View>
-          </View>
-
-          <Text className="mb-3 text-base leading-6 text-foreground">
-            Especialista em pintura residencial e reformas rápidas. Atendimento
-            flexível com orçamentos transparentes e acabamento limpo.
+          <Text className="text-xl font-bold text-primary mt-1">
+            R$ 200,00
+            <Text className="text-sm font-medium text-muted-foreground">/dia</Text>
           </Text>
 
+          <View className="mt-3 flex-row w-full gap-3">
+            <Pressable
+              className="flex-1 rounded-xl bg-primary py-3.5 flex-row items-center justify-center gap-2"
+              accessibilityRole="button"
+              accessibilityLabel="Enviar mensagem"
+            >
+              <Ionicons name="chatbubble-ellipses-outline" size={17} color="#ffffff" />
+              <Text className="text-sm font-semibold text-primary-foreground">Mensagem</Text>
+            </Pressable>
+            <Pressable
+              className="flex-1 rounded-xl bg-[#25d366] py-3.5 flex-row items-center justify-center gap-2"
+              accessibilityRole="button"
+              accessibilityLabel="Abrir WhatsApp"
+            >
+              <Ionicons name="logo-whatsapp" size={17} color="#ffffff" />
+              <Text className="text-sm font-semibold text-white">WhatsApp</Text>
+            </Pressable>
+          </View>
+
+          <Pressable
+            className="mt-3 w-full rounded-xl bg-primary py-4 flex-row items-center justify-center gap-2"
+            accessibilityRole="button"
+            accessibilityLabel="Contratar profissional"
+          >
+            <Ionicons name="hand-left-outline" size={20} color="#ffffff" />
+            <Text className="text-base font-bold text-primary-foreground">Contratar Profissional</Text>
+          </Pressable>
+        </View>
+
+        <View className="mt-5 rounded-xl bg-card p-4 shadow-sm shadow-black/10">
+          <View className="flex-row items-center gap-2 mb-2">
+            <View className="h-8 w-8 items-center justify-center rounded-full bg-secondary">
+              <Ionicons name="person-outline" size={16} color="#b94b50" />
+            </View>
+            <Text className="text-sm font-bold text-foreground">Sobre mim</Text>
+          </View>
+          <Text className="text-sm leading-relaxed text-muted-foreground">
+            Sou Jhon Souza, pintor profissional com mais de 10 anos de experiência em pintura residencial e comercial. Transformo ambientes com acabamento limpo, respeito aos prazos e atendimento dedicado.
+          </Text>
+        </View>
+
+        <View className="mt-4 rounded-xl bg-card p-4 shadow-sm shadow-black/10">
+          <View className="flex-row items-center gap-2 mb-3">
+            <View className="h-8 w-8 items-center justify-center rounded-full bg-secondary">
+              <Ionicons name="calendar-outline" size={16} color="#b94b50" />
+            </View>
+            <Text className="text-sm font-bold text-foreground">Disponibilidade</Text>
+          </View>
+
+          <View className="flex-row justify-between gap-1">
+            {availabilityDays.map((day, index) => (
+              <View key={`${day.label}-${index}`} className="flex-1 items-center gap-1.5">
+                <View
+                  className={`h-8 w-8 items-center justify-center rounded-full ${
+                    day.available ? "bg-primary" : "bg-secondary"
+                  }`}
+                >
+                  <Text
+                    className={`text-sm font-bold ${
+                      day.available ? "text-primary-foreground" : "text-secondary-foreground"
+                    }`}
+                  >
+                    {day.label}
+                  </Text>
+                </View>
+              </View>
+            ))}
+          </View>
+
+          <View className="mt-3 flex-row items-center gap-3">
+            <View className="flex-row items-center gap-1">
+              <View className="h-3 w-3 rounded-full bg-primary" />
+              <Text className="text-xs text-muted-foreground">Disponível</Text>
+            </View>
+            <View className="flex-row items-center gap-1">
+              <View className="h-3 w-3 rounded-full bg-muted" />
+              <Text className="text-xs text-muted-foreground">Indisponível</Text>
+            </View>
+          </View>
+        </View>
+
+        <View className="mt-5">
+          <Text className="text-base font-bold text-foreground mb-3">Especializações</Text>
           <View className="flex-row flex-wrap gap-2">
-            {['Pintura interna', 'Revestimentos', 'Acabamentos'].map((tag) => (
+            {specializations.map((item) => (
               <View
-                key={tag}
-                className="rounded-full bg-primary/10 px-3 py-2"
+                key={item}
+                className="rounded-full bg-card px-4 py-1.5 border border-black/10 shadow-sm shadow-black/5"
               >
-                <Text className="text-xs font-semibold text-primary">{tag}</Text>
+                <Text className="text-sm font-medium text-foreground">{item}</Text>
               </View>
             ))}
           </View>
         </View>
 
-        <View className="mb-5">
-          <View className="mb-3 flex-row items-center justify-between">
-            <Text className="text-lg font-bold text-foreground">Portfólio</Text>
-            <Pressable accessibilityRole="button" accessibilityLabel="Ver todos os projetos">
+        <View className="mt-5">
+          <View className="flex-row items-center justify-between mb-3">
+            <Text className="text-base font-bold text-foreground">Portfólio</Text>
+            <Pressable className="flex-row items-center gap-1" accessibilityRole="button">
               <Text className="text-sm font-semibold text-primary">Ver tudo</Text>
+              <Ionicons name="chevron-forward" size={14} color="#b94b50" />
             </Pressable>
           </View>
 
           <View className="flex-row flex-wrap justify-between gap-3">
-            {portfolioImages.map((imageUri) => (
-              <Image
-                key={imageUri}
-                source={{ uri: imageUri }}
-                className="h-40 w-[48%] rounded-[12px]"
-                resizeMode="cover"
-                accessibilityLabel="Imagem do portfólio"
-              />
+            {portfolioItems.map((item) => (
+              <View key={item.label} className="w-[48%] overflow-hidden rounded-xl shadow-sm shadow-black/10">
+                <Image
+                  source={{ uri: item.uri }}
+                  className="h-[110px] w-full object-cover"
+                  resizeMode="cover"
+                  accessibilityLabel={item.label}
+                />
+                <View className="bg-card px-3 py-2">
+                  <Text className="text-xs font-semibold text-foreground">{item.label}</Text>
+                </View>
+              </View>
             ))}
           </View>
         </View>
 
-        <View className="rounded-[24px] bg-card p-5 shadow-sm shadow-black/5">
-          <Text className="mb-3 text-lg font-bold text-foreground">Informações de contato</Text>
-          <View className="mb-3 flex-row items-center justify-between rounded-[20px] bg-background px-4 py-3">
-            <Text className="text-sm font-semibold text-foreground">Tempo de resposta</Text>
-            <Text className="text-sm text-muted-foreground">1 hora</Text>
+        <View className="mt-5">
+          <View className="flex-row items-center justify-between mb-3">
+            <Text className="text-base font-bold text-foreground">Avaliações</Text>
+            <Pressable className="flex-row items-center gap-1" accessibilityRole="button">
+              <Text className="text-sm font-semibold text-primary">Ler mais comentários</Text>
+              <Ionicons name="chevron-forward" size={14} color="#b94b50" />
+            </Pressable>
           </View>
-          <View className="flex-row items-center justify-between rounded-[20px] bg-background px-4 py-3">
-            <Text className="text-sm font-semibold text-foreground">Atendimento</Text>
-            <Text className="text-sm text-muted-foreground">Seg a Sáb</Text>
+
+          <View className="flex-col gap-3">
+            {reviews.map((review) => (
+              <View key={review.name} className="rounded-xl bg-card p-4 shadow-sm shadow-black/10">
+                <View className="flex-row items-center justify-between mb-2">
+                  <View className="flex-row items-center gap-2">
+                    <View className="h-9 w-9 overflow-hidden rounded-full">
+                      <Image
+                        source={{ uri: review.avatarUri }}
+                        className="h-full w-full"
+                        resizeMode="cover"
+                        accessibilityLabel={review.name}
+                      />
+                    </View>
+                    <View>
+                      <Text className="text-sm font-bold text-foreground">{review.name}</Text>
+                      <Text className="text-xs text-muted-foreground">{review.when}</Text>
+                    </View>
+                  </View>
+                  <View className="flex-row items-center gap-1">
+                    <Ionicons name="star" size={13} color="#f59e0b" />
+                    <Text className="text-sm font-bold text-foreground">{review.rating}</Text>
+                  </View>
+                </View>
+                <Text className="text-sm leading-relaxed text-muted-foreground">{review.comment}</Text>
+              </View>
+            ))}
           </View>
         </View>
       </ScrollView>
