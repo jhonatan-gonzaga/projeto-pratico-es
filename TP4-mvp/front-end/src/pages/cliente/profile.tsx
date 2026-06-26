@@ -77,6 +77,7 @@ export function ClientProfilePage({
 
   const handleOpenPortfolio = () => setIsShowingPortfolio(true);
   const handleClosePortfolio = () => setIsShowingPortfolio(false);
+  const handleOpenProjectResult = () => setIsViewingProjectResult(true);
 
   if (isViewingProjectResult) {
     return (
@@ -308,10 +309,10 @@ export function ClientProfilePage({
             {portfolioItems.map((item) => (
               <Pressable
                 key={item.label}
-                onPress={handleOpenPortfolio}
+                onPress={handleOpenProjectResult}
                 className="w-[48%] overflow-hidden rounded-xl shadow-sm shadow-black/10"
                 accessibilityRole="button"
-                accessibilityLabel={`Abrir portfólio ${item.label}`}
+                accessibilityLabel={`Abrir projeto ${item.label}`}
               >
                 <Image
                   source={{ uri: item.uri }}
