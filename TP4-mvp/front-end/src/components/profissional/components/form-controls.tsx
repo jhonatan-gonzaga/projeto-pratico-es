@@ -4,6 +4,36 @@ import { Image, Pressable, Text, TextInput, View } from "react-native";
 import { statusMeta } from "../data";
 import type { IconName, ProfessionalArea, ProfessionalService, ProfessionalTab, ProjectItem, ServiceRequest, ServiceStatus } from "../types";
 
+export type FieldValidationStatus = "default" | "valid" | "error";
+
+const validationClasses: Record<FieldValidationStatus, string> = {
+  default: "border-input-border bg-card",
+  valid: "border-[#16a34a] bg-[#f7fff9]",
+  error: "border-[#dc2626] bg-[#fff7f7]",
+};
+
+function ValidationHelper({
+  helperText,
+  status,
+}: {
+  helperText?: string;
+  status: FieldValidationStatus;
+}) {
+  if (!helperText) {
+    return null;
+  }
+
+  return (
+    <Text
+      className={`px-1 text-xs leading-4 ${
+        status === "error" ? "text-[#dc2626]" : "text-muted-foreground"
+      }`}
+    >
+      {helperText}
+    </Text>
+  );
+}
+
 export function ProjectSection({
   children,
   icon,
@@ -25,39 +55,58 @@ export function ProjectSection({
 }
 
 export function SetupTextField({
+  helperText,
   icon,
   keyboardType = "default",
   multiline,
+  onBlur,
   onChangeText,
   placeholder,
+  status = "default",
   value,
 }: {
+  helperText?: string;
   icon?: IconName;
   keyboardType?: "default" | "numeric" | "phone-pad";
   multiline?: boolean;
+  onBlur?: () => void;
   onChangeText: (value: string) => void;
   placeholder?: string;
+  status?: FieldValidationStatus;
   value: string;
 }) {
+  const isValidated = status === "valid" || status === "error";
+
   return (
-    <View
-      className={`flex-row gap-2.5 rounded-[16px] border-[1.5px] border-input-border bg-card px-4 py-3 shadow-sm ${
-        multiline ? "min-h-[100px] items-start" : "items-center"
-      }`}
-    >
-      {icon ? <Ionicons name={icon} size={16} color="#b94b50" /> : null}
-      <TextInput
-        value={value}
-        onChangeText={onChangeText}
-        keyboardType={keyboardType}
-        multiline={multiline}
-        className={`flex-1 p-0 text-[15px] font-medium text-foreground ${
-          multiline ? "min-h-[74px] text-top" : "min-h-[24px]"
+    <View className="gap-1">
+      <View
+        className={`flex-row gap-2.5 rounded-[16px] border-[1.5px] px-4 py-3 shadow-sm ${validationClasses[status]} ${
+          multiline ? "min-h-[100px] items-start" : "items-center"
         }`}
-        placeholder={placeholder}
-        placeholderTextColor="#b0b8c1"
-        accessibilityLabel={placeholder}
-      />
+      >
+        {icon ? <Ionicons name={icon} size={16} color="#b94b50" /> : null}
+        <TextInput
+          value={value}
+          onBlur={onBlur}
+          onChangeText={onChangeText}
+          keyboardType={keyboardType}
+          multiline={multiline}
+          className={`flex-1 p-0 text-[15px] font-medium text-foreground ${
+            multiline ? "min-h-[74px] text-top" : "min-h-[24px]"
+          }`}
+          placeholder={placeholder}
+          placeholderTextColor="#b0b8c1"
+          accessibilityLabel={placeholder}
+        />
+        {isValidated ? (
+          <Ionicons
+            name={status === "valid" ? "checkmark-circle" : "alert-circle"}
+            size={18}
+            color={status === "valid" ? "#16a34a" : "#dc2626"}
+          />
+        ) : null}
+      </View>
+      <ValidationHelper helperText={helperText} status={status} />
     </View>
   );
 }
@@ -137,27 +186,50 @@ export function DayButton({
 }
 
 export function ProjectInput({
+  helperText,
   label,
+  onBlur,
   placeholder,
+  status = "default",
   value,
   onChangeText,
 }: {
+  helperText?: string;
   label: string;
+  onBlur?: () => void;
   placeholder: string;
+  status?: FieldValidationStatus;
   value: string;
   onChangeText: (value: string) => void;
 }) {
+  const isValidated = status === "valid" || status === "error";
+
   return (
-    <View>
+    <View className="gap-1">
       <Text className="mb-1.5 text-xs text-muted-foreground">{label}</Text>
-      <TextInput
-        value={value}
-        onChangeText={onChangeText}
-        className="min-h-[46px] rounded-[12px] bg-[#f5e8e9] px-4 py-3 text-sm text-foreground"
-        placeholder={placeholder}
-        placeholderTextColor="#8a8a96"
-        accessibilityLabel={label}
-      />
+      <View
+        className={`min-h-[46px] flex-row items-center rounded-[12px] border-[1.5px] px-4 py-3 ${
+          status === "default" ? "border-transparent bg-[#f5e8e9]" : validationClasses[status]
+        }`}
+      >
+        <TextInput
+          value={value}
+          onBlur={onBlur}
+          onChangeText={onChangeText}
+          className="min-h-[20px] flex-1 p-0 text-sm text-foreground"
+          placeholder={placeholder}
+          placeholderTextColor="#8a8a96"
+          accessibilityLabel={label}
+        />
+        {isValidated ? (
+          <Ionicons
+            name={status === "valid" ? "checkmark-circle" : "alert-circle"}
+            size={18}
+            color={status === "valid" ? "#16a34a" : "#dc2626"}
+          />
+        ) : null}
+      </View>
+      <ValidationHelper helperText={helperText} status={status} />
     </View>
   );
 }

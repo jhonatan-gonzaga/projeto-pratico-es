@@ -6,6 +6,7 @@ import { Image, Pressable, ScrollView, Text, TextInput, View } from "react-nativ
 import { professionalServices, projectItems, serviceRequests } from "../../components/profissional/data";
 import { formatBRPhone } from "../../components/profissional/utils";
 import type { ProfessionalArea, ProfessionalTab, ProjectItem } from "../../components/profissional/types";
+import { getProjectFormErrors, isRequiredText } from "../../services/validators";
 import {
   ChoiceChip,
   CustomerAvatar,
@@ -52,6 +53,12 @@ export function EditProjectScreen({
     "Construcao de uma residencia de 2 andares no bairro centro, com acabamento padrao medio.",
   );
   const [isEditingPhoto, setIsEditingPhoto] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [touched, setTouched] = useState({
+    details: false,
+    neighborhood: false,
+    title: false,
+  });
   const [selectedCategories, setSelectedCategories] = useState<string[]>([
     "Eletrica",
     "Reparo",
@@ -71,6 +78,38 @@ export function EditProjectScreen({
         ? current.filter((item) => item !== category)
         : [...current, category],
     );
+  };
+
+  const errors = getProjectFormErrors({
+    categories: selectedCategories,
+    details,
+    neighborhood,
+    title,
+  });
+  const hasErrors = Object.values(errors).some(Boolean);
+  const shouldShow = (field: keyof typeof touched) => submitted || touched[field];
+  const fieldStatus = (field: keyof typeof touched, isValid: boolean) => {
+    if (!shouldShow(field)) {
+      return "default";
+    }
+
+    return isValid ? "valid" : "error";
+  };
+  const fieldError = (field: keyof typeof touched) =>
+    shouldShow(field) ? errors[field] : undefined;
+
+  const handleSave = () => {
+    setSubmitted(true);
+
+    if (hasErrors) {
+      return;
+    }
+
+    onSave({
+      ...project,
+      title: title.trim(),
+      location: neighborhood.trim(),
+    });
   };
 
   if (isEditingPhoto) {
@@ -108,13 +147,21 @@ export function EditProjectScreen({
               label="Titulo do projeto"
               placeholder="Construcao de Residencia"
               value={title}
+              onBlur={() => setTouched((current) => ({ ...current, title: true }))}
               onChangeText={setTitle}
+              status={fieldStatus("title", isRequiredText(title, 3))}
+              helperText={fieldError("title")}
             />
             <ProjectInput
               label="Em qual Bairro?"
               placeholder="Centro"
               value={neighborhood}
+              onBlur={() =>
+                setTouched((current) => ({ ...current, neighborhood: true }))
+              }
               onChangeText={setNeighborhood}
+              status={fieldStatus("neighborhood", isRequiredText(neighborhood))}
+              helperText={fieldError("neighborhood")}
             />
           </View>
         </ProjectSection>
@@ -130,15 +177,29 @@ export function EditProjectScreen({
               />
             ))}
           </View>
+          {submitted && errors.categories ? (
+            <Text className="px-1 text-xs leading-4 text-[#dc2626]">
+              {errors.categories}
+            </Text>
+          ) : null}
         </ProjectSection>
 
         <ProjectSection
           icon="reorder-three-outline"
           title="Detalhes (se quiser escrever)"
         >
-          <View className="relative min-h-[100px] rounded-[12px] bg-[#f5e8e9] px-4 py-3">
+          <View
+            className={`relative min-h-[100px] rounded-[12px] border-[1.5px] px-4 py-3 ${
+              fieldError("details")
+                ? "border-[#dc2626] bg-[#fff7f7]"
+                : "border-transparent bg-[#f5e8e9]"
+            }`}
+          >
             <TextInput
               value={details}
+              onBlur={() =>
+                setTouched((current) => ({ ...current, details: true }))
+              }
               onChangeText={setDetails}
               multiline
               className="min-h-[74px] pr-10 text-sm text-foreground"
@@ -158,6 +219,11 @@ export function EditProjectScreen({
               <Ionicons name="mic-outline" size={16} color="#b94b50" />
             </Pressable>
           </View>
+          {fieldError("details") ? (
+            <Text className="px-1 text-xs leading-4 text-[#dc2626]">
+              {fieldError("details")}
+            </Text>
+          ) : null}
         </ProjectSection>
 
         <ProjectSection icon="image-outline" title="Fotos do Projeto">
@@ -205,13 +271,7 @@ export function EditProjectScreen({
           </Text>
         </Pressable>
         <Pressable
-          onPress={() =>
-            onSave({
-              ...project,
-              title: title || project.title,
-              location: neighborhood || project.location,
-            })
-          }
+          onPress={handleSave}
           className="min-h-[56px] flex-[2] flex-row items-center justify-center gap-2 rounded-[12px] bg-primary"
           accessibilityRole="button"
         >

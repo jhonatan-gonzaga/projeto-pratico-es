@@ -6,6 +6,7 @@ import { Image, Pressable, ScrollView, Text, TextInput, View } from "react-nativ
 import { professionalServices, projectItems, serviceRequests } from "../../components/profissional/data";
 import { formatBRPhone } from "../../components/profissional/utils";
 import type { ProfessionalArea, ProfessionalTab, ServiceRequest } from "../../components/profissional/types";
+import { isValidBRMoney } from "../../services/validators";
 import {
   ChoiceChip,
   CustomerAvatar,
@@ -49,6 +50,20 @@ export function RequestDetailsScreen({
 }) {
   const [proposedValue, setProposedValue] = useState("");
   const [proposalSent, setProposalSent] = useState(false);
+  const [proposalTouched, setProposalTouched] = useState(false);
+  const [proposalSubmitted, setProposalSubmitted] = useState(false);
+  const proposalIsValid = isValidBRMoney(proposedValue);
+  const showProposalError =
+    (proposalTouched || proposalSubmitted) && !proposalIsValid;
+  const handleSendProposal = () => {
+    setProposalSubmitted(true);
+
+    if (!proposalIsValid) {
+      return;
+    }
+
+    setProposalSent(true);
+  };
 
   return (
     <View className="h-full w-full max-w-[480px] self-center bg-background">
@@ -149,10 +164,19 @@ export function RequestDetailsScreen({
               </Text>
             </View>
             <View className="flex-row items-center gap-2">
-              <View className="flex-1 flex-row items-center gap-2 rounded-[12px] border border-input-border bg-background px-3 py-3">
+              <View
+                className={`flex-1 flex-row items-center gap-2 rounded-[12px] border px-3 py-3 ${
+                  showProposalError
+                    ? "border-[#dc2626] bg-[#fff7f7]"
+                    : proposalTouched
+                      ? "border-[#16a34a] bg-[#f7fff9]"
+                      : "border-input-border bg-background"
+                }`}
+              >
                 <Text className="text-sm font-medium text-muted-foreground">R$</Text>
                 <TextInput
                   value={proposedValue}
+                  onBlur={() => setProposalTouched(true)}
                   onChangeText={setProposedValue}
                   keyboardType="numeric"
                   className="flex-1 p-0 text-sm text-foreground"
@@ -160,10 +184,16 @@ export function RequestDetailsScreen({
                   placeholderTextColor="#8a8a96"
                   accessibilityLabel="Propor novo valor"
                 />
+                {proposalTouched || proposalSubmitted ? (
+                  <Ionicons
+                    name={proposalIsValid ? "checkmark-circle" : "alert-circle"}
+                    size={18}
+                    color={proposalIsValid ? "#16a34a" : "#dc2626"}
+                  />
+                ) : null}
               </View>
               <Pressable
-                disabled={!proposedValue.trim()}
-                onPress={() => setProposalSent(true)}
+                onPress={handleSendProposal}
                 className={`rounded-[12px] px-5 py-3 ${
                   proposedValue.trim() ? "bg-primary" : "bg-[#d7c7c9]"
                 }`}
@@ -174,6 +204,11 @@ export function RequestDetailsScreen({
                 </Text>
               </Pressable>
             </View>
+            {showProposalError ? (
+              <Text className="mt-1 px-1 text-xs leading-4 text-[#dc2626]">
+                O valor proposto deve ser maior que zero.
+              </Text>
+            ) : null}
           </View>
         ) : null}
 
