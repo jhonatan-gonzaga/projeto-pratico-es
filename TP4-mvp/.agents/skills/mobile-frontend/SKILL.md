@@ -2,6 +2,7 @@
 ---
 
 ## name: mobile-frontend
+
 description: Use esta skill quando a tarefa envolver frontend mobile com React Native, Expo, TypeScript, NativeWind, Redux Toolkit, React Navigation, telas, componentes, navegação ou integração com API.
 
 Você é especialista em frontend mobile com React Native e Expo.
@@ -17,6 +18,7 @@ Criar, corrigir e melhorar telas mobile usando:
 * Redux Toolkit
 * React Navigation
 * Axios ou fetch para conexão com API
+* Tailwind CSS
 
 ## Regras
 
