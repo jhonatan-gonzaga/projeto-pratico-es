@@ -9,6 +9,7 @@ import { ProfessionalHomeScreen, ProfessionalSetupScreen } from "./components/pr
 import {
   AccountProfileScreen,
   ClientHomePage,
+  ClientSearchPage,
   GoogleSignInScreen,
   LoginScreen,
   PhoneVerificationScreen,
@@ -21,7 +22,8 @@ type ProfileReturnScreen =
   | "profileChoice"
   | "professionalSetup"
   | "professionalHome"
-  | "clientHome";
+  | "clientHome"
+  | "clientSearch";
 type Screen =
   | ReturnScreen
   | "phone"
@@ -30,7 +32,8 @@ type Screen =
   | "accountProfile"
   | "professionalSetup"
   | "professionalHome"
-  | "clientHome";
+  | "clientHome"
+  | "clientSearch";
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>("login");
@@ -53,6 +56,10 @@ export default function App() {
   const openAccountProfile = (from: ProfileReturnScreen) => {
     setProfileReturnScreen(from);
     setScreen("accountProfile");
+  };
+
+  const openClientTab = (tab: "home" | "search") => {
+    setScreen(tab === "search" ? "clientSearch" : "clientHome");
   };
 
   const currentScreen =
@@ -85,7 +92,17 @@ export default function App() {
               onProfilePress={() => openAccountProfile("profileChoice")}
             />
           ) : screen === "clientHome" ? (
-            <ClientHomePage />
+            <ClientHomePage onNavigate={(tab) => {
+              if (tab === "home" || tab === "search") {
+                openClientTab(tab);
+              }
+            }} />
+          ) : screen === "clientSearch" ? (
+            <ClientSearchPage onNavigate={(tab) => {
+              if (tab === "home" || tab === "search") {
+                openClientTab(tab);
+              }
+            }} />
           ) : screen === "professionalSetup" ? (
             <ProfessionalSetupScreen
               onBack={() => setScreen("profileChoice")}
