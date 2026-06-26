@@ -7,6 +7,13 @@ import { professionalServices, projectItems, serviceRequests } from "../../compo
 import { formatBRPhone } from "../../components/profissional/utils";
 import type { ProfessionalArea, ProfessionalTab } from "../../components/profissional/types";
 import {
+  getProfessionalProfileErrors,
+  isRequiredText,
+  isValidBRMoney,
+  isValidName,
+  isValidTime,
+} from "../../services/validators";
+import {
   ChoiceChip,
   CustomerAvatar,
   DayButton,
@@ -90,6 +97,7 @@ function ReviewActionScreen({
 }) {
   const [reply, setReply] = useState("");
   const [reportDetails, setReportDetails] = useState("");
+  const [submitted, setSubmitted] = useState(false);
   const [selectedReason, setSelectedReason] = useState("Comentario ofensivo");
   const reportReasons = [
     "Comentario ofensivo",
@@ -98,6 +106,22 @@ function ReviewActionScreen({
     "Nao reconheco o servico",
   ];
   const isReply = action === "reply";
+  const detailsError = isReply
+    ? !isRequiredText(reply, 10)
+      ? "Escreva uma resposta com pelo menos 10 caracteres."
+      : undefined
+    : !isRequiredText(reportDetails, 15)
+      ? "Descreva o motivo do reporte com pelo menos 15 caracteres."
+      : undefined;
+  const handleDone = () => {
+    setSubmitted(true);
+
+    if (detailsError) {
+      return;
+    }
+
+    onDone();
+  };
 
   return (
     <View className="h-full w-full max-w-[480px] self-center bg-background">
@@ -157,7 +181,13 @@ function ReviewActionScreen({
 
           {isReply ? (
             <View className="gap-3">
-              <View className="min-h-[150px] rounded-[16px] border-[1.5px] border-input-border bg-card px-4 py-3">
+              <View
+                className={`min-h-[150px] rounded-[16px] border-[1.5px] px-4 py-3 ${
+                  submitted && detailsError
+                    ? "border-[#dc2626] bg-[#fff7f7]"
+                    : "border-input-border bg-card"
+                }`}
+              >
                 <TextInput
                   value={reply}
                   onChangeText={setReply}
@@ -168,6 +198,11 @@ function ReviewActionScreen({
                   accessibilityLabel="Resposta da avaliacao"
                 />
               </View>
+              {submitted && detailsError ? (
+                <Text className="px-1 text-xs leading-4 text-[#dc2626]">
+                  {detailsError}
+                </Text>
+              ) : null}
 
               <View className="rounded-[12px] bg-[#f7eced] px-4 py-3">
                 <Text className="text-xs leading-5 text-muted-foreground">
@@ -206,7 +241,13 @@ function ReviewActionScreen({
                 })}
               </View>
 
-              <View className="min-h-[130px] rounded-[16px] border-[1.5px] border-input-border bg-card px-4 py-3">
+              <View
+                className={`min-h-[130px] rounded-[16px] border-[1.5px] px-4 py-3 ${
+                  submitted && detailsError
+                    ? "border-[#dc2626] bg-[#fff7f7]"
+                    : "border-input-border bg-card"
+                }`}
+              >
                 <TextInput
                   value={reportDetails}
                   onChangeText={setReportDetails}
@@ -217,13 +258,18 @@ function ReviewActionScreen({
                   accessibilityLabel="Detalhes do reporte"
                 />
               </View>
+              {submitted && detailsError ? (
+                <Text className="px-1 text-xs leading-4 text-[#dc2626]">
+                  {detailsError}
+                </Text>
+              ) : null}
             </View>
           )}
         </View>
 
         <View className="gap-3">
           <Pressable
-            onPress={onDone}
+            onPress={handleDone}
             className="min-h-[56px] items-center justify-center rounded-[16px] bg-primary px-6"
             accessibilityRole="button"
           >
@@ -280,6 +326,17 @@ function ProfessionalProfileSettingsScreen({
   ]);
   const [startTime, setStartTime] = useState("08:00");
   const [endTime, setEndTime] = useState("18:00");
+  const [submitted, setSubmitted] = useState(false);
+  const [touched, setTouched] = useState({
+    about: false,
+    dailyRate: false,
+    endTime: false,
+    name: false,
+    neighborhood: false,
+    number: false,
+    startTime: false,
+    street: false,
+  });
   const [selectedReview, setSelectedReview] =
     useState<ProfessionalReview | null>(null);
   const [reviewAction, setReviewAction] = useState<ReviewAction | null>(null);
@@ -326,6 +383,40 @@ function ProfessionalProfileSettingsScreen({
   const closeReviewAction = () => {
     setSelectedReview(null);
     setReviewAction(null);
+  };
+
+  const errors = getProfessionalProfileErrors({
+    about,
+    availableDays,
+    dailyRate,
+    endTime,
+    name,
+    neighborhood,
+    number,
+    specialties,
+    startTime,
+    street,
+  });
+  const hasErrors = Object.values(errors).some(Boolean);
+  const shouldShow = (field: keyof typeof touched) => submitted || touched[field];
+  const fieldStatus = (field: keyof typeof touched, isValid: boolean) => {
+    if (!shouldShow(field)) {
+      return "default";
+    }
+
+    return isValid ? "valid" : "error";
+  };
+  const fieldError = (field: keyof typeof touched) =>
+    shouldShow(field) ? errors[field] : undefined;
+
+  const handleSave = () => {
+    setSubmitted(true);
+
+    if (hasErrors) {
+      return;
+    }
+
+    onSave();
   };
 
   if (selectedReview && reviewAction) {
@@ -447,7 +538,13 @@ function ProfessionalProfileSettingsScreen({
 
         <View className="mt-5 gap-5 px-4">
           <SetupSection label="Nome Completo">
-            <SetupTextField value={name} onChangeText={setName} />
+            <SetupTextField
+              value={name}
+              onBlur={() => setTouched((current) => ({ ...current, name: true }))}
+              onChangeText={setName}
+              status={fieldStatus("name", isValidName(name))}
+              helperText={fieldError("name")}
+            />
           </SetupSection>
 
           <SetupSection label="Especialidades">
@@ -461,6 +558,11 @@ function ProfessionalProfileSettingsScreen({
                 />
               ))}
             </View>
+            {submitted && errors.specialties ? (
+              <Text className="px-1 text-xs leading-4 text-[#dc2626]">
+                {errors.specialties}
+              </Text>
+            ) : null}
           </SetupSection>
 
           <SetupSection label="Disponibilidade">
@@ -477,33 +579,62 @@ function ProfessionalProfileSettingsScreen({
                 />
               ))}
             </View>
+            {submitted && errors.availableDays ? (
+              <Text className="px-1 text-xs leading-4 text-[#dc2626]">
+                {errors.availableDays}
+              </Text>
+            ) : null}
           </SetupSection>
 
           <View className="flex-row gap-4">
             <View className="flex-1 gap-2">
               <Text className="text-sm font-bold text-foreground">Das</Text>
-              <SetupTextField value={startTime} onChangeText={setStartTime} />
+              <SetupTextField
+                value={startTime}
+                onBlur={() =>
+                  setTouched((current) => ({ ...current, startTime: true }))
+                }
+                onChangeText={setStartTime}
+                status={fieldStatus("startTime", isValidTime(startTime))}
+                helperText={fieldError("startTime")}
+              />
             </View>
             <View className="flex-1 gap-2">
               <Text className="text-sm font-bold text-foreground">Ate</Text>
-              <SetupTextField value={endTime} onChangeText={setEndTime} />
+              <SetupTextField
+                value={endTime}
+                onBlur={() =>
+                  setTouched((current) => ({ ...current, endTime: true }))
+                }
+                onChangeText={setEndTime}
+                status={fieldStatus("endTime", !errors.endTime)}
+                helperText={fieldError("endTime")}
+              />
             </View>
           </View>
 
           <SetupSection label="Valor da Diaria">
             <SetupTextField
               value={dailyRate}
+              onBlur={() =>
+                setTouched((current) => ({ ...current, dailyRate: true }))
+              }
               onChangeText={setDailyRate}
               keyboardType="numeric"
+              status={fieldStatus("dailyRate", isValidBRMoney(dailyRate))}
+              helperText={fieldError("dailyRate")}
             />
           </SetupSection>
 
           <SetupSection label="Sobre mim">
             <SetupTextField
               value={about}
+              onBlur={() => setTouched((current) => ({ ...current, about: true }))}
               onChangeText={setAbout}
               placeholder="Conte sua experiencia, servicos e diferenciais"
               multiline
+              status={fieldStatus("about", isRequiredText(about, 20))}
+              helperText={fieldError("about")}
             />
           </SetupSection>
 
@@ -512,24 +643,39 @@ function ProfessionalProfileSettingsScreen({
               <SetupTextField
                 icon="map-outline"
                 value={neighborhood}
+                onBlur={() =>
+                  setTouched((current) => ({ ...current, neighborhood: true }))
+                }
                 onChangeText={setNeighborhood}
                 placeholder="Bairro"
+                status={fieldStatus("neighborhood", isRequiredText(neighborhood))}
+                helperText={fieldError("neighborhood")}
               />
               <View className="flex-row gap-3">
                 <View className="flex-[2]">
                   <SetupTextField
                     icon="navigate-outline"
                     value={street}
+                    onBlur={() =>
+                      setTouched((current) => ({ ...current, street: true }))
+                    }
                     onChangeText={setStreet}
                     placeholder="Rua"
+                    status={fieldStatus("street", isRequiredText(street))}
+                    helperText={fieldError("street")}
                   />
                 </View>
                 <View className="flex-1">
                   <SetupTextField
                     icon="keypad-outline"
                     value={number}
+                    onBlur={() =>
+                      setTouched((current) => ({ ...current, number: true }))
+                    }
                     onChangeText={setNumber}
                     placeholder="No"
+                    status={fieldStatus("number", !errors.number)}
+                    helperText={fieldError("number")}
                   />
                 </View>
               </View>
@@ -537,7 +683,7 @@ function ProfessionalProfileSettingsScreen({
           </SetupSection>
 
           <Pressable
-            onPress={onSave}
+            onPress={handleSave}
             className="mb-8 min-h-[56px] items-center justify-center rounded-[16px] bg-primary px-6"
             accessibilityRole="button"
           >

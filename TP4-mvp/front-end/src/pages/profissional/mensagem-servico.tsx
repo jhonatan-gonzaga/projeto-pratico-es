@@ -8,6 +8,7 @@ import {
   ProjectHeader,
   StatusBadge,
 } from "../../components/profissional/components";
+import { validateMessage } from "../../services/validators";
 
 export function ServiceMessageScreen({
   onBack,
@@ -19,6 +20,8 @@ export function ServiceMessageScreen({
   service: ProfessionalService;
 }) {
   const [message, setMessage] = useState("");
+  const [messageTouched, setMessageTouched] = useState(false);
+  const [messageSubmitted, setMessageSubmitted] = useState(false);
   const [messages, setMessages] = useState([
     {
       id: "1",
@@ -46,8 +49,10 @@ export function ServiceMessageScreen({
 
   const sendMessage = () => {
     const trimmed = message.trim();
+    const validation = validateMessage(message);
+    setMessageSubmitted(true);
 
-    if (!trimmed) {
+    if (!validation.isValid) {
       return;
     }
 
@@ -61,7 +66,12 @@ export function ServiceMessageScreen({
       },
     ]);
     setMessage("");
+    setMessageSubmitted(false);
+    setMessageTouched(false);
   };
+  const messageValidation = validateMessage(message);
+  const showMessageError =
+    (messageTouched || messageSubmitted) && !messageValidation.isValid;
 
   return (
     <View className="h-full w-full max-w-[480px] self-center bg-background">
@@ -125,23 +135,48 @@ export function ServiceMessageScreen({
         </Pressable>
       </ScrollView>
 
-      <View className="flex-row items-center gap-2 border-t border-input-border bg-card px-4 py-3">
-        <TextInput
-          value={message}
-          onChangeText={setMessage}
-          className="min-h-[44px] flex-1 rounded-[12px] bg-background px-4 text-sm text-foreground"
-          placeholder="Digite uma mensagem..."
-          placeholderTextColor="#8a8a96"
-          accessibilityLabel="Mensagem"
-        />
-        <Pressable
-          onPress={sendMessage}
-          className="h-11 w-11 items-center justify-center rounded-full bg-primary"
-          accessibilityRole="button"
-          accessibilityLabel="Enviar mensagem"
-        >
-          <Ionicons name="send" size={17} color="#ffffff" />
-        </Pressable>
+      <View className="border-t border-input-border bg-card px-4 py-3">
+        <View className="flex-row items-center gap-2">
+          <View
+            className={`min-h-[44px] flex-1 flex-row items-center rounded-[12px] border px-4 ${
+              showMessageError
+                ? "border-[#dc2626] bg-[#fff7f7]"
+                : messageTouched
+                  ? "border-[#16a34a] bg-[#f7fff9]"
+                  : "border-transparent bg-background"
+            }`}
+          >
+            <TextInput
+              value={message}
+              onBlur={() => setMessageTouched(true)}
+              onChangeText={setMessage}
+              className="min-h-[42px] flex-1 p-0 text-sm text-foreground"
+              placeholder="Digite uma mensagem..."
+              placeholderTextColor="#8a8a96"
+              accessibilityLabel="Mensagem"
+            />
+            {messageTouched || messageSubmitted ? (
+              <Ionicons
+                name={messageValidation.isValid ? "checkmark-circle" : "alert-circle"}
+                size={18}
+                color={messageValidation.isValid ? "#16a34a" : "#dc2626"}
+              />
+            ) : null}
+          </View>
+          <Pressable
+            onPress={sendMessage}
+            className="h-11 w-11 items-center justify-center rounded-full bg-primary"
+            accessibilityRole="button"
+            accessibilityLabel="Enviar mensagem"
+          >
+            <Ionicons name="send" size={17} color="#ffffff" />
+          </Pressable>
+        </View>
+        {showMessageError ? (
+          <Text className="mt-1 px-1 text-xs leading-4 text-[#dc2626]">
+            {messageValidation.message}
+          </Text>
+        ) : null}
       </View>
     </View>
   );
