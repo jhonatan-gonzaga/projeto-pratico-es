@@ -1,2 +1,2 @@
 export { ClientHomePage } from "./home";
-export { ClientSearchPage } from "./search";
+export { ClientProfilePage } from "./profile";

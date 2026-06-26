@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Image, Text, View } from "react-native";
+import { Image, Pressable, Text, View } from "react-native";
 
 type ProfessionalCardProps = {
   name: string;
@@ -7,6 +7,7 @@ type ProfessionalCardProps = {
   price: string;
   rating: string;
   avatarUri: string;
+  onPress?: () => void;
 };
 
 export function ProfessionalCard({
@@ -15,9 +16,16 @@ export function ProfessionalCard({
   price,
   rating,
   avatarUri,
+  onPress,
 }: ProfessionalCardProps) {
+  const CardWrapper = onPress ? Pressable : View;
+
   return (
-    <View className="w-[48%] min-w-[48%] overflow-hidden rounded-[20px] bg-card shadow-lg shadow-black/5">
+    <CardWrapper
+      onPress={onPress}
+      className="w-[48%] min-w-[48%] overflow-hidden rounded-[20px] bg-card shadow-lg shadow-black/5"
+      accessibilityRole={onPress ? "button" : undefined}
+    >
       <View className="relative h-[150px]">
         <Image
           source={{ uri: avatarUri }}
@@ -38,6 +46,6 @@ export function ProfessionalCard({
           <Text className="text-xs font-normal text-muted-foreground">/dia</Text>
         </Text>
       </View>
-    </View>
+    </CardWrapper>
   );
 }

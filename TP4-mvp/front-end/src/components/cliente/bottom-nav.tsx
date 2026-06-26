@@ -25,7 +25,7 @@ const navItems: NavItem[] = [
 
 export function ClientBottomNav({ active = "home", onSelect }: ClientBottomNavProps) {
   return (
-    <View className="mx-3 mb-4 rounded-[24px] bg-card px-2 py-3 shadow-lg shadow-black/10">
+    <View className="border-t border-input-border bg-card px-2 py-3 shadow-lg shadow-black/10">
       <View className="flex-row items-center justify-around">
         {navItems.map((item) => {
           const isActive = active === item.key;

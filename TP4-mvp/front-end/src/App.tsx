@@ -2,14 +2,14 @@ import "./global.css";
 
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
-import { KeyboardAvoidingView, Platform, ScrollView } from "react-native";
+import { KeyboardAvoidingView, Platform, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { ProfessionalHomeScreen, ProfessionalSetupScreen } from "./components/profissional";
 import {
   AccountProfileScreen,
   ClientHomePage,
-  ClientSearchPage,
+  ClientProfilePage,
   GoogleSignInScreen,
   LoginScreen,
   PhoneVerificationScreen,
@@ -23,7 +23,7 @@ type ProfileReturnScreen =
   | "professionalSetup"
   | "professionalHome"
   | "clientHome"
-  | "clientSearch";
+  | "clientProfile";
 type Screen =
   | ReturnScreen
   | "phone"
@@ -33,7 +33,7 @@ type Screen =
   | "professionalSetup"
   | "professionalHome"
   | "clientHome"
-  | "clientSearch";
+  | "clientProfile";
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>("login");
@@ -92,17 +92,12 @@ export default function App() {
               onProfilePress={() => openAccountProfile("profileChoice")}
             />
           ) : screen === "clientHome" ? (
-            <ClientHomePage onNavigate={(tab) => {
-              if (tab === "home" || tab === "search") {
-                openClientTab(tab);
-              }
-            }} />
-          ) : screen === "clientSearch" ? (
-            <ClientSearchPage onNavigate={(tab) => {
-              if (tab === "home" || tab === "search") {
-                openClientTab(tab);
-              }
-            }} />
+            <ClientHomePage
+            onOpenProfessional={() => setScreen("clientProfile")}
+            onBack={() => setScreen("profileChoice")}
+          />
+          ) : screen === "clientProfile" ? (
+            <ClientProfilePage onBack={() => setScreen("clientHome")} />
           ) : screen === "professionalSetup" ? (
             <ProfessionalSetupScreen
               onBack={() => setScreen("profileChoice")}
@@ -135,14 +130,7 @@ export default function App() {
         {isProfessionalScreen ? (
           currentScreen
         ) : (
-          <ScrollView
-            className="flex-1"
-            contentContainerClassName="min-h-[812px] items-center"
-            keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={false}
-          >
-            {currentScreen}
-        </ScrollView>
+          <View className="flex-1 items-center">{currentScreen}</View>
         )}
       </KeyboardAvoidingView>
     </SafeAreaView>

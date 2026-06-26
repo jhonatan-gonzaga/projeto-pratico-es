@@ -62,16 +62,19 @@ const professionals = [
   },
 ];
 
-type ClientHomePageProps = {
-  onNavigate?: (key: ClientNavKey) => void;
-};
-
-export function ClientHomePage({ onNavigate }: ClientHomePageProps) {
+export function ClientHomePage({
+  onOpenProfessional,
+  onBack,
+}: {
+  onOpenProfessional?: () => void;
+  onBack?: () => void;
+}) {
   return (
-    <View className="min-h-[812px] w-full max-w-[480px] bg-background">
+    <View className="relative flex-1 w-full max-w-[480px] bg-background">
       <View className="flex-row items-center justify-between px-5 pt-5 pb-3">
         <Pressable
           className="h-9 w-9 items-center justify-center rounded-[24px] bg-card shadow-sm shadow-black/10"
+          onPress={onBack}
           accessibilityRole="button"
           accessibilityLabel="Voltar"
         >
@@ -101,8 +104,8 @@ export function ClientHomePage({ onNavigate }: ClientHomePageProps) {
       </View>
 
       <ScrollView
-        className="px-5"
-        contentContainerClassName="pb-4"
+        className="flex-1 px-5"
+        contentContainerClassName="pb-32"
         showsVerticalScrollIndicator={false}
       >
         <Text className="mb-4 text-3xl font-bold leading-tight text-foreground">
@@ -159,7 +162,7 @@ export function ClientHomePage({ onNavigate }: ClientHomePageProps) {
             Profissionais em destaque
           </Text>
           <View className="flex-row flex-wrap justify-between gap-3">
-            {professionals.map((professional) => (
+            {professionals.map((professional, index) => (
               <ProfessionalCard
                 key={professional.name}
                 name={professional.name}
@@ -167,13 +170,16 @@ export function ClientHomePage({ onNavigate }: ClientHomePageProps) {
                 price={professional.price}
                 rating={professional.rating}
                 avatarUri={professional.avatarUri}
+                onPress={index === 0 ? onOpenProfessional : undefined}
               />
             ))}
           </View>
         </View>
       </ScrollView>
 
-      <ClientBottomNav active="home" onSelect={onNavigate} />
+      <View className="absolute inset-x-0 bottom-0 px-5 pb-2">
+        <ClientBottomNav />
+      </View>
     </View>
   );
 }
