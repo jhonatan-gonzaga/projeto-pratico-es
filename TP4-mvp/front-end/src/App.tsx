@@ -10,6 +10,7 @@ import {
   AccountProfileScreen,
   ClientHomePage,
   ClientProfilePage,
+  ClientSearchPage,
   GoogleSignInScreen,
   LoginScreen,
   PhoneVerificationScreen,
@@ -23,6 +24,7 @@ type ProfileReturnScreen =
   | "professionalSetup"
   | "professionalHome"
   | "clientHome"
+  | "clientSearch"
   | "clientProfile";
 type Screen =
   | ReturnScreen
@@ -33,6 +35,7 @@ type Screen =
   | "professionalSetup"
   | "professionalHome"
   | "clientHome"
+  | "clientSearch"
   | "clientProfile";
 
 export default function App() {
@@ -93,9 +96,22 @@ export default function App() {
             />
           ) : screen === "clientHome" ? (
             <ClientHomePage
-            onOpenProfessional={() => setScreen("clientProfile")}
-            onBack={() => setScreen("profileChoice")}
-          />
+              onNavigate={(tab) => {
+                if (tab === "home" || tab === "search") {
+                  openClientTab(tab);
+                }
+              }}
+              onOpenProfessional={() => setScreen("clientProfile")}
+              onBack={() => setScreen("profileChoice")}
+            />
+          ) : screen === "clientSearch" ? (
+            <ClientSearchPage
+              onNavigate={(tab) => {
+                if (tab === "home" || tab === "search") {
+                  openClientTab(tab);
+                }
+              }}
+            />
           ) : screen === "clientProfile" ? (
             <ClientProfilePage onBack={() => setScreen("clientHome")} />
           ) : screen === "professionalSetup" ? (

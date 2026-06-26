@@ -63,9 +63,11 @@ const professionals = [
 ];
 
 export function ClientHomePage({
+  onNavigate,
   onOpenProfessional,
   onBack,
 }: {
+  onNavigate?: (key: ClientNavKey) => void;
   onOpenProfessional?: () => void;
   onBack?: () => void;
 }) {
@@ -178,7 +180,7 @@ export function ClientHomePage({
       </ScrollView>
 
       <View className="absolute inset-x-0 bottom-0 px-5 pb-2">
-        <ClientBottomNav />
+        <ClientBottomNav active="home" onSelect={onNavigate} />
       </View>
     </View>
   );
