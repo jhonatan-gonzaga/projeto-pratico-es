@@ -6,6 +6,7 @@ import { ClientBottomNav } from "../../components/cliente";
 import { projectItems } from "../../components/profissional/data";
 import { MyProjectsScreen } from "../profissional/meus-projetos";
 import { ProjectResultScreen } from "../profissional/resultado-projeto";
+import { ClientMessageScreen } from "./mensagem-profissional";
 
 const availabilityDays = [
   { label: "S", available: true },
@@ -74,10 +75,15 @@ export function ClientProfilePage({
 }) {
   const [isShowingPortfolio, setIsShowingPortfolio] = useState(false);
   const [isViewingProjectResult, setIsViewingProjectResult] = useState(false);
+  const [isShowingMessages, setIsShowingMessages] = useState(false);
 
   const handleOpenPortfolio = () => setIsShowingPortfolio(true);
   const handleClosePortfolio = () => setIsShowingPortfolio(false);
   const handleOpenProjectResult = () => setIsViewingProjectResult(true);
+
+  if (isShowingMessages) {
+    return <ClientMessageScreen onBack={() => setIsShowingMessages(false)} />;
+  }
 
   if (isViewingProjectResult) {
     return (
@@ -192,6 +198,7 @@ export function ClientProfilePage({
 
           <View className="mt-3 flex-row w-full gap-3">
             <Pressable
+              onPress={() => setIsShowingMessages(true)}
               className="flex-1 rounded-xl bg-primary py-3.5 flex-row items-center justify-center gap-2"
               accessibilityRole="button"
               accessibilityLabel="Enviar mensagem"
