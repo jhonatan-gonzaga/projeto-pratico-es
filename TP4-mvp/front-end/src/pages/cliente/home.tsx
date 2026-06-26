@@ -1,7 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
 
-import { CategoryCard, ClientBottomNav, ProfessionalCard } from "../../components/cliente";
+import {
+  CategoryCard,
+  ClientBottomNav,
+  type ClientNavKey,
+  ProfessionalCard,
+} from "../../components/cliente";
 
 const categories = [
   {
@@ -108,13 +113,19 @@ export function ClientHomePage({
         </Text>
 
         <View className="mb-5 flex-row gap-2">
-          <View className="flex-1 flex-row items-center gap-2 rounded-[20px] bg-card px-4 py-3 shadow-sm shadow-black/10">
+          <Pressable
+            onPress={() => onNavigate?.("search")}
+            className="flex-1 flex-row items-center gap-2 rounded-[20px] bg-card px-4 py-3 shadow-sm shadow-black/10"
+            accessibilityRole="button"
+            accessibilityLabel="Buscar servicos ou profissionais"
+          >
             <Ionicons name="search" size={16} color="#9e8e8f" />
             <Text className="text-sm text-muted-foreground">
               Buscar Serviços ou Profis...
             </Text>
-          </View>
+          </Pressable>
           <Pressable
+            onPress={() => onNavigate?.("search")}
             className="h-[52px] w-[52px] items-center justify-center rounded-[20px] bg-card shadow-sm shadow-black/10"
             accessibilityRole="button"
             accessibilityLabel="Filtros"

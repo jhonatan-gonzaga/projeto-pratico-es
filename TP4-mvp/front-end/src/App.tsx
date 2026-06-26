@@ -58,6 +58,10 @@ export default function App() {
     setScreen("accountProfile");
   };
 
+  const openClientTab = (tab: "home" | "search") => {
+    setScreen(tab === "search" ? "clientSearch" : "clientHome");
+  };
+
   const currentScreen =
     screen === "login" ? (
             <LoginScreen
