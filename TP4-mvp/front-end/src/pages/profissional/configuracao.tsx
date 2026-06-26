@@ -1,11 +1,15 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
-import { Image, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { Alert, Image, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
 import { professionalServices, projectItems, serviceRequests } from "../../components/profissional/data";
 import { formatBRPhone } from "../../components/profissional/utils";
 import type { ProfessionalArea, ProfessionalTab } from "../../components/profissional/types";
+import {
+  validateProfessionalProfile,
+  validateReviewAction,
+} from "../../services/validators";
 import {
   ChoiceChip,
   CustomerAvatar,
@@ -98,6 +102,19 @@ function ReviewActionScreen({
     "Nao reconheco o servico",
   ];
   const isReply = action === "reply";
+  const handleDone = () => {
+    const validation = validateReviewAction({
+      action,
+      details: isReply ? reply : reportDetails,
+    });
+
+    if (!validation.isValid) {
+      Alert.alert("Revise os dados", validation.message);
+      return;
+    }
+
+    onDone();
+  };
 
   return (
     <View className="h-full w-full max-w-[480px] self-center bg-background">
@@ -223,7 +240,7 @@ function ReviewActionScreen({
 
         <View className="gap-3">
           <Pressable
-            onPress={onDone}
+            onPress={handleDone}
             className="min-h-[56px] items-center justify-center rounded-[16px] bg-primary px-6"
             accessibilityRole="button"
           >
@@ -326,6 +343,28 @@ function ProfessionalProfileSettingsScreen({
   const closeReviewAction = () => {
     setSelectedReview(null);
     setReviewAction(null);
+  };
+
+  const handleSave = () => {
+    const validation = validateProfessionalProfile({
+      about,
+      availableDays,
+      dailyRate,
+      endTime,
+      name,
+      neighborhood,
+      number,
+      specialties,
+      startTime,
+      street,
+    });
+
+    if (!validation.isValid) {
+      Alert.alert("Revise os dados", validation.message);
+      return;
+    }
+
+    onSave();
   };
 
   if (selectedReview && reviewAction) {
@@ -537,7 +576,7 @@ function ProfessionalProfileSettingsScreen({
           </SetupSection>
 
           <Pressable
-            onPress={onSave}
+            onPress={handleSave}
             className="mb-8 min-h-[56px] items-center justify-center rounded-[16px] bg-primary px-6"
             accessibilityRole="button"
           >

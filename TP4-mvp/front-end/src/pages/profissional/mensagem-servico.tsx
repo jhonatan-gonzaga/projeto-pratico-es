@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
-import { Linking, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { Alert, Linking, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
 import type { ProfessionalService } from "../../components/profissional/types";
 import {
@@ -8,6 +8,7 @@ import {
   ProjectHeader,
   StatusBadge,
 } from "../../components/profissional/components";
+import { validateMessage } from "../../services/validators";
 
 export function ServiceMessageScreen({
   onBack,
@@ -46,8 +47,10 @@ export function ServiceMessageScreen({
 
   const sendMessage = () => {
     const trimmed = message.trim();
+    const validation = validateMessage(message);
 
-    if (!trimmed) {
+    if (!validation.isValid) {
+      Alert.alert("Revise os dados", validation.message);
       return;
     }
 

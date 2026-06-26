@@ -1,11 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
-import { Image, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { Alert, Image, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
 import { professionalServices, projectItems, serviceRequests } from "../../components/profissional/data";
 import { formatBRPhone } from "../../components/profissional/utils";
 import type { ProfessionalArea, ProfessionalTab, ProjectItem } from "../../components/profissional/types";
+import { validateProjectForm } from "../../services/validators";
 import {
   ChoiceChip,
   CustomerAvatar,
@@ -71,6 +72,26 @@ export function EditProjectScreen({
         ? current.filter((item) => item !== category)
         : [...current, category],
     );
+  };
+
+  const handleSave = () => {
+    const validation = validateProjectForm({
+      categories: selectedCategories,
+      details,
+      neighborhood,
+      title,
+    });
+
+    if (!validation.isValid) {
+      Alert.alert("Revise os dados", validation.message);
+      return;
+    }
+
+    onSave({
+      ...project,
+      title: title.trim(),
+      location: neighborhood.trim(),
+    });
   };
 
   if (isEditingPhoto) {
@@ -205,13 +226,7 @@ export function EditProjectScreen({
           </Text>
         </Pressable>
         <Pressable
-          onPress={() =>
-            onSave({
-              ...project,
-              title: title || project.title,
-              location: neighborhood || project.location,
-            })
-          }
+          onPress={handleSave}
           className="min-h-[56px] flex-[2] flex-row items-center justify-center gap-2 rounded-[12px] bg-primary"
           accessibilityRole="button"
         >

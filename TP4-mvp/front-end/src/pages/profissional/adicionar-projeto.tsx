@@ -1,11 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
-import { Image, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { Alert, Image, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
 import { professionalServices, projectItems, serviceRequests } from "../../components/profissional/data";
 import { formatBRPhone } from "../../components/profissional/utils";
 import type { ProfessionalArea, ProfessionalTab, ProjectItem } from "../../components/profissional/types";
+import { validateProjectForm } from "../../services/validators";
 import {
   ChoiceChip,
   CustomerAvatar,
@@ -67,6 +68,27 @@ export function AddProjectScreen({
         ? current.filter((item) => item !== category)
         : [...current, category],
     );
+  };
+
+  const handleSave = () => {
+    const validation = validateProjectForm({
+      categories: selectedCategories,
+      details,
+      neighborhood,
+      title,
+    });
+
+    if (!validation.isValid) {
+      Alert.alert("Revise os dados", validation.message);
+      return;
+    }
+
+    onSave({
+      title: title.trim(),
+      location: neighborhood.trim(),
+      image:
+        "https://storage.googleapis.com/banani-generated-images/generated-images/3a22084a-7d43-47ce-bda1-718b62bd262d.jpg",
+    });
   };
 
   if (isEditingPhoto) {
@@ -175,14 +197,7 @@ export function AddProjectScreen({
           </Text>
         </Pressable>
         <Pressable
-          onPress={() =>
-            onSave({
-              title: title || "Novo Projeto Simulado",
-              location: neighborhood || "Centro",
-              image:
-                "https://storage.googleapis.com/banani-generated-images/generated-images/3a22084a-7d43-47ce-bda1-718b62bd262d.jpg",
-            })
-          }
+          onPress={handleSave}
           className="min-h-[56px] flex-[2] items-center justify-center rounded-[12px] bg-primary"
           accessibilityRole="button"
         >

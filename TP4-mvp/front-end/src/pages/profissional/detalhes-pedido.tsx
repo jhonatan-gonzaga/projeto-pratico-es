@@ -1,11 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
-import { Image, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { Alert, Image, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
 import { professionalServices, projectItems, serviceRequests } from "../../components/profissional/data";
 import { formatBRPhone } from "../../components/profissional/utils";
 import type { ProfessionalArea, ProfessionalTab, ServiceRequest } from "../../components/profissional/types";
+import { isValidBRMoney } from "../../services/validators";
 import {
   ChoiceChip,
   CustomerAvatar,
@@ -49,6 +50,14 @@ export function RequestDetailsScreen({
 }) {
   const [proposedValue, setProposedValue] = useState("");
   const [proposalSent, setProposalSent] = useState(false);
+  const handleSendProposal = () => {
+    if (!isValidBRMoney(proposedValue)) {
+      Alert.alert("Revise os dados", "O valor proposto deve ser maior que zero.");
+      return;
+    }
+
+    setProposalSent(true);
+  };
 
   return (
     <View className="h-full w-full max-w-[480px] self-center bg-background">
@@ -163,7 +172,7 @@ export function RequestDetailsScreen({
               </View>
               <Pressable
                 disabled={!proposedValue.trim()}
-                onPress={() => setProposalSent(true)}
+                onPress={handleSendProposal}
                 className={`rounded-[12px] px-5 py-3 ${
                   proposedValue.trim() ? "bg-primary" : "bg-[#d7c7c9]"
                 }`}

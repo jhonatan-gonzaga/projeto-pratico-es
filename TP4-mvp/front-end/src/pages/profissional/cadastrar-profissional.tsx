@@ -1,11 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
-import { Image, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { Alert, Image, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
 import { professionalServices, projectItems, serviceRequests } from "../../components/profissional/data";
 import { formatBRPhone } from "../../components/profissional/utils";
 import type { ProfessionalArea, ProfessionalTab } from "../../components/profissional/types";
+import { validateProfessionalProfile } from "../../services/validators";
 import {
   ChoiceChip,
   CustomerAvatar,
@@ -99,6 +100,29 @@ export function ProfessionalSetupScreen({
         ? current.filter((item) => item !== day)
         : [...current, day],
     );
+  };
+
+  const handleSave = () => {
+    const validation = validateProfessionalProfile({
+      about,
+      availableDays,
+      dailyRate,
+      endTime,
+      name,
+      neighborhood,
+      number,
+      phone,
+      specialties,
+      startTime,
+      street,
+    });
+
+    if (!validation.isValid) {
+      Alert.alert("Revise os dados", validation.message);
+      return;
+    }
+
+    onSave();
   };
 
   return (
@@ -257,7 +281,7 @@ export function ProfessionalSetupScreen({
 
       <View className="absolute bottom-0 left-0 right-0 border-t border-input-border bg-card px-5 pb-8 pt-4">
         <Pressable
-          onPress={onSave}
+          onPress={handleSave}
           className="min-h-[56px] items-center justify-center rounded-[18px] bg-primary px-6"
           accessibilityRole="button"
         >
