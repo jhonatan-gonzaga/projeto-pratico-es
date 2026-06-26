@@ -51,7 +51,7 @@ export function MyProjectsScreen({
   onProfilePress: () => void;
   projects: ProjectItem[];
   onSelectArea: (area: ProfessionalArea) => void;
-  onViewResult: () => void;
+  onViewResult: (project: ProjectItem) => void;
 }) {
   return (
     <View className="h-full w-full max-w-[480px] self-center bg-background">
@@ -89,7 +89,7 @@ export function MyProjectsScreen({
               project={project}
               onDelete={() => onDeleteProject(project)}
               onEdit={() => onEditProject(project)}
-              onViewResult={onViewResult}
+              onViewResult={() => onViewResult(project)}
             />
           ))}
         </View>

@@ -46,6 +46,8 @@ export function ProfessionalHomeScreen({
   const [isAddingProject, setIsAddingProject] = useState(false);
   const [isEditingProject, setIsEditingProject] = useState(false);
   const [isViewingProjectResult, setIsViewingProjectResult] = useState(false);
+  const [shouldReturnToResultAfterEdit, setShouldReturnToResultAfterEdit] =
+    useState(false);
   const [isViewingRequestDetails, setIsViewingRequestDetails] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<ServiceRequest | null>(
     null,
@@ -205,6 +207,13 @@ export function ProfessionalHomeScreen({
       <EditProjectScreen
         project={selectedProject}
         onBack={() => {
+          if (shouldReturnToResultAfterEdit) {
+            setIsEditingProject(false);
+            setIsViewingProjectResult(true);
+            setShouldReturnToResultAfterEdit(false);
+            return;
+          }
+
           setIsEditingProject(false);
           setSelectedProject(null);
         }}
@@ -217,6 +226,11 @@ export function ProfessionalHomeScreen({
           );
           setSelectedProject(project);
           setIsEditingProject(false);
+
+          if (shouldReturnToResultAfterEdit) {
+            setIsViewingProjectResult(true);
+            setShouldReturnToResultAfterEdit(false);
+          }
         }}
       />
     );
@@ -225,8 +239,12 @@ export function ProfessionalHomeScreen({
   if (activeArea === "projects" && isViewingProjectResult) {
     return (
       <ProjectResultScreen
-        onBack={() => setIsViewingProjectResult(false)}
+        onBack={() => {
+          setIsViewingProjectResult(false);
+          setSelectedProject(null);
+        }}
         onEdit={() => {
+          setShouldReturnToResultAfterEdit(true);
           setIsViewingProjectResult(false);
           setIsEditingProject(true);
         }}
@@ -257,11 +275,15 @@ export function ProfessionalHomeScreen({
         }
         onEditProject={(project) => {
           setSelectedProject(project);
+          setShouldReturnToResultAfterEdit(false);
           setIsEditingProject(true);
         }}
         onProfilePress={onProfilePress}
         projects={projects}
-        onViewResult={() => setIsViewingProjectResult(true)}
+        onViewResult={(project) => {
+          setSelectedProject(project);
+          setIsViewingProjectResult(true);
+        }}
         onSelectArea={selectArea}
       />
     );

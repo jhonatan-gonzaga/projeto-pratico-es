@@ -1,10 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Image, Linking, Pressable, ScrollView, Text, View } from "react-native";
-import { useState } from "react";
 
 import { ClientBottomNav } from "../../components/cliente";
-import { MyProjectsScreen } from "../../pages/profissional/meus-projetos";
-import { projectItems } from "../../components/profissional/data";
 
 const availabilityDays = [
   { label: "S", available: true },
@@ -71,26 +68,6 @@ export function ClientProfilePage({
 }: {
   onBack: () => void;
 }) {
-  const [isShowingPortfolio, setIsShowingPortfolio] = useState(false);
-
-  const handleOpenPortfolio = () => setIsShowingPortfolio(true);
-  const handleClosePortfolio = () => setIsShowingPortfolio(false);
-
-  if (isShowingPortfolio) {
-    return (
-      <MyProjectsScreen
-        onAddProject={() => {}}
-        onBack={handleClosePortfolio}
-        onDeleteProject={() => {}}
-        onEditProject={() => {}}
-        onProfilePress={() => {}}
-        projects={projectItems}
-        onSelectArea={() => {}}
-        onViewResult={handleClosePortfolio}
-      />
-    );
-  }
-
   const handleOpenWhatsApp = async () => {
     const phoneNumber = "+5511999999999";
     const whatsappUrl = `whatsapp://send?phone=${phoneNumber}`;
@@ -286,26 +263,15 @@ export function ClientProfilePage({
         <View className="mt-5">
           <View className="flex-row items-center justify-between mb-3">
             <Text className="text-base font-bold text-foreground">Portfólio</Text>
-            <Pressable
-              onPress={handleOpenPortfolio}
-              className="flex-row items-center gap-1"
-              accessibilityRole="button"
-              accessibilityLabel="Abrir portfólio"
-            >
+            <View className="flex-row items-center gap-1">
               <Text className="text-sm font-semibold text-primary">Ver tudo</Text>
               <Ionicons name="chevron-forward" size={14} color="#b94b50" />
-            </Pressable>
+            </View>
           </View>
 
           <View className="flex-row flex-wrap justify-between gap-3">
             {portfolioItems.map((item) => (
-              <Pressable
-                key={item.label}
-                onPress={handleOpenPortfolio}
-                className="w-[48%] overflow-hidden rounded-xl shadow-sm shadow-black/10"
-                accessibilityRole="button"
-                accessibilityLabel={`Abrir portfólio ${item.label}`}
-              >
+              <View key={item.label} className="w-[48%] overflow-hidden rounded-xl shadow-sm shadow-black/10">
                 <Image
                   source={{ uri: item.uri }}
                   className="h-[110px] w-full object-cover"
@@ -315,7 +281,7 @@ export function ClientProfilePage({
                 <View className="bg-card px-3 py-2">
                   <Text className="text-xs font-semibold text-foreground">{item.label}</Text>
                 </View>
-              </Pressable>
+              </View>
             ))}
           </View>
         </View>
