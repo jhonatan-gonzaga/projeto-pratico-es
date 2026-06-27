@@ -45,6 +45,9 @@ export default function App() {
   const [previousScreen, setPreviousScreen] = useState<ReturnScreen>("signup");
   const [profileReturnScreen, setProfileReturnScreen] =
     useState<ProfileReturnScreen>("profileChoice");
+  const [clientWorkReturnScreen, setClientWorkReturnScreen] = useState<
+    "clientHome" | "clientSearch"
+  >("clientHome");
   const isProfessionalScreen =
     screen === "professionalSetup" || screen === "professionalHome";
 
@@ -63,10 +66,16 @@ export default function App() {
     setScreen("accountProfile");
   };
 
-  const openClientTab = (tab: "home" | "search" | "work") => {
+  const openClientTab = (
+    tab: "home" | "search" | "work",
+    from?: "clientHome" | "clientSearch",
+  ) => {
     if (tab === "search") {
       setScreen("clientSearch");
     } else if (tab === "work") {
+      if (from) {
+        setClientWorkReturnScreen(from);
+      }
       setScreen("clientWork");
     } else {
       setScreen("clientHome");
@@ -106,7 +115,7 @@ export default function App() {
             <ClientHomePage
               onNavigate={(tab) => {
                 if (tab === "home" || tab === "search" || tab === "work") {
-                  openClientTab(tab);
+                  openClientTab(tab, "clientHome");
                 }
               }}
               onOpenProfessional={() => setScreen("clientProfile")}
@@ -116,7 +125,7 @@ export default function App() {
             <ClientSearchPage
               onNavigate={(tab) => {
                 if (tab === "home" || tab === "search" || tab === "work") {
-                  openClientTab(tab);
+                  openClientTab(tab, "clientSearch");
                 }
               }}
             />
@@ -127,6 +136,7 @@ export default function App() {
                   openClientTab(tab);
                 }
               }}
+              onBack={() => setScreen(clientWorkReturnScreen)}
             />
           ) : screen === "clientProfile" ? (
             <ClientProfilePage onBack={() => setScreen("clientHome")} />

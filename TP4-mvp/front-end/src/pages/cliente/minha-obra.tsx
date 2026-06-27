@@ -197,9 +197,11 @@ function ServiceCard({
 export function ClientMyWorkPage({
   onNavigate,
   onOpenDetail,
+  onBack,
 }: {
   onNavigate?: (key: ClientNavKey) => void;
   onOpenDetail?: (service: Service) => void;
+  onBack?: () => void;
 }) {
   const [services, setServices] = useState<Service[]>(initialServices);
   const [filter, setFilter] = useState<FilterKey | null>(null);
@@ -228,8 +230,19 @@ export function ClientMyWorkPage({
 
   return (
     <View className="relative flex-1 w-full max-w-[480px] bg-background">
-      <View className="items-center justify-center px-5 pt-5 pb-3">
+      <View className="flex-row items-center justify-between px-5 pt-5 pb-3">
+        <Pressable
+          onPress={onBack}
+          className="h-9 w-9 items-center justify-center rounded-full bg-card shadow-sm shadow-black/10"
+          accessibilityRole="button"
+          accessibilityLabel="Voltar"
+        >
+          <Ionicons name="arrow-back" size={18} color="#0f1720" />
+        </Pressable>
+
         <Text className="text-base font-bold text-foreground">Minha Obra</Text>
+
+        <View className="h-9 w-9" />
       </View>
 
       <View className="mb-5 flex-row gap-2 px-5">
