@@ -1,30 +1,20 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
-import { Alert, Image, Pressable, Text, TextInput, View } from "react-native";
+import { Image, Pressable, Text, View } from "react-native";
 
 import {
-  AccountRow,
-  BrandLogo,
-  Divider,
-  Field,
-  PermissionItem,
-  ProfileCard,
   ProfileInfoField,
-  SocialButtons,
 } from "../components/app-components";
 import type { ValidationStatus } from "../components/app-components";
 import {
   formatBRPhone,
   isValidEmail,
   isValidName,
-  isValidPassword,
   isValidPhone,
 } from "../services/validators";
 
 const logo = require("../../assets/logotipo.png");
-
-type ProfileType = "cliente" | "profissional";
 
 const validationStatus = (
   isTouched: boolean,
@@ -52,20 +42,37 @@ export function AccountProfileScreen({
   const [phone, setPhone] = useState("(11) 99999-9999");
   const [email, setEmail] = useState("maria@email.com");
   const [hasProfilePhoto, setHasProfilePhoto] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [touched, setTouched] = useState({
+    email: false,
+    name: false,
+    phone: false,
+  });
 
-  const confirmDeleteAccount = () => {
-    Alert.alert(
-      "Excluir conta",
-      "Sua conta sera excluida. Para continuar usando o app, faca um novo cadastro.",
-      [
-        { text: "Cancelar", style: "cancel" },
-        {
-          text: "Excluir",
-          style: "destructive",
-          onPress: onDeleteAccount,
-        },
-      ],
-    );
+  const errors = {
+    name: isValidName(name)
+      ? undefined
+      : "Informe nome e sobrenome, com pelo menos 2 letras em cada parte.",
+    phone: isValidPhone(phone)
+      ? undefined
+      : "Informe um telefone valido com DDD e 11 digitos.",
+    email: isValidEmail(email) ? undefined : "Informe um email valido.",
+  };
+  const shouldShow = (field: keyof typeof touched) => submitted || touched[field];
+  const fieldStatus = (field: keyof typeof touched, isValid: boolean) =>
+    validationStatus(shouldShow(field), isValid);
+  const fieldError = (field: keyof typeof touched) =>
+    shouldShow(field) ? errors[field] : undefined;
+
+  const handleSave = () => {
+    setSubmitted(true);
+
+    if (Object.values(errors).some(Boolean)) {
+      return;
+    }
+
+    onSave();
   };
 
   return (
@@ -126,29 +133,38 @@ export function AccountProfileScreen({
           label="Nome completo"
           icon="person-outline"
           value={name}
+          onBlur={() => setTouched((current) => ({ ...current, name: true }))}
           onChangeText={setName}
           autoComplete="name"
+          status={fieldStatus("name", isValidName(name))}
+          helperText={fieldError("name")}
         />
         <ProfileInfoField
           label="Telefone"
           icon="call-outline"
           value={phone}
+          onBlur={() => setTouched((current) => ({ ...current, phone: true }))}
           onChangeText={(value) => setPhone(formatBRPhone(value))}
           keyboardType="phone-pad"
           autoComplete="tel"
+          status={fieldStatus("phone", isValidPhone(phone))}
+          helperText={fieldError("phone")}
         />
         <ProfileInfoField
           active
           label="Email"
           icon="mail-outline"
           value={email}
+          onBlur={() => setTouched((current) => ({ ...current, email: true }))}
           onChangeText={setEmail}
           keyboardType="email-address"
           autoComplete="email"
+          status={fieldStatus("email", isValidEmail(email))}
+          helperText={fieldError("email")}
         />
 
         <Pressable
-          onPress={onSave}
+          onPress={handleSave}
           className="mt-4 min-h-[56px] flex-row items-center justify-center gap-2 rounded-[16px] bg-primary px-6"
           accessibilityRole="button"
         >
@@ -175,9 +191,41 @@ export function AccountProfileScreen({
           </Text>
         </Pressable>
 
-        <Pressable onPress={confirmDeleteAccount} accessibilityRole="button">
-          <Text className="text-sm font-medium text-primary">Excluir conta</Text>
-        </Pressable>
+        {confirmingDelete ? (
+          <View className="w-full gap-3 rounded-[16px] border border-[#f2cdd0] bg-[#fff7f7] p-4">
+            <Text className="text-center text-sm leading-5 text-muted-foreground">
+              Sua conta sera excluida. Para continuar usando o app, faca um novo
+              cadastro.
+            </Text>
+            <View className="flex-row gap-2">
+              <Pressable
+                onPress={() => setConfirmingDelete(false)}
+                className="min-h-[44px] flex-1 items-center justify-center rounded-[12px] border border-input-border bg-card"
+                accessibilityRole="button"
+              >
+                <Text className="text-sm font-semibold text-foreground">
+                  Cancelar
+                </Text>
+              </Pressable>
+              <Pressable
+                onPress={onDeleteAccount}
+                className="min-h-[44px] flex-1 items-center justify-center rounded-[12px] bg-primary"
+                accessibilityRole="button"
+              >
+                <Text className="text-sm font-semibold text-white">
+                  Excluir
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+        ) : (
+          <Pressable
+            onPress={() => setConfirmingDelete(true)}
+            accessibilityRole="button"
+          >
+            <Text className="text-sm font-medium text-primary">Excluir conta</Text>
+          </Pressable>
+        )}
       </View>
     </View>
   );

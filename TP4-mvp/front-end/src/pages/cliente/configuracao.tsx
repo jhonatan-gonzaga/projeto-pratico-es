@@ -4,6 +4,7 @@ import { Pressable, ScrollView, Switch, Text, View } from "react-native";
 
 import { ClientBottomNav, type ClientNavKey } from "../../components/cliente";
 import {
+  ProjectHeader,
   SettingsDivider,
   SettingsOption,
   SettingsSection,
@@ -14,37 +15,9 @@ type ClientSettingsPage = "home" | "notifications" | "privacy" | "help" | "terms
 type ClientSettingsScreenProps = {
   onBack: () => void;
   onNavigate?: (key: ClientNavKey) => void;
+  onProfilePress?: () => void;
   onSignOut?: () => void;
 };
-
-type SettingsHeaderProps = {
-  onBack: () => void;
-  title: string;
-};
-
-function SettingsHeader({ onBack, title }: SettingsHeaderProps) {
-  return (
-    <>
-      <View className="flex-row items-center justify-between bg-background px-4 pb-4 pt-5">
-        <Pressable
-          onPress={onBack}
-          className="h-10 w-10 items-center justify-center rounded-full bg-card shadow-sm shadow-black/10"
-          accessibilityRole="button"
-          accessibilityLabel="Voltar"
-        >
-          <Ionicons name="arrow-back" size={18} color="#0f1720" />
-        </Pressable>
-
-        <Text className="flex-1 text-center text-base font-bold text-foreground">
-          {title}
-        </Text>
-
-        <View className="h-10 w-10" />
-      </View>
-      <View className="h-px bg-black/5" />
-    </>
-  );
-}
 
 function NotificationRow({
   description,
@@ -80,14 +53,20 @@ function NotificationRow({
   );
 }
 
-function ClientNotificationsScreen({ onBack }: { onBack: () => void }) {
+function ClientNotificationsScreen({
+  onBack,
+  onProfilePress,
+}: {
+  onBack: () => void;
+  onProfilePress?: () => void;
+}) {
   const [messages, setMessages] = useState(true);
   const [ads, setAds] = useState(true);
   const [status, setStatus] = useState(false);
 
   return (
     <View className="h-full w-full max-w-[480px] self-center bg-background">
-      <SettingsHeader onBack={onBack} title="Notificacoes" />
+      <ProjectHeader onBack={onBack} onProfilePress={onProfilePress} />
 
       <ScrollView
         className="flex-1"
@@ -157,10 +136,16 @@ function SecurityOption({
   );
 }
 
-function ClientPrivacyScreen({ onBack }: { onBack: () => void }) {
+function ClientPrivacyScreen({
+  onBack,
+  onProfilePress,
+}: {
+  onBack: () => void;
+  onProfilePress?: () => void;
+}) {
   return (
     <View className="h-full w-full max-w-[480px] self-center bg-background">
-      <SettingsHeader onBack={onBack} title="Privacidade e Seguranca" />
+      <ProjectHeader onBack={onBack} onProfilePress={onProfilePress} />
 
       <ScrollView
         className="flex-1"
@@ -226,10 +211,16 @@ function HelpCard({
   );
 }
 
-function ClientHelpScreen({ onBack }: { onBack: () => void }) {
+function ClientHelpScreen({
+  onBack,
+  onProfilePress,
+}: {
+  onBack: () => void;
+  onProfilePress?: () => void;
+}) {
   return (
     <View className="h-full w-full max-w-[480px] self-center bg-background">
-      <SettingsHeader onBack={onBack} title="Central de Ajuda" />
+      <ProjectHeader onBack={onBack} onProfilePress={onProfilePress} />
 
       <ScrollView
         className="flex-1"
@@ -284,10 +275,16 @@ function ClientHelpScreen({ onBack }: { onBack: () => void }) {
   );
 }
 
-function ClientTermsScreen({ onBack }: { onBack: () => void }) {
+function ClientTermsScreen({
+  onBack,
+  onProfilePress,
+}: {
+  onBack: () => void;
+  onProfilePress?: () => void;
+}) {
   return (
     <View className="h-full w-full max-w-[480px] self-center bg-background">
-      <SettingsHeader onBack={onBack} title="Termos de Uso" />
+      <ProjectHeader onBack={onBack} onProfilePress={onProfilePress} />
 
       <ScrollView
         className="flex-1"
@@ -341,35 +338,60 @@ function ClientTermsScreen({ onBack }: { onBack: () => void }) {
 export function ClientSettingsScreen({
   onBack,
   onNavigate,
+  onProfilePress,
   onSignOut,
 }: ClientSettingsScreenProps) {
   const [settingsPage, setSettingsPage] = useState<ClientSettingsPage>("home");
 
   if (settingsPage === "notifications") {
-    return <ClientNotificationsScreen onBack={() => setSettingsPage("home")} />;
+    return (
+      <ClientNotificationsScreen
+        onBack={() => setSettingsPage("home")}
+        onProfilePress={onProfilePress}
+      />
+    );
   }
 
   if (settingsPage === "privacy") {
-    return <ClientPrivacyScreen onBack={() => setSettingsPage("home")} />;
+    return (
+      <ClientPrivacyScreen
+        onBack={() => setSettingsPage("home")}
+        onProfilePress={onProfilePress}
+      />
+    );
   }
 
   if (settingsPage === "help") {
-    return <ClientHelpScreen onBack={() => setSettingsPage("home")} />;
+    return (
+      <ClientHelpScreen
+        onBack={() => setSettingsPage("home")}
+        onProfilePress={onProfilePress}
+      />
+    );
   }
 
   if (settingsPage === "terms") {
-    return <ClientTermsScreen onBack={() => setSettingsPage("home")} />;
+    return (
+      <ClientTermsScreen
+        onBack={() => setSettingsPage("home")}
+        onProfilePress={onProfilePress}
+      />
+    );
   }
 
   return (
     <View className="relative flex-1 w-full max-w-[480px] bg-background">
-      <SettingsHeader onBack={onBack} title="Configuracoes" />
+      <ProjectHeader onBack={onBack} onProfilePress={onProfilePress} />
 
       <ScrollView
         className="flex-1"
         contentContainerClassName="px-4 pb-32 pt-5"
         showsVerticalScrollIndicator={false}
       >
+        <Text className="mb-5 text-[28px] font-bold leading-9 text-foreground">
+          Configuracoes
+        </Text>
+
         <SettingsSection title="Preferencias">
           <SettingsOption
             icon="notifications-outline"

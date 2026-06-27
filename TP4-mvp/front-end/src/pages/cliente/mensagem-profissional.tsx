@@ -7,10 +7,12 @@ import { CustomerAvatar, ProjectHeader } from "../../components/profissional/com
 export function ClientMessageScreen({
   onBack,
   onHire,
+  onProfilePress,
   professionalName = "Jhon Souza",
 }: {
   onBack: () => void;
   onHire?: () => void;
+  onProfilePress?: () => void;
   professionalName?: string;
 }) {
   const [message, setMessage] = useState("");
@@ -60,7 +62,7 @@ export function ClientMessageScreen({
 
   return (
     <View className="h-full w-full max-w-[480px] self-center bg-background">
-      <ProjectHeader onBack={onBack} />
+      <ProjectHeader onBack={onBack} onProfilePress={onProfilePress} />
 
       <View className="border-b border-input-border bg-card px-4 py-3">
         <View className="flex-row items-center gap-3">

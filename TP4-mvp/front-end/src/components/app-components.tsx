@@ -266,45 +266,74 @@ export function ProfileCard({
 export function ProfileInfoField({
   active,
   autoComplete,
+  helperText,
   icon,
   keyboardType = "default",
   label,
   onChangeText,
+  onBlur,
+  status = "default",
   value,
 }: {
   active?: boolean;
   autoComplete?: "email" | "name" | "tel";
+  helperText?: string;
   icon: IconName;
   keyboardType?: "default" | "email-address" | "phone-pad";
   label: string;
+  onBlur?: () => void;
   onChangeText: (value: string) => void;
+  status?: ValidationStatus;
   value: string;
 }) {
+  const isError = status === "error";
+  const isValid = status === "valid";
+
   return (
-    <View
-      className={`mb-3 rounded-[16px] border px-4 pb-3 pt-3 ${
-        active ? "border-primary" : "border-input-border"
-      }`}
-    >
-      <Text className="mb-1 text-xs font-bold uppercase tracking-[1.6px] text-primary">
-        {label}
-      </Text>
-      <View className="flex-row items-center gap-3">
-        <Ionicons name={icon} size={16} color="#b94b50" />
-        <TextInput
-          value={value}
-          onChangeText={onChangeText}
-          keyboardType={keyboardType}
-          autoComplete={autoComplete}
-          autoCapitalize={keyboardType === "email-address" ? "none" : "words"}
-          className={`min-h-[28px] flex-1 p-0 text-base ${
-            active ? "font-medium text-foreground" : "text-muted-foreground"
-          }`}
-          placeholderTextColor="#c5adaf"
-          accessibilityLabel={label}
-        />
+    <View className="mb-3 gap-1">
+      <View
+        className={`rounded-[16px] border px-4 pb-3 pt-3 ${
+          isError
+            ? "border-[#dc2626] bg-[#fff7f7]"
+            : isValid
+              ? "border-[#16a34a] bg-[#f7fff9]"
+              : active
+                ? "border-primary"
+                : "border-input-border"
+        }`}
+      >
+        <Text className="mb-1 text-xs font-bold uppercase tracking-[1.6px] text-primary">
+          {label}
+        </Text>
+        <View className="flex-row items-center gap-3">
+          <Ionicons name={icon} size={16} color="#b94b50" />
+          <TextInput
+            value={value}
+            onBlur={onBlur}
+            onChangeText={onChangeText}
+            keyboardType={keyboardType}
+            autoComplete={autoComplete}
+            autoCapitalize={keyboardType === "email-address" ? "none" : "words"}
+            className={`min-h-[28px] flex-1 p-0 text-base ${
+              active ? "font-medium text-foreground" : "text-muted-foreground"
+            }`}
+            placeholderTextColor="#c5adaf"
+            accessibilityLabel={label}
+          />
+          {isError || isValid ? (
+            <Ionicons
+              name={isValid ? "checkmark-circle" : "alert-circle"}
+              size={18}
+              color={isValid ? "#16a34a" : "#dc2626"}
+            />
+          ) : null}
+        </View>
       </View>
+      {helperText ? (
+        <Text className="px-1 text-xs leading-4 text-[#dc2626]">
+          {helperText}
+        </Text>
+      ) : null}
     </View>
   );
 }
-
