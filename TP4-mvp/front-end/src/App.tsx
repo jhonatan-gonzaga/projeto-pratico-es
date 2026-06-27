@@ -9,6 +9,7 @@ import { ProfessionalHomeScreen, ProfessionalSetupScreen } from "./components/pr
 import {
   AccountProfileScreen,
   ClientHomePage,
+  ClientMyWorkPage,
   ClientProfilePage,
   ClientSearchPage,
   GoogleSignInScreen,
@@ -36,6 +37,7 @@ type Screen =
   | "professionalHome"
   | "clientHome"
   | "clientSearch"
+  | "clientWork"
   | "clientProfile";
 
 export default function App() {
@@ -61,8 +63,14 @@ export default function App() {
     setScreen("accountProfile");
   };
 
-  const openClientTab = (tab: "home" | "search") => {
-    setScreen(tab === "search" ? "clientSearch" : "clientHome");
+  const openClientTab = (tab: "home" | "search" | "work") => {
+    if (tab === "search") {
+      setScreen("clientSearch");
+    } else if (tab === "work") {
+      setScreen("clientWork");
+    } else {
+      setScreen("clientHome");
+    }
   };
 
   const currentScreen =
@@ -97,7 +105,7 @@ export default function App() {
           ) : screen === "clientHome" ? (
             <ClientHomePage
               onNavigate={(tab) => {
-                if (tab === "home" || tab === "search") {
+                if (tab === "home" || tab === "search" || tab === "work") {
                   openClientTab(tab);
                 }
               }}
@@ -107,7 +115,15 @@ export default function App() {
           ) : screen === "clientSearch" ? (
             <ClientSearchPage
               onNavigate={(tab) => {
-                if (tab === "home" || tab === "search") {
+                if (tab === "home" || tab === "search" || tab === "work") {
+                  openClientTab(tab);
+                }
+              }}
+            />
+          ) : screen === "clientWork" ? (
+            <ClientMyWorkPage
+              onNavigate={(tab) => {
+                if (tab === "home" || tab === "search" || tab === "work") {
                   openClientTab(tab);
                 }
               }}
