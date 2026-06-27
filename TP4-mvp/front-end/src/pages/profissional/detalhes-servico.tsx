@@ -15,12 +15,14 @@ export function ServiceDetailsScreen({
   onMessage,
   onProfilePress,
   onStatusAction,
+  participantLabel = "Cliente do servico",
   service,
 }: {
   onBack: () => void;
   onMessage: () => void;
   onProfilePress: () => void;
   onStatusAction: () => void;
+  participantLabel?: string;
   service: ProfessionalService;
 }) {
   const actionLabel =
@@ -64,7 +66,7 @@ export function ServiceDetailsScreen({
               {service.customer}
             </Text>
             <Text className="text-sm text-muted-foreground">
-              Cliente do servico
+              {participantLabel}
             </Text>
           </View>
           <Text className="text-lg font-bold text-foreground">

@@ -10,6 +10,7 @@ import {
   AccountProfileScreen,
   ClientAdsPage,
   ClientHomePage,
+  ClientMyWorkPage,
   ClientProfilePage,
   ClientSearchPage,
   GoogleSignInScreen,
@@ -18,6 +19,9 @@ import {
   ProfileChoiceScreen,
   SignupScreen,
 } from "./pages";
+import type { ProfessionalService, ServiceStatus } from "./components/profissional/types";
+import { ClientMessageScreen } from "./pages/cliente/mensagem-profissional";
+import { ServiceDetailsScreen } from "./pages/profissional";
 
 type ReturnScreen = "login" | "signup";
 type ProfileReturnScreen =
@@ -38,14 +42,47 @@ type Screen =
   | "professionalHome"
   | "clientHome"
   | "clientSearch"
-  | "clientAds"
+  | "clientWork"
+  | "clientServiceDetails"
+  | "clientServiceMessage"
   | "clientProfile";
+
+const clientStatusToProfessionalStatus: Record<
+  ClientWorkService["status"],
+  ServiceStatus
+> = {
+  em_andamento: "inProgress",
+  aguardando_aprovacao: "pending",
+  concluido: "completed",
+  reabrir_servico: "inProgress",
+};
+
+function toServiceDetailsItem(service: ClientWorkService): ProfessionalService {
+  return {
+    title: service.title,
+    status: clientStatusToProfessionalStatus[service.status],
+    order: `CLI-${service.id.padStart(4, "0")}`,
+    customer: service.professionalName,
+    price: "A combinar",
+    date: service.dateValue,
+    time: "08:00 - 17:00",
+    deadline: "5 dias",
+    messageCount: service.unreadMessages
+      ? String(service.unreadMessages)
+      : undefined,
+  };
+}
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>("login");
   const [previousScreen, setPreviousScreen] = useState<ReturnScreen>("signup");
   const [profileReturnScreen, setProfileReturnScreen] =
     useState<ProfileReturnScreen>("profileChoice");
+  const [clientWorkReturnScreen, setClientWorkReturnScreen] = useState<
+    "clientHome" | "clientSearch"
+  >("clientHome");
+  const [selectedClientService, setSelectedClientService] =
+    useState<ClientWorkService | null>(null);
   const isProfessionalScreen =
     screen === "professionalSetup" || screen === "professionalHome";
 
@@ -64,13 +101,20 @@ export default function App() {
     setScreen("accountProfile");
   };
 
-  const openClientTab = (tab: "home" | "search" | "ads") => {
-    if (tab === "ads") {
-      setScreen("clientAds");
-      return;
+  const openClientTab = (
+    tab: "home" | "search" | "work",
+    from?: "clientHome" | "clientSearch",
+  ) => {
+    if (tab === "search") {
+      setScreen("clientSearch");
+    } else if (tab === "work") {
+      if (from) {
+        setClientWorkReturnScreen(from);
+      }
+      setScreen("clientWork");
+    } else {
+      setScreen("clientHome");
     }
-
-    setScreen(tab === "search" ? "clientSearch" : "clientHome");
   };
 
   const currentScreen =
@@ -105,8 +149,8 @@ export default function App() {
           ) : screen === "clientHome" ? (
             <ClientHomePage
               onNavigate={(tab) => {
-                if (tab === "home" || tab === "search" || tab === "ads") {
-                  openClientTab(tab);
+                if (tab === "home" || tab === "search" || tab === "work") {
+                  openClientTab(tab, "clientHome");
                 }
               }}
               onOpenProfessional={() => setScreen("clientProfile")}
@@ -115,19 +159,37 @@ export default function App() {
           ) : screen === "clientSearch" ? (
             <ClientSearchPage
               onNavigate={(tab) => {
-                if (tab === "home" || tab === "search" || tab === "ads") {
-                  openClientTab(tab);
+                if (tab === "home" || tab === "search" || tab === "work") {
+                  openClientTab(tab, "clientSearch");
                 }
               }}
             />
-          ) : screen === "clientAds" ? (
-            <ClientAdsPage
-              onBack={() => setScreen("clientHome")}
+          ) : screen === "clientWork" ? (
+            <ClientMyWorkPage
               onNavigate={(tab) => {
-                if (tab === "home" || tab === "search" || tab === "ads") {
+                if (tab === "home" || tab === "search" || tab === "work") {
                   openClientTab(tab);
                 }
               }}
+              onOpenDetail={(service) => {
+                setSelectedClientService(service);
+                setScreen("clientServiceDetails");
+              }}
+              onBack={() => setScreen(clientWorkReturnScreen)}
+            />
+          ) : screen === "clientServiceDetails" && selectedClientService ? (
+            <ServiceDetailsScreen
+              service={toServiceDetailsItem(selectedClientService)}
+              participantLabel="Profissional contratado"
+              onBack={() => setScreen("clientWork")}
+              onMessage={() => setScreen("clientServiceMessage")}
+              onProfilePress={() => openAccountProfile("clientServiceDetails")}
+              onStatusAction={() => setScreen("clientWork")}
+            />
+          ) : screen === "clientServiceMessage" && selectedClientService ? (
+            <ClientMessageScreen
+              professionalName={selectedClientService.professionalName}
+              onBack={() => setScreen("clientServiceDetails")}
             />
           ) : screen === "clientProfile" ? (
             <ClientProfilePage onBack={() => setScreen("clientHome")} />
