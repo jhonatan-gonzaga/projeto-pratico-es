@@ -9,6 +9,7 @@ import { ProfessionalHomeScreen, ProfessionalSetupScreen } from "./components/pr
 import {
   AccountProfileScreen,
   ClientHomePage,
+  ClientMyWorkPage,
   ClientProfilePage,
   ClientSearchPage,
   GoogleSignInScreen,
@@ -36,6 +37,7 @@ type Screen =
   | "professionalHome"
   | "clientHome"
   | "clientSearch"
+  | "clientWork"
   | "clientProfile";
 
 export default function App() {
@@ -43,6 +45,9 @@ export default function App() {
   const [previousScreen, setPreviousScreen] = useState<ReturnScreen>("signup");
   const [profileReturnScreen, setProfileReturnScreen] =
     useState<ProfileReturnScreen>("profileChoice");
+  const [clientWorkReturnScreen, setClientWorkReturnScreen] = useState<
+    "clientHome" | "clientSearch"
+  >("clientHome");
   const isProfessionalScreen =
     screen === "professionalSetup" || screen === "professionalHome";
 
@@ -61,8 +66,20 @@ export default function App() {
     setScreen("accountProfile");
   };
 
-  const openClientTab = (tab: "home" | "search") => {
-    setScreen(tab === "search" ? "clientSearch" : "clientHome");
+  const openClientTab = (
+    tab: "home" | "search" | "work",
+    from?: "clientHome" | "clientSearch",
+  ) => {
+    if (tab === "search") {
+      setScreen("clientSearch");
+    } else if (tab === "work") {
+      if (from) {
+        setClientWorkReturnScreen(from);
+      }
+      setScreen("clientWork");
+    } else {
+      setScreen("clientHome");
+    }
   };
 
   const currentScreen =
@@ -97,8 +114,8 @@ export default function App() {
           ) : screen === "clientHome" ? (
             <ClientHomePage
               onNavigate={(tab) => {
-                if (tab === "home" || tab === "search") {
-                  openClientTab(tab);
+                if (tab === "home" || tab === "search" || tab === "work") {
+                  openClientTab(tab, "clientHome");
                 }
               }}
               onOpenProfessional={() => setScreen("clientProfile")}
@@ -107,10 +124,19 @@ export default function App() {
           ) : screen === "clientSearch" ? (
             <ClientSearchPage
               onNavigate={(tab) => {
-                if (tab === "home" || tab === "search") {
+                if (tab === "home" || tab === "search" || tab === "work") {
+                  openClientTab(tab, "clientSearch");
+                }
+              }}
+            />
+          ) : screen === "clientWork" ? (
+            <ClientMyWorkPage
+              onNavigate={(tab) => {
+                if (tab === "home" || tab === "search" || tab === "work") {
                   openClientTab(tab);
                 }
               }}
+              onBack={() => setScreen(clientWorkReturnScreen)}
             />
           ) : screen === "clientProfile" ? (
             <ClientProfilePage onBack={() => setScreen("clientHome")} />
