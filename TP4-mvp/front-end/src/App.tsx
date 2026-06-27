@@ -8,6 +8,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ProfessionalHomeScreen, ProfessionalSetupScreen } from "./components/profissional";
 import {
   AccountProfileScreen,
+  ClientAdsPage,
   ClientHomePage,
   ClientProfilePage,
   ClientSearchPage,
@@ -25,6 +26,7 @@ type ProfileReturnScreen =
   | "professionalHome"
   | "clientHome"
   | "clientSearch"
+  | "clientAds"
   | "clientProfile";
 type Screen =
   | ReturnScreen
@@ -36,6 +38,7 @@ type Screen =
   | "professionalHome"
   | "clientHome"
   | "clientSearch"
+  | "clientAds"
   | "clientProfile";
 
 export default function App() {
@@ -61,7 +64,12 @@ export default function App() {
     setScreen("accountProfile");
   };
 
-  const openClientTab = (tab: "home" | "search") => {
+  const openClientTab = (tab: "home" | "search" | "ads") => {
+    if (tab === "ads") {
+      setScreen("clientAds");
+      return;
+    }
+
     setScreen(tab === "search" ? "clientSearch" : "clientHome");
   };
 
@@ -97,7 +105,7 @@ export default function App() {
           ) : screen === "clientHome" ? (
             <ClientHomePage
               onNavigate={(tab) => {
-                if (tab === "home" || tab === "search") {
+                if (tab === "home" || tab === "search" || tab === "ads") {
                   openClientTab(tab);
                 }
               }}
@@ -107,7 +115,16 @@ export default function App() {
           ) : screen === "clientSearch" ? (
             <ClientSearchPage
               onNavigate={(tab) => {
-                if (tab === "home" || tab === "search") {
+                if (tab === "home" || tab === "search" || tab === "ads") {
+                  openClientTab(tab);
+                }
+              }}
+            />
+          ) : screen === "clientAds" ? (
+            <ClientAdsPage
+              onBack={() => setScreen("clientHome")}
+              onNavigate={(tab) => {
+                if (tab === "home" || tab === "search" || tab === "ads") {
                   openClientTab(tab);
                 }
               }}
