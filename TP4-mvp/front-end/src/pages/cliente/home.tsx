@@ -1,12 +1,15 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Image, Pressable, ScrollView, Text, View } from "react-native";
+import { useState } from "react";
+import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
 import {
   CategoryCard,
   ClientBottomNav,
+  ClientSearchFilters,
   type ClientNavKey,
   ProfessionalCard,
 } from "../../components/cliente";
+import { ProjectHeader } from "../../components/profissional/components";
 
 const categories = [
   {
@@ -65,49 +68,48 @@ const professionals = [
 export function ClientHomePage({
   onNavigate,
   onOpenProfessional,
+  onProfilePress,
   onBack,
 }: {
   onNavigate?: (key: ClientNavKey) => void;
   onOpenProfessional?: () => void;
+  onProfilePress?: () => void;
   onBack?: () => void;
 }) {
+  const [query, setQuery] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(["Todos"]);
+  const [sortBy, setSortBy] = useState("Relevancia");
+  const [minPrice, setMinPrice] = useState("0");
+  const [maxPrice, setMaxPrice] = useState("500");
+  const [rating, setRating] = useState("Qualquer");
+
+  const toggleCategory = (item: string) => {
+    if (item === "Todos") {
+      setSelectedCategories(["Todos"]);
+      return;
+    }
+
+    setSelectedCategories((current) => {
+      const withoutAll = current.filter((categoryItem) => categoryItem !== "Todos");
+
+      if (withoutAll.includes(item)) {
+        const nextCategories = withoutAll.filter((categoryItem) => categoryItem !== item);
+        return nextCategories.length > 0 ? nextCategories : ["Todos"];
+      }
+
+      return [...withoutAll, item];
+    });
+  };
+
   return (
     <View className="relative flex-1 w-full max-w-[480px] bg-background">
-      <View className="flex-row items-center justify-between px-5 pt-5 pb-3">
-        <Pressable
-          className="h-9 w-9 items-center justify-center rounded-[24px] bg-card shadow-sm shadow-black/10"
-          onPress={onBack}
-          accessibilityRole="button"
-          accessibilityLabel="Voltar"
-        >
-          <Ionicons name="arrow-back" size={18} color="#0f1720" />
-        </Pressable>
-
-        <View className="flex-row items-center gap-2">
-          <View className="h-8 w-8 items-center justify-center rounded-lg bg-primary">
-            <Ionicons name="business-outline" size={16} color="#ffffff" />
-          </View>
-          <View>
-            <Text className="text-xs font-bold uppercase tracking-[0.7px] text-primary">
-              CONECTA OBRAS
-            </Text>
-            <Text className="text-xs font-bold uppercase tracking-[0.7px] text-primary">
-              ITACOATIARA
-            </Text>
-          </View>
-        </View>
-
-        <Image
-          source={{ uri: "https://storage.googleapis.com/banani-avatars/avatar/male/35-50/European/0" }}
-          className="h-9 w-9 rounded-[20px]"
-          resizeMode="cover"
-          accessibilityLabel="Usuário"
-        />
-      </View>
+      <ProjectHeader onBack={onBack ?? (() => {})} onProfilePress={onProfilePress} />
 
       <ScrollView
         className="flex-1 px-5"
-        contentContainerClassName="pb-32"
+        contentContainerClassName="pb-32 pt-4"
+        keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
         <Text className="mb-4 text-3xl font-bold leading-tight text-foreground">
@@ -115,26 +117,57 @@ export function ClientHomePage({
         </Text>
 
         <View className="mb-5 flex-row gap-2">
-          <Pressable
-            onPress={() => onNavigate?.("search")}
+          <View
             className="flex-1 flex-row items-center gap-2 rounded-[20px] bg-card px-4 py-3 shadow-sm shadow-black/10"
-            accessibilityRole="button"
-            accessibilityLabel="Buscar servicos ou profissionais"
           >
             <Ionicons name="search" size={16} color="#9e8e8f" />
-            <Text className="text-sm text-muted-foreground">
-              Buscar Serviços ou Profis...
-            </Text>
-          </Pressable>
+            <TextInput
+              value={query}
+              onChangeText={setQuery}
+              className="h-[28px] flex-1 p-0 text-sm text-foreground"
+              placeholder="Buscar Servicos ou Profissionais"
+              placeholderTextColor="#9e8e8f"
+              returnKeyType="search"
+              accessibilityLabel="Buscar servicos ou profissionais"
+            />
+          </View>
           <Pressable
-            onPress={() => onNavigate?.("search")}
-            className="h-[52px] w-[52px] items-center justify-center rounded-[20px] bg-card shadow-sm shadow-black/10"
+            onPress={() => setShowFilters((current) => !current)}
+            className={`h-[52px] w-[52px] items-center justify-center rounded-[20px] shadow-sm shadow-black/10 ${
+              showFilters ? "bg-primary" : "bg-card"
+            }`}
             accessibilityRole="button"
+            accessibilityState={{ expanded: showFilters }}
             accessibilityLabel="Filtros"
           >
-            <Ionicons name="filter-outline" size={18} color="#0f1720" />
+            <Ionicons
+              name="filter-outline"
+              size={18}
+              color={showFilters ? "#ffffff" : "#0f1720"}
+            />
           </Pressable>
         </View>
+
+        {showFilters ? (
+          <View className="mb-6 gap-7 rounded-[16px] bg-background">
+            <ClientSearchFilters
+              values={{
+                selectedCategories,
+                sortBy,
+                minPrice,
+                maxPrice,
+                rating,
+              }}
+              actions={{
+                onToggleCategory: toggleCategory,
+                onChangeSort: setSortBy,
+                onChangeMinPrice: setMinPrice,
+                onChangeMaxPrice: setMaxPrice,
+                onChangeRating: setRating,
+              }}
+            />
+          </View>
+        ) : null}
 
         <View className="mb-5">
           <View className="mb-3 flex-row items-center justify-between">

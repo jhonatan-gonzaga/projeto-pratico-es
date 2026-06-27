@@ -374,4 +374,3 @@ export function ServiceInfoBox({
     </View>
   );
 }
-

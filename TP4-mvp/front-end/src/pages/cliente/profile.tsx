@@ -2,7 +2,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { Image, Linking, Pressable, ScrollView, Text, View } from "react-native";
 import { useState } from "react";
 
-import { ClientBottomNav } from "../../components/cliente";
+import { ClientBottomNav, type ClientNavKey } from "../../components/cliente";
+import { ProjectHeader } from "../../components/profissional/components";
 import { projectItems } from "../../components/profissional/data";
 import { MyProjectsScreen } from "../profissional/meus-projetos";
 import { ProjectResultScreen } from "../profissional/resultado-projeto";
@@ -70,8 +71,12 @@ const reviews = [
 
 export function ClientProfilePage({
   onBack,
+  onNavigate,
+  onProfilePress,
 }: {
   onBack: () => void;
+  onNavigate?: (key: ClientNavKey) => void;
+  onProfilePress?: () => void;
 }) {
   const [isShowingPortfolio, setIsShowingPortfolio] = useState(false);
   const [isViewingProjectResult, setIsViewingProjectResult] = useState(false);
@@ -82,7 +87,12 @@ export function ClientProfilePage({
   const handleOpenProjectResult = () => setIsViewingProjectResult(true);
 
   if (isShowingMessages) {
-    return <ClientMessageScreen onBack={() => setIsShowingMessages(false)} />;
+    return (
+      <ClientMessageScreen
+        onBack={() => setIsShowingMessages(false)}
+        onProfilePress={onProfilePress}
+      />
+    );
   }
 
   if (isViewingProjectResult) {
@@ -123,28 +133,7 @@ export function ClientProfilePage({
 
   return (
     <View className="relative flex-1 w-full max-w-[480px] bg-background">
-      <View className="flex-row items-center justify-between px-4 pt-5 pb-4">
-        <Pressable
-          onPress={onBack}
-          className="h-10 w-10 items-center justify-center rounded-full bg-card shadow-sm shadow-black/10"
-          accessibilityRole="button"
-          accessibilityLabel="Voltar"
-        >
-          <Ionicons name="arrow-back" size={18} color="#0f1720" />
-        </Pressable>
-
-        <Text className="text-base font-bold text-foreground">Perfil do Profissional</Text>
-
-        <Pressable
-          className="h-10 w-10 items-center justify-center rounded-full bg-card shadow-sm shadow-black/10"
-          accessibilityRole="button"
-          accessibilityLabel="Compartilhar"
-        >
-          <Ionicons name="share-social-outline" size={18} color="#0f1720" />
-        </Pressable>
-      </View>
-
-      <View className="h-px bg-black/5" />
+      <ProjectHeader onBack={onBack} onProfilePress={onProfilePress} />
 
       <ScrollView
         className="flex-1 px-4"
@@ -375,7 +364,7 @@ export function ClientProfilePage({
       </ScrollView>
 
       <View className="absolute inset-x-0 bottom-0 px-5 pb-2">
-        <ClientBottomNav />
+        <ClientBottomNav active="search" onSelect={onNavigate} />
       </View>
     </View>
   );

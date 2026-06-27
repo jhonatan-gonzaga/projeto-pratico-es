@@ -1,12 +1,14 @@
 import { Ionicons } from "@expo/vector-icons";
 import type { ReactNode } from "react";
-import { Image, Pressable, ScrollView, Text, View } from "react-native";
+import { Pressable, ScrollView, Text, View } from "react-native";
 
 import { ClientBottomNav, type ClientNavKey } from "../../components/cliente";
+import { ProjectHeader } from "../../components/profissional/components";
 
 type ClientAdsPageProps = {
   onBack?: () => void;
   onNavigate?: (key: ClientNavKey) => void;
+  onProfilePress?: () => void;
 };
 
 type AdStatus = "active" | "review";
@@ -70,42 +72,6 @@ const statusContent: Record<
     actionTextClassName: "text-[#6b2730]",
   },
 };
-
-function Header({ onBack }: { onBack?: () => void }) {
-  return (
-    <View className="flex-row items-center justify-between px-5 pb-3 pt-5">
-      <Pressable
-        onPress={onBack}
-        className="h-9 w-9 items-center justify-center rounded-full bg-card shadow-sm shadow-black/10"
-        accessibilityRole="button"
-        accessibilityLabel="Voltar"
-      >
-        <Ionicons name="arrow-back" size={18} color="#0f1720" />
-      </Pressable>
-
-      <View className="flex-row items-center gap-2">
-        <View className="h-8 w-8 items-center justify-center rounded-lg bg-primary">
-          <Ionicons name="business-outline" size={16} color="#ffffff" />
-        </View>
-        <View>
-          <Text className="text-xs font-bold uppercase tracking-[0.7px] text-primary">
-            CONECTA OBRAS
-          </Text>
-          <Text className="text-xs font-bold uppercase tracking-[0.7px] text-primary">
-            ITACOATIARA
-          </Text>
-        </View>
-      </View>
-
-      <Image
-        source={{ uri: "https://storage.googleapis.com/banani-avatars/avatar/male/35-50/European/0" }}
-        className="h-9 w-9 rounded-full border-2 border-primary"
-        resizeMode="cover"
-        accessibilityLabel="Usuario"
-      />
-    </View>
-  );
-}
 
 function IconText({
   icon,
@@ -177,14 +143,21 @@ function AdCard({ item }: { item: AdItem }) {
   );
 }
 
-export function ClientAdsPage({ onBack, onNavigate }: ClientAdsPageProps) {
+export function ClientAdsPage({
+  onBack,
+  onNavigate,
+  onProfilePress,
+}: ClientAdsPageProps) {
   return (
     <View className="relative flex-1 w-full max-w-[480px] bg-background">
-      <Header onBack={onBack} />
+      <ProjectHeader
+        onBack={onBack ?? (() => onNavigate?.("home"))}
+        onProfilePress={onProfilePress}
+      />
 
       <ScrollView
         className="flex-1 px-5"
-        contentContainerClassName="pb-32 pt-1"
+        contentContainerClassName="pb-32 pt-5"
         showsVerticalScrollIndicator={false}
       >
         <Text className="mb-4 text-[22px] font-bold text-foreground">

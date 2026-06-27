@@ -2,81 +2,24 @@ import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
-import { ClientBottomNav, type ClientNavKey } from "../../components/cliente";
+import {
+  ClientBottomNav,
+  ClientSearchFilters,
+  type ClientNavKey,
+} from "../../components/cliente";
+import { ProjectHeader } from "../../components/profissional/components";
 
 type ClientSearchPageProps = {
   onNavigate?: (key: ClientNavKey) => void;
+  onBack?: () => void;
+  onProfilePress?: () => void;
 };
 
-type FilterChipProps = {
-  label: string;
-  selected: boolean;
-  onPress: () => void;
-};
-
-const categories = [
-  "Todos",
-  "Pintura",
-  "Eletrica",
-  "Encanamento",
-  "Pedreiro",
-  "Jardinagem",
-  "Montagem",
-];
-
-const sortOptions = ["Relevancia", "Menor Preco", "Maior Avaliacao", "Mais Proximo"];
-const ratingOptions = ["Qualquer", "4.0+", "4.5+", "5.0"];
-
-function FilterChip({ label, selected, onPress }: FilterChipProps) {
-  return (
-    <Pressable
-      onPress={onPress}
-      className={`rounded-full px-[18px] py-[9px] shadow-sm shadow-black/5 ${
-        selected ? "bg-primary" : "bg-card"
-      }`}
-      accessibilityRole="button"
-      accessibilityState={{ selected }}
-      accessibilityLabel={label}
-    >
-      <Text className={`text-sm font-medium ${selected ? "text-white" : "text-foreground"}`}>
-        {label}
-      </Text>
-    </Pressable>
-  );
-}
-
-type PriceInputProps = {
-  value: string;
-  label: string;
-  placeholder: string;
-  onChangeText: (value: string) => void;
-};
-
-function normalizePrice(value: string) {
-  return value.replace(/\D/g, "");
-}
-
-function PriceInput({ value, label, placeholder, onChangeText }: PriceInputProps) {
-  return (
-    <View
-      className="h-[52px] flex-1 flex-row items-center gap-2 rounded-2xl bg-card px-4 shadow-sm shadow-black/5"
-    >
-      <Text className="text-sm font-medium text-muted-foreground">R$</Text>
-      <TextInput
-        value={value}
-        onChangeText={(text) => onChangeText(normalizePrice(text))}
-        className="h-full flex-1 text-base font-semibold text-foreground"
-        placeholder={placeholder}
-        placeholderTextColor="#7a6568"
-        keyboardType="number-pad"
-        returnKeyType="done"
-        accessibilityLabel={label}
-      />
-    </View>
-  );
-}
-
-export function ClientSearchPage({ onNavigate }: ClientSearchPageProps) {
+export function ClientSearchPage({
+  onBack,
+  onNavigate,
+  onProfilePress,
+}: ClientSearchPageProps) {
   const [query, setQuery] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>(["Todos"]);
   const [sortBy, setSortBy] = useState("Relevancia");
@@ -112,7 +55,12 @@ export function ClientSearchPage({ onNavigate }: ClientSearchPageProps) {
   };
 
   return (
-    <View className="min-h-[812px] w-full max-w-[480px] bg-background">
+    <View className="relative flex-1 w-full max-w-[480px] bg-background">
+      <ProjectHeader
+        onBack={onBack ?? (() => onNavigate?.("home"))}
+        onProfilePress={onProfilePress}
+      />
+
       <View className="flex-row items-center justify-between px-5 pb-2 pt-5">
         <Text className="text-[28px] font-bold leading-9 text-foreground">
           Buscar
@@ -143,77 +91,31 @@ export function ClientSearchPage({ onNavigate }: ClientSearchPageProps) {
 
       <ScrollView
         className="flex-1 px-5"
-        contentContainerClassName="gap-7 pb-8 pt-5"
+        contentContainerClassName="gap-7 pb-32 pt-5"
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-        <View className="gap-3">
-          <Text className="text-[17px] font-bold text-foreground">Categorias</Text>
-          <View className="flex-row flex-wrap gap-2">
-            {categories.map((item) => (
-              <FilterChip
-                key={item}
-                label={item}
-                selected={selectedCategories.includes(item)}
-                onPress={() => toggleCategory(item)}
-              />
-            ))}
-          </View>
-        </View>
-
-        <View className="gap-3">
-          <Text className="text-[17px] font-bold text-foreground">Ordenar por</Text>
-          <View className="flex-row flex-wrap gap-2">
-            {sortOptions.map((item) => (
-              <FilterChip
-                key={item}
-                label={item}
-                selected={sortBy === item}
-                onPress={() => setSortBy(item)}
-              />
-            ))}
-          </View>
-        </View>
-
-        <View className="gap-3">
-          <Text className="text-[17px] font-bold text-foreground">
-            Faixa de Preco (por dia)
-          </Text>
-          <View className="flex-row items-center gap-3">
-            <PriceInput
-              value={minPrice}
-              label="Preco minimo"
-              placeholder="0"
-              onChangeText={setMinPrice}
-            />
-            <Text className="text-lg text-muted-foreground">-</Text>
-            <PriceInput
-              value={maxPrice}
-              label="Preco maximo"
-              placeholder="500"
-              onChangeText={setMaxPrice}
-            />
-          </View>
-        </View>
-
-        <View className="gap-3">
-          <Text className="text-[17px] font-bold text-foreground">
-            Avaliacao Minima
-          </Text>
-          <View className="flex-row flex-wrap gap-2">
-            {ratingOptions.map((item) => (
-              <FilterChip
-                key={item}
-                label={item}
-                selected={rating === item}
-                onPress={() => setRating(item)}
-              />
-            ))}
-          </View>
-        </View>
+        <ClientSearchFilters
+          values={{
+            selectedCategories,
+            sortBy,
+            minPrice,
+            maxPrice,
+            rating,
+          }}
+          actions={{
+            onToggleCategory: toggleCategory,
+            onChangeSort: setSortBy,
+            onChangeMinPrice: setMinPrice,
+            onChangeMaxPrice: setMaxPrice,
+            onChangeRating: setRating,
+          }}
+        />
       </ScrollView>
 
-      <ClientBottomNav active="search" onSelect={onNavigate} />
+      <View className="absolute inset-x-0 bottom-0 px-5 pb-2">
+        <ClientBottomNav active="search" onSelect={onNavigate} />
+      </View>
     </View>
   );
 }
