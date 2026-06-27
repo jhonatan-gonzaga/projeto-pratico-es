@@ -162,8 +162,8 @@ export function ProfessionalSetupScreen({
 
       <ScrollView
         className="flex-1"
-        contentContainerClassName="gap-7 px-5 pb-[120px] pt-3"
-        keyboardShouldPersistTaps="handled"
+        contentContainerClassName="gap-7 px-5 pb-8 pt-3"
+        keyboardShouldPersistTaps="always"
         showsVerticalScrollIndicator={false}
       >
         <View className="items-center gap-2">
@@ -366,17 +366,15 @@ export function ProfessionalSetupScreen({
             </View>
           </View>
         </SetupSection>
-      </ScrollView>
 
-      <View className="absolute bottom-0 left-0 right-0 border-t border-input-border bg-card px-5 pb-8 pt-4">
         <Pressable
           onPress={handleSave}
-          className="min-h-[56px] items-center justify-center rounded-[18px] bg-primary px-6"
+          className="mb-6 min-h-[56px] items-center justify-center rounded-[18px] bg-primary px-6"
           accessibilityRole="button"
         >
           <Text className="text-base font-bold text-white">Salvar Perfil</Text>
         </Pressable>
-      </View>
+      </ScrollView>
     </View>
   );
 }

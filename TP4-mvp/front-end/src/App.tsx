@@ -5,6 +5,7 @@ import { useState } from "react";
 import { KeyboardAvoidingView, Platform, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import type { ClientNavKey } from "./components/cliente";
 import { ProfessionalHomeScreen, ProfessionalSetupScreen } from "./components/profissional";
 import {
   AccountProfileScreen,
@@ -12,7 +13,9 @@ import {
   ClientHomePage,
   ClientMyWorkPage,
   ClientProfilePage,
+  ClientSettingsScreen,
   ClientSearchPage,
+  type ClientWorkService,
   GoogleSignInScreen,
   LoginScreen,
   PhoneVerificationScreen,
@@ -31,6 +34,9 @@ type ProfileReturnScreen =
   | "clientHome"
   | "clientSearch"
   | "clientAds"
+  | "clientServiceDetails"
+  | "clientServiceMessage"
+  | "clientSettings"
   | "clientProfile";
 type Screen =
   | ReturnScreen
@@ -43,8 +49,10 @@ type Screen =
   | "clientHome"
   | "clientSearch"
   | "clientWork"
+  | "clientAds"
   | "clientServiceDetails"
   | "clientServiceMessage"
+  | "clientSettings"
   | "clientProfile";
 
 const clientStatusToProfessionalStatus: Record<
@@ -79,10 +87,13 @@ export default function App() {
   const [profileReturnScreen, setProfileReturnScreen] =
     useState<ProfileReturnScreen>("profileChoice");
   const [clientWorkReturnScreen, setClientWorkReturnScreen] = useState<
-    "clientHome" | "clientSearch"
+    "clientHome" | "clientSearch" | "clientAds"
   >("clientHome");
   const [selectedClientService, setSelectedClientService] =
     useState<ClientWorkService | null>(null);
+  const [contractedClientServices, setContractedClientServices] = useState<
+    ClientWorkService[]
+  >([]);
   const isProfessionalScreen =
     screen === "professionalSetup" || screen === "professionalHome";
 
@@ -102,11 +113,15 @@ export default function App() {
   };
 
   const openClientTab = (
-    tab: "home" | "search" | "work",
-    from?: "clientHome" | "clientSearch",
+    tab: ClientNavKey,
+    from?: "clientHome" | "clientSearch" | "clientAds",
   ) => {
     if (tab === "search") {
       setScreen("clientSearch");
+    } else if (tab === "ads") {
+      setScreen("clientAds");
+    } else if (tab === "settings") {
+      setScreen("clientSettings");
     } else if (tab === "work") {
       if (from) {
         setClientWorkReturnScreen(from);
@@ -148,29 +163,51 @@ export default function App() {
             />
           ) : screen === "clientHome" ? (
             <ClientHomePage
-              onNavigate={(tab) => {
-                if (tab === "home" || tab === "search" || tab === "work") {
-                  openClientTab(tab, "clientHome");
-                }
-              }}
+              onNavigate={(tab) => openClientTab(tab, "clientHome")}
               onOpenProfessional={() => setScreen("clientProfile")}
+              onProfilePress={() => openAccountProfile("clientHome")}
               onBack={() => setScreen("profileChoice")}
             />
           ) : screen === "clientSearch" ? (
             <ClientSearchPage
-              onNavigate={(tab) => {
-                if (tab === "home" || tab === "search" || tab === "work") {
-                  openClientTab(tab, "clientSearch");
-                }
+              onBack={() => setScreen("clientHome")}
+              onNavigate={(tab) => openClientTab(tab, "clientSearch")}
+              onProfilePress={() => openAccountProfile("clientSearch")}
+            />
+          ) : screen === "clientAds" ? (
+            <ClientAdsPage
+              onContractService={(service) => {
+                setContractedClientServices((current) => {
+                  if (current.some((item) => item.id === service.id)) {
+                    return current;
+                  }
+
+                  return [service, ...current];
+                });
               }}
+              onNavigate={(tab) => openClientTab(tab, "clientAds")}
+              onBack={() => setScreen("clientHome")}
+              onProfilePress={() => openAccountProfile("clientAds")}
+            />
+          ) : screen === "clientSettings" ? (
+            <ClientSettingsScreen
+              onNavigate={(tab) => openClientTab(tab)}
+              onBack={() => setScreen("clientHome")}
+              onProfilePress={() => openAccountProfile("clientSettings")}
+              onSignOut={() => setScreen("login")}
             />
           ) : screen === "clientWork" ? (
             <ClientMyWorkPage
-              onNavigate={(tab) => {
-                if (tab === "home" || tab === "search" || tab === "work") {
-                  openClientTab(tab);
-                }
+              extraServices={contractedClientServices}
+              onChangeExtraServiceStatus={(id, status) => {
+                setContractedClientServices((current) =>
+                  current.map((service) =>
+                    service.id === id ? { ...service, status } : service,
+                  ),
+                );
               }}
+              onNavigate={(tab) => openClientTab(tab)}
+              onProfilePress={() => openAccountProfile("clientHome")}
               onOpenDetail={(service) => {
                 setSelectedClientService(service);
                 setScreen("clientServiceDetails");
@@ -190,9 +227,14 @@ export default function App() {
             <ClientMessageScreen
               professionalName={selectedClientService.professionalName}
               onBack={() => setScreen("clientServiceDetails")}
+              onProfilePress={() => openAccountProfile("clientServiceMessage")}
             />
           ) : screen === "clientProfile" ? (
-            <ClientProfilePage onBack={() => setScreen("clientHome")} />
+            <ClientProfilePage
+              onBack={() => setScreen("clientHome")}
+              onNavigate={(tab) => openClientTab(tab)}
+              onProfilePress={() => openAccountProfile("clientProfile")}
+            />
           ) : screen === "professionalSetup" ? (
             <ProfessionalSetupScreen
               onBack={() => setScreen("profileChoice")}

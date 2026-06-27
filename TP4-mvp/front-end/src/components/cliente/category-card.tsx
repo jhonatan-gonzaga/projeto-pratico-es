@@ -1,13 +1,30 @@
-import { Image, Text, View } from "react-native";
+import { Image, Pressable, Text, View } from "react-native";
 
 type CategoryCardProps = {
   title: string;
   imageUri: string;
+  onPress?: () => void;
+  selected?: boolean;
 };
 
-export function CategoryCard({ title, imageUri }: CategoryCardProps) {
+export function CategoryCard({
+  title,
+  imageUri,
+  onPress,
+  selected = false,
+}: CategoryCardProps) {
+  const Wrapper = onPress ? Pressable : View;
+
   return (
-    <View className="relative h-[100px] w-[106px] overflow-hidden rounded-[20px]">
+    <Wrapper
+      onPress={onPress}
+      className={`relative h-[100px] w-[106px] overflow-hidden rounded-[20px] ${
+        selected ? "border-[3px] border-primary" : ""
+      }`}
+      accessibilityRole={onPress ? "button" : undefined}
+      accessibilityState={onPress ? { selected } : undefined}
+      accessibilityLabel={title}
+    >
       <Image
         source={{ uri: imageUri }}
         className="h-full w-full"
@@ -18,6 +35,6 @@ export function CategoryCard({ title, imageUri }: CategoryCardProps) {
       <Text className="absolute bottom-2 left-2 text-sm font-semibold text-primary-foreground">
         {title}
       </Text>
-    </View>
+    </Wrapper>
   );
 }

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Image, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
 import { ClientBottomNav, type ClientNavKey } from "../../components/cliente";
+import { ProjectHeader } from "../../components/profissional/components";
 import { ClientMessageScreen } from "./mensagem-profissional";
 
 export type ClientWorkStatusKey =
@@ -194,12 +195,18 @@ function ServiceCard({
 }
 
 export function ClientMyWorkPage({
+  extraServices = [],
+  onChangeExtraServiceStatus,
   onNavigate,
   onOpenDetail,
+  onProfilePress,
   onBack,
 }: {
+  extraServices?: ClientWorkService[];
+  onChangeExtraServiceStatus?: (id: string, status: ClientWorkStatusKey) => void;
   onNavigate?: (key: ClientNavKey) => void;
   onOpenDetail?: (service: ClientWorkService) => void;
+  onProfilePress?: () => void;
   onBack?: () => void;
 }) {
   const [services, setServices] = useState<ClientWorkService[]>(initialServices);
@@ -207,6 +214,11 @@ export function ClientMyWorkPage({
   const [activeMessageProfessional, setActiveMessageProfessional] = useState<string | null>(null);
 
   const handleChangeStatus = (id: string, status: ClientWorkStatusKey) => {
+    if (extraServices.some((service) => service.id === id)) {
+      onChangeExtraServiceStatus?.(id, status);
+      return;
+    }
+
     setServices((current) => current.map((service) => (service.id === id ? { ...service, status } : service)));
   };
 
@@ -214,34 +226,33 @@ export function ClientMyWorkPage({
     setFilter((current) => (current === key ? null : key));
   };
 
-  const countByStatus = (key: FilterKey) => services.filter((service) => service.status === key).length;
+  const allServices = [...extraServices, ...services];
 
-  const visibleServices = filter ? services.filter((service) => service.status === filter) : services;
+  const countByStatus = (key: FilterKey) => allServices.filter((service) => service.status === key).length;
+
+  const visibleServices = filter ? allServices.filter((service) => service.status === filter) : allServices;
 
   if (activeMessageProfessional) {
     return (
       <ClientMessageScreen
         professionalName={activeMessageProfessional}
         onBack={() => setActiveMessageProfessional(null)}
+        onProfilePress={onProfilePress}
       />
     );
   }
 
   return (
     <View className="relative flex-1 w-full max-w-[480px] bg-background">
-      <View className="flex-row items-center justify-between px-5 pt-5 pb-3">
-        <Pressable
-          onPress={onBack}
-          className="h-9 w-9 items-center justify-center rounded-full bg-card shadow-sm shadow-black/10"
-          accessibilityRole="button"
-          accessibilityLabel="Voltar"
-        >
-          <Ionicons name="arrow-back" size={18} color="#0f1720" />
-        </Pressable>
+      <ProjectHeader
+        onBack={onBack ?? (() => onNavigate?.("home"))}
+        onProfilePress={onProfilePress}
+      />
 
-        <Text className="text-base font-bold text-foreground">Minha Obra</Text>
-
-        <View className="h-9 w-9" />
+      <View className="px-5 pb-3 pt-4">
+        <Text className="text-[28px] font-bold leading-9 text-foreground">
+          Minha Obra
+        </Text>
       </View>
 
       <View className="mb-5 flex-row gap-2 px-5">

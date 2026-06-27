@@ -2,7 +2,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { Image, Linking, Pressable, ScrollView, Text, View } from "react-native";
 import { useState } from "react";
 
-import { ClientBottomNav } from "../../components/cliente";
+import { ClientBottomNav, type ClientNavKey } from "../../components/cliente";
+import { ProjectHeader } from "../../components/profissional/components";
 import { projectItems } from "../../components/profissional/data";
 import { MyProjectsScreen } from "../profissional/meus-projetos";
 import { ProjectResultScreen } from "../profissional/resultado-projeto";
@@ -68,10 +69,36 @@ const reviews = [
   },
 ];
 
+export type ClientProfessionalProfile = {
+  about?: string;
+  avatarUri: string;
+  dailyRate?: string;
+  name: string;
+  neighborhood?: string;
+  role: string;
+};
+
+const defaultProfessionalProfile: ClientProfessionalProfile = {
+  about:
+    "Sou Jhon Souza, pintor profissional com mais de 10 anos de experiência em pintura residencial e comercial. Transformo ambientes com acabamento limpo, respeito aos prazos e atendimento dedicado.",
+  avatarUri:
+    "https://storage.googleapis.com/banani-avatars/avatar/male/35-50/European/0",
+  dailyRate: "R$ 200,00",
+  name: "Jhon Souza",
+  neighborhood: "Centro",
+  role: "Pintor",
+};
+
 export function ClientProfilePage({
   onBack,
+  onNavigate,
+  onProfilePress,
+  professional = defaultProfessionalProfile,
 }: {
   onBack: () => void;
+  onNavigate?: (key: ClientNavKey) => void;
+  onProfilePress?: () => void;
+  professional?: ClientProfessionalProfile;
 }) {
   const [isShowingPortfolio, setIsShowingPortfolio] = useState(false);
   const [isViewingProjectResult, setIsViewingProjectResult] = useState(false);
@@ -82,7 +109,12 @@ export function ClientProfilePage({
   const handleOpenProjectResult = () => setIsViewingProjectResult(true);
 
   if (isShowingMessages) {
-    return <ClientMessageScreen onBack={() => setIsShowingMessages(false)} />;
+    return (
+      <ClientMessageScreen
+        onBack={() => setIsShowingMessages(false)}
+        onProfilePress={onProfilePress}
+      />
+    );
   }
 
   if (isViewingProjectResult) {
@@ -123,28 +155,7 @@ export function ClientProfilePage({
 
   return (
     <View className="relative flex-1 w-full max-w-[480px] bg-background">
-      <View className="flex-row items-center justify-between px-4 pt-5 pb-4">
-        <Pressable
-          onPress={onBack}
-          className="h-10 w-10 items-center justify-center rounded-full bg-card shadow-sm shadow-black/10"
-          accessibilityRole="button"
-          accessibilityLabel="Voltar"
-        >
-          <Ionicons name="arrow-back" size={18} color="#0f1720" />
-        </Pressable>
-
-        <Text className="text-base font-bold text-foreground">Perfil do Profissional</Text>
-
-        <Pressable
-          className="h-10 w-10 items-center justify-center rounded-full bg-card shadow-sm shadow-black/10"
-          accessibilityRole="button"
-          accessibilityLabel="Compartilhar"
-        >
-          <Ionicons name="share-social-outline" size={18} color="#0f1720" />
-        </Pressable>
-      </View>
-
-      <View className="h-px bg-black/5" />
+      <ProjectHeader onBack={onBack} onProfilePress={onProfilePress} />
 
       <ScrollView
         className="flex-1 px-4"
@@ -154,16 +165,16 @@ export function ClientProfilePage({
         <View className="items-center gap-2">
           <View className="rounded-full overflow-hidden border-[3px] border-primary">
             <Image
-              source={{ uri: "https://storage.googleapis.com/banani-avatars/avatar/male/35-50/European/0" }}
+              source={{ uri: professional.avatarUri }}
               className="h-24 w-24"
               resizeMode="cover"
-              accessibilityLabel="Foto do profissional"
+              accessibilityLabel={`Foto de ${professional.name}`}
             />
           </View>
 
           <View className="text-center">
-            <Text className="text-xl font-bold text-foreground">Jhon Souza</Text>
-            <Text className="text-sm text-muted-foreground">Pintor</Text>
+            <Text className="text-xl font-bold text-foreground">{professional.name}</Text>
+            <Text className="text-sm text-muted-foreground">{professional.role}</Text>
           </View>
 
           <View className="mt-1 flex-row w-full gap-3">
@@ -187,12 +198,12 @@ export function ClientProfilePage({
               <View className="flex-row items-center gap-1">
                 <Ionicons name="location-outline" size={14} color="#b94b50" />
               </View>
-              <Text className="text-xs text-muted-foreground">Centro</Text>
+              <Text className="text-xs text-muted-foreground">{professional.neighborhood ?? "Centro"}</Text>
             </View>
           </View>
 
           <Text className="text-xl font-bold text-primary mt-1">
-            R$ 200,00
+            {professional.dailyRate ?? "R$ 200,00"}
             <Text className="text-sm font-medium text-muted-foreground">/dia</Text>
           </Text>
 
@@ -235,7 +246,8 @@ export function ClientProfilePage({
             <Text className="text-sm font-bold text-foreground">Sobre mim</Text>
           </View>
           <Text className="text-sm leading-relaxed text-muted-foreground">
-            Sou Jhon Souza, pintor profissional com mais de 10 anos de experiência em pintura residencial e comercial. Transformo ambientes com acabamento limpo, respeito aos prazos e atendimento dedicado.
+            {professional.about ??
+              `${professional.name} atua como ${professional.role.toLowerCase()} com experiência em serviços residenciais, atendimento dedicado e compromisso com prazos.`}
           </Text>
         </View>
 
@@ -375,7 +387,7 @@ export function ClientProfilePage({
       </ScrollView>
 
       <View className="absolute inset-x-0 bottom-0 px-5 pb-2">
-        <ClientBottomNav />
+        <ClientBottomNav active="search" onSelect={onNavigate} />
       </View>
     </View>
   );
