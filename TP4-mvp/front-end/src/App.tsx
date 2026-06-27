@@ -13,6 +13,7 @@ import {
   ClientHomePage,
   ClientMyWorkPage,
   ClientProfilePage,
+  ClientSettingsScreen,
   ClientSearchPage,
   type ClientWorkService,
   GoogleSignInScreen,
@@ -49,6 +50,7 @@ type Screen =
   | "clientAds"
   | "clientServiceDetails"
   | "clientServiceMessage"
+  | "clientSettings"
   | "clientProfile";
 
 const clientStatusToProfessionalStatus: Record<
@@ -114,7 +116,7 @@ export default function App() {
     } else if (tab === "ads") {
       setScreen("clientAds");
     } else if (tab === "settings") {
-      openAccountProfile(from ?? "clientHome");
+      setScreen("clientSettings");
     } else if (tab === "work") {
       if (from) {
         setClientWorkReturnScreen(from);
@@ -168,6 +170,12 @@ export default function App() {
             <ClientAdsPage
               onNavigate={(tab) => openClientTab(tab, "clientAds")}
               onBack={() => setScreen("clientHome")}
+            />
+          ) : screen === "clientSettings" ? (
+            <ClientSettingsScreen
+              onNavigate={(tab) => openClientTab(tab)}
+              onBack={() => setScreen("clientHome")}
+              onSignOut={() => setScreen("login")}
             />
           ) : screen === "clientWork" ? (
             <ClientMyWorkPage

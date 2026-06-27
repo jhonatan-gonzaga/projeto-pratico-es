@@ -10,5 +10,6 @@ export {
   type ClientWorkService,
   ClientMyWorkPage,
   ClientProfilePage,
+  ClientSettingsScreen,
   ClientSearchPage,
 } from "./cliente";

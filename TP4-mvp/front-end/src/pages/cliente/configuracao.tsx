@@ -1,0 +1,420 @@
+import { Ionicons } from "@expo/vector-icons";
+import { useState } from "react";
+import { Pressable, ScrollView, Switch, Text, View } from "react-native";
+
+import { ClientBottomNav, type ClientNavKey } from "../../components/cliente";
+import {
+  SettingsDivider,
+  SettingsOption,
+  SettingsSection,
+} from "../../components/profissional/components";
+
+type ClientSettingsPage = "home" | "notifications" | "privacy" | "help" | "terms";
+
+type ClientSettingsScreenProps = {
+  onBack: () => void;
+  onNavigate?: (key: ClientNavKey) => void;
+  onSignOut?: () => void;
+};
+
+type SettingsHeaderProps = {
+  onBack: () => void;
+  title: string;
+};
+
+function SettingsHeader({ onBack, title }: SettingsHeaderProps) {
+  return (
+    <>
+      <View className="flex-row items-center justify-between bg-background px-4 pb-4 pt-5">
+        <Pressable
+          onPress={onBack}
+          className="h-10 w-10 items-center justify-center rounded-full bg-card shadow-sm shadow-black/10"
+          accessibilityRole="button"
+          accessibilityLabel="Voltar"
+        >
+          <Ionicons name="arrow-back" size={18} color="#0f1720" />
+        </Pressable>
+
+        <Text className="flex-1 text-center text-base font-bold text-foreground">
+          {title}
+        </Text>
+
+        <View className="h-10 w-10" />
+      </View>
+      <View className="h-px bg-black/5" />
+    </>
+  );
+}
+
+function NotificationRow({
+  description,
+  icon,
+  label,
+  onChange,
+  value,
+}: {
+  description: string;
+  icon: keyof typeof Ionicons.glyphMap;
+  label: string;
+  onChange: (value: boolean) => void;
+  value: boolean;
+}) {
+  return (
+    <View className="flex-row items-center gap-3 rounded-[12px] bg-card p-4 shadow-sm shadow-black/5">
+      <View className="h-10 w-10 items-center justify-center rounded-[12px] bg-[#fceaea]">
+        <Ionicons name={icon} size={18} color="#b94b50" />
+      </View>
+      <View className="flex-1">
+        <Text className="text-base font-semibold text-foreground">{label}</Text>
+        <Text className="mt-0.5 text-xs leading-4 text-muted-foreground">
+          {description}
+        </Text>
+      </View>
+      <Switch
+        value={value}
+        onValueChange={onChange}
+        thumbColor={value ? "#b94b50" : "#f4f4f5"}
+        trackColor={{ false: "#e4dada", true: "#f2cdd0" }}
+      />
+    </View>
+  );
+}
+
+function ClientNotificationsScreen({ onBack }: { onBack: () => void }) {
+  const [messages, setMessages] = useState(true);
+  const [ads, setAds] = useState(true);
+  const [status, setStatus] = useState(false);
+
+  return (
+    <View className="h-full w-full max-w-[480px] self-center bg-background">
+      <SettingsHeader onBack={onBack} title="Notificacoes" />
+
+      <ScrollView
+        className="flex-1"
+        contentContainerClassName="gap-4 px-4 pb-6 pt-5"
+        showsVerticalScrollIndicator={false}
+      >
+        <View>
+          <Text className="text-2xl font-bold text-foreground">
+            Notificacoes
+          </Text>
+          <Text className="mt-1 text-sm text-muted-foreground">
+            Escolha quais avisos deseja receber.
+          </Text>
+        </View>
+
+        <NotificationRow
+          icon="chatbubble-outline"
+          label="Mensagens"
+          description="Receber avisos quando profissionais enviarem respostas."
+          value={messages}
+          onChange={setMessages}
+        />
+        <NotificationRow
+          icon="megaphone-outline"
+          label="Anuncios"
+          description="Receber atualizacoes dos anuncios publicados."
+          value={ads}
+          onChange={setAds}
+        />
+        <NotificationRow
+          icon="hammer-outline"
+          label="Minha obra"
+          description="Avisar quando houver mudanca no andamento dos servicos."
+          value={status}
+          onChange={setStatus}
+        />
+      </ScrollView>
+    </View>
+  );
+}
+
+function SecurityOption({
+  description,
+  icon,
+  label,
+}: {
+  description: string;
+  icon: keyof typeof Ionicons.glyphMap;
+  label: string;
+}) {
+  return (
+    <Pressable
+      className="flex-row items-center gap-3 rounded-[12px] bg-card p-4 shadow-sm shadow-black/5"
+      accessibilityRole="button"
+    >
+      <View className="h-10 w-10 items-center justify-center rounded-[12px] bg-[#fceaea]">
+        <Ionicons name={icon} size={18} color="#b94b50" />
+      </View>
+      <View className="flex-1">
+        <Text className="text-base font-semibold text-foreground">{label}</Text>
+        <Text className="mt-0.5 text-xs leading-4 text-muted-foreground">
+          {description}
+        </Text>
+      </View>
+      <Ionicons name="chevron-forward" size={18} color="#b94b50" />
+    </Pressable>
+  );
+}
+
+function ClientPrivacyScreen({ onBack }: { onBack: () => void }) {
+  return (
+    <View className="h-full w-full max-w-[480px] self-center bg-background">
+      <SettingsHeader onBack={onBack} title="Privacidade e Seguranca" />
+
+      <ScrollView
+        className="flex-1"
+        contentContainerClassName="gap-4 px-4 pb-6 pt-5"
+        showsVerticalScrollIndicator={false}
+      >
+        <View>
+          <Text className="text-2xl font-bold text-foreground">
+            Privacidade e Seguranca
+          </Text>
+          <Text className="mt-1 text-sm text-muted-foreground">
+            Controle senha, dados e protecao da sua conta.
+          </Text>
+        </View>
+
+        <SecurityOption
+          icon="key-outline"
+          label="Alterar senha"
+          description="Atualize sua senha de acesso ao aplicativo."
+        />
+        <SecurityOption
+          icon="shield-checkmark-outline"
+          label="Verificacao em duas etapas"
+          description="Adicione uma protecao extra para entrar na conta."
+        />
+        <SecurityOption
+          icon="eye-outline"
+          label="Visibilidade dos dados"
+          description="Defina quais dados podem aparecer para profissionais."
+        />
+        <SecurityOption
+          icon="trash-outline"
+          label="Excluir dados da conta"
+          description="Solicite a remocao dos seus dados do Conecta Obras."
+        />
+      </ScrollView>
+    </View>
+  );
+}
+
+function HelpCard({
+  description,
+  icon,
+  title,
+}: {
+  description: string;
+  icon: keyof typeof Ionicons.glyphMap;
+  title: string;
+}) {
+  return (
+    <Pressable
+      className="rounded-[12px] bg-card p-4 shadow-sm shadow-black/5"
+      accessibilityRole="button"
+    >
+      <View className="mb-2 flex-row items-center gap-2">
+        <Ionicons name={icon} size={18} color="#b94b50" />
+        <Text className="text-base font-bold text-foreground">{title}</Text>
+      </View>
+      <Text className="text-sm leading-5 text-muted-foreground">
+        {description}
+      </Text>
+    </Pressable>
+  );
+}
+
+function ClientHelpScreen({ onBack }: { onBack: () => void }) {
+  return (
+    <View className="h-full w-full max-w-[480px] self-center bg-background">
+      <SettingsHeader onBack={onBack} title="Central de Ajuda" />
+
+      <ScrollView
+        className="flex-1"
+        contentContainerClassName="gap-4 px-4 pb-6 pt-5"
+        showsVerticalScrollIndicator={false}
+      >
+        <View>
+          <Text className="text-2xl font-bold text-foreground">
+            Central de Ajuda
+          </Text>
+          <Text className="mt-1 text-sm text-muted-foreground">
+            Encontre respostas rapidas para usar sua conta de cliente.
+          </Text>
+        </View>
+
+        <HelpCard
+          icon="search-outline"
+          title="Como encontrar profissionais?"
+          description="Use a guia Buscar para filtrar por categoria, preco, avaliacao e servicos disponiveis."
+        />
+        <HelpCard
+          icon="megaphone-outline"
+          title="Como criar um anuncio?"
+          description="Abra a guia Anunciar, toque em criar novo anuncio e descreva o servico que precisa."
+        />
+        <HelpCard
+          icon="hammer-outline"
+          title="Como acompanhar minha obra?"
+          description="Use Minha obra para acompanhar servicos, conversar com profissionais e conferir detalhes."
+        />
+
+        <View className="rounded-[12px] bg-[#f7eced] p-4">
+          <Text className="text-base font-bold text-foreground">
+            Precisa de suporte?
+          </Text>
+          <Text className="mt-1 text-sm leading-5 text-muted-foreground">
+            Entre em contato pelo atendimento do Conecta Obras para tirar
+            duvidas sobre conta, anuncios ou seguranca.
+          </Text>
+          <Pressable
+            className="mt-4 min-h-[46px] flex-row items-center justify-center gap-2 rounded-[12px] bg-primary px-4"
+            accessibilityRole="button"
+          >
+            <Ionicons name="chatbubble-ellipses-outline" size={17} color="#ffffff" />
+            <Text className="text-sm font-semibold text-white">
+              Falar com suporte
+            </Text>
+          </Pressable>
+        </View>
+      </ScrollView>
+    </View>
+  );
+}
+
+function ClientTermsScreen({ onBack }: { onBack: () => void }) {
+  return (
+    <View className="h-full w-full max-w-[480px] self-center bg-background">
+      <SettingsHeader onBack={onBack} title="Termos de Uso" />
+
+      <ScrollView
+        className="flex-1"
+        contentContainerClassName="gap-4 px-4 pb-6 pt-5"
+        showsVerticalScrollIndicator={false}
+      >
+        <View>
+          <Text className="text-2xl font-bold text-foreground">
+            Termos de Uso
+          </Text>
+          <Text className="mt-1 text-sm text-muted-foreground">
+            Texto ficticio para revisao e edicao futura.
+          </Text>
+        </View>
+
+        {[
+          {
+            title: "1. Aceite dos termos",
+            text: "Ao utilizar o Conecta Obras, o cliente declara que leu e concorda com estas condicoes gerais.",
+          },
+          {
+            title: "2. Anuncios e solicitacoes",
+            text: "O cliente deve informar dados verdadeiros sobre o servico solicitado para facilitar o contato com profissionais.",
+          },
+          {
+            title: "3. Negociacao dos servicos",
+            text: "A negociacao, prazo, valor e realizacao do servico sao de responsabilidade das partes envolvidas.",
+          },
+          {
+            title: "4. Privacidade",
+            text: "Informacoes pessoais devem ser utilizadas apenas para comunicacao e execucao dos servicos dentro da plataforma.",
+          },
+        ].map((item) => (
+          <View
+            key={item.title}
+            className="rounded-[12px] bg-card p-4 shadow-sm shadow-black/5"
+          >
+            <Text className="mb-3 text-base font-bold text-foreground">
+              {item.title}
+            </Text>
+            <Text className="text-sm leading-6 text-muted-foreground">
+              {item.text}
+            </Text>
+          </View>
+        ))}
+      </ScrollView>
+    </View>
+  );
+}
+
+export function ClientSettingsScreen({
+  onBack,
+  onNavigate,
+  onSignOut,
+}: ClientSettingsScreenProps) {
+  const [settingsPage, setSettingsPage] = useState<ClientSettingsPage>("home");
+
+  if (settingsPage === "notifications") {
+    return <ClientNotificationsScreen onBack={() => setSettingsPage("home")} />;
+  }
+
+  if (settingsPage === "privacy") {
+    return <ClientPrivacyScreen onBack={() => setSettingsPage("home")} />;
+  }
+
+  if (settingsPage === "help") {
+    return <ClientHelpScreen onBack={() => setSettingsPage("home")} />;
+  }
+
+  if (settingsPage === "terms") {
+    return <ClientTermsScreen onBack={() => setSettingsPage("home")} />;
+  }
+
+  return (
+    <View className="relative flex-1 w-full max-w-[480px] bg-background">
+      <SettingsHeader onBack={onBack} title="Configuracoes" />
+
+      <ScrollView
+        className="flex-1"
+        contentContainerClassName="px-4 pb-32 pt-5"
+        showsVerticalScrollIndicator={false}
+      >
+        <SettingsSection title="Preferencias">
+          <SettingsOption
+            icon="notifications-outline"
+            label="Notificacoes"
+            onPress={() => setSettingsPage("notifications")}
+          />
+          <SettingsDivider />
+          <SettingsOption
+            icon="lock-closed-outline"
+            label="Privacidade e Seguranca"
+            onPress={() => setSettingsPage("privacy")}
+          />
+        </SettingsSection>
+
+        <SettingsSection title="Suporte">
+          <SettingsOption
+            icon="help-circle-outline"
+            label="Central de Ajuda"
+            onPress={() => setSettingsPage("help")}
+          />
+          <SettingsDivider />
+          <SettingsOption
+            icon="document-text-outline"
+            label="Termos de Uso"
+            onPress={() => setSettingsPage("terms")}
+          />
+        </SettingsSection>
+
+        <View className="overflow-hidden rounded-[16px] bg-card shadow-sm shadow-black/5">
+          <Pressable
+            onPress={onSignOut}
+            className="flex-row items-center justify-center gap-2 px-4 py-4"
+            accessibilityRole="button"
+          >
+            <Ionicons name="log-out-outline" size={18} color="#b94b50" />
+            <Text className="text-[15px] font-semibold text-primary">
+              Sair da Conta
+            </Text>
+          </Pressable>
+        </View>
+      </ScrollView>
+
+      <View className="absolute inset-x-0 bottom-0 px-5 pb-2">
+        <ClientBottomNav active="settings" onSelect={onNavigate} />
+      </View>
+    </View>
+  );
+}
