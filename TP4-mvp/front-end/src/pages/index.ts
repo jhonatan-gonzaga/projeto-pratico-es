@@ -5,6 +5,7 @@ export { GoogleSignInScreen } from "./login-gmail";
 export { ProfileChoiceScreen } from "./escolher-perfil";
 export { AccountProfileScreen } from "./perfil";
 export {
+  ClientAdsPage,
   ClientHomePage,
   type ClientWorkService,
   ClientMyWorkPage,

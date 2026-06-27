@@ -5,6 +5,7 @@ import { useState } from "react";
 import { KeyboardAvoidingView, Platform, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import type { ClientNavKey } from "./components/cliente";
 import { ProfessionalHomeScreen, ProfessionalSetupScreen } from "./components/profissional";
 import {
   AccountProfileScreen,
@@ -13,6 +14,7 @@ import {
   ClientMyWorkPage,
   ClientProfilePage,
   ClientSearchPage,
+  type ClientWorkService,
   GoogleSignInScreen,
   LoginScreen,
   PhoneVerificationScreen,
@@ -31,6 +33,7 @@ type ProfileReturnScreen =
   | "clientHome"
   | "clientSearch"
   | "clientAds"
+  | "clientServiceDetails"
   | "clientProfile";
 type Screen =
   | ReturnScreen
@@ -43,6 +46,7 @@ type Screen =
   | "clientHome"
   | "clientSearch"
   | "clientWork"
+  | "clientAds"
   | "clientServiceDetails"
   | "clientServiceMessage"
   | "clientProfile";
@@ -79,7 +83,7 @@ export default function App() {
   const [profileReturnScreen, setProfileReturnScreen] =
     useState<ProfileReturnScreen>("profileChoice");
   const [clientWorkReturnScreen, setClientWorkReturnScreen] = useState<
-    "clientHome" | "clientSearch"
+    "clientHome" | "clientSearch" | "clientAds"
   >("clientHome");
   const [selectedClientService, setSelectedClientService] =
     useState<ClientWorkService | null>(null);
@@ -102,11 +106,15 @@ export default function App() {
   };
 
   const openClientTab = (
-    tab: "home" | "search" | "work",
-    from?: "clientHome" | "clientSearch",
+    tab: ClientNavKey,
+    from?: "clientHome" | "clientSearch" | "clientAds",
   ) => {
     if (tab === "search") {
       setScreen("clientSearch");
+    } else if (tab === "ads") {
+      setScreen("clientAds");
+    } else if (tab === "settings") {
+      openAccountProfile(from ?? "clientHome");
     } else if (tab === "work") {
       if (from) {
         setClientWorkReturnScreen(from);
@@ -148,29 +156,22 @@ export default function App() {
             />
           ) : screen === "clientHome" ? (
             <ClientHomePage
-              onNavigate={(tab) => {
-                if (tab === "home" || tab === "search" || tab === "work") {
-                  openClientTab(tab, "clientHome");
-                }
-              }}
+              onNavigate={(tab) => openClientTab(tab, "clientHome")}
               onOpenProfessional={() => setScreen("clientProfile")}
               onBack={() => setScreen("profileChoice")}
             />
           ) : screen === "clientSearch" ? (
             <ClientSearchPage
-              onNavigate={(tab) => {
-                if (tab === "home" || tab === "search" || tab === "work") {
-                  openClientTab(tab, "clientSearch");
-                }
-              }}
+              onNavigate={(tab) => openClientTab(tab, "clientSearch")}
+            />
+          ) : screen === "clientAds" ? (
+            <ClientAdsPage
+              onNavigate={(tab) => openClientTab(tab, "clientAds")}
+              onBack={() => setScreen("clientHome")}
             />
           ) : screen === "clientWork" ? (
             <ClientMyWorkPage
-              onNavigate={(tab) => {
-                if (tab === "home" || tab === "search" || tab === "work") {
-                  openClientTab(tab);
-                }
-              }}
+              onNavigate={(tab) => openClientTab(tab)}
               onOpenDetail={(service) => {
                 setSelectedClientService(service);
                 setScreen("clientServiceDetails");
