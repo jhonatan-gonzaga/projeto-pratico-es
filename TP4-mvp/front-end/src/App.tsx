@@ -8,7 +8,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ProfessionalHomeScreen, ProfessionalSetupScreen } from "./components/profissional";
 import {
   AccountProfileScreen,
-  type ClientWorkService,
+  ClientAdsPage,
   ClientHomePage,
   ClientMyWorkPage,
   ClientProfilePage,
@@ -30,7 +30,7 @@ type ProfileReturnScreen =
   | "professionalHome"
   | "clientHome"
   | "clientSearch"
-  | "clientServiceDetails"
+  | "clientAds"
   | "clientProfile";
 type Screen =
   | ReturnScreen
