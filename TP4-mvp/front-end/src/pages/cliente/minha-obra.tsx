@@ -5,15 +5,19 @@ import { Image, Pressable, ScrollView, Text, TextInput, View } from "react-nativ
 import { ClientBottomNav, type ClientNavKey } from "../../components/cliente";
 import { ClientMessageScreen } from "./mensagem-profissional";
 
-type StatusKey = "em_andamento" | "aguardando_aprovacao" | "pausado" | "concluido" | "cancelado";
+export type ClientWorkStatusKey =
+  | "em_andamento"
+  | "aguardando_aprovacao"
+  | "concluido"
+  | "reabrir_servico";
 type FilterKey = "em_andamento" | "aguardando_aprovacao";
 
 type StatusOption = {
-  key: StatusKey;
+  key: ClientWorkStatusKey;
   label: string;
 };
 
-type Service = {
+export type ClientWorkService = {
   id: string;
   title: string;
   dateLabel: string;
@@ -22,19 +26,25 @@ type Service = {
   professionalRole: string;
   avatarUri: string;
   unreadMessages?: number;
-  status: StatusKey;
+  status: ClientWorkStatusKey;
   statusOptions: StatusOption[];
 };
 
-const STATUS_BADGE: Record<StatusKey, { label: string; bg: string; text: string }> = {
+const STATUS_BADGE: Record<ClientWorkStatusKey, { label: string; bg: string; text: string }> = {
   em_andamento: { label: "Em andamento", bg: "bg-[#f3eced]", text: "text-primary" },
   aguardando_aprovacao: { label: "Aguardando aprovação", bg: "bg-[#fff3cd]", text: "text-[#856404]" },
-  pausado: { label: "Pausado", bg: "bg-muted", text: "text-muted-foreground" },
   concluido: { label: "Concluído", bg: "bg-[#d1fae5]", text: "text-[#065f46]" },
-  cancelado: { label: "Cancelado", bg: "bg-muted", text: "text-muted-foreground" },
+  reabrir_servico: { label: "Reabrir Serviço", bg: "bg-[#f3eced]", text: "text-primary" },
 };
 
-const initialServices: Service[] = [
+const STATUS_OPTIONS: StatusOption[] = [
+  { key: "aguardando_aprovacao", label: "Aguardando aprovação" },
+  { key: "em_andamento", label: "Em andamento" },
+  { key: "concluido", label: "Concluído" },
+  { key: "reabrir_servico", label: "Reabrir Serviço" },
+];
+
+const initialServices: ClientWorkService[] = [
   {
     id: "1",
     title: "Reforma Completa de Banheiro",
@@ -45,11 +55,7 @@ const initialServices: Service[] = [
     avatarUri: "https://storage.googleapis.com/banani-avatars/avatar/female/25-35/European/2",
     unreadMessages: 2,
     status: "em_andamento",
-    statusOptions: [
-      { key: "em_andamento", label: "Em andamento" },
-      { key: "pausado", label: "Pausado" },
-      { key: "concluido", label: "Concluído" },
-    ],
+    statusOptions: STATUS_OPTIONS,
   },
   {
     id: "2",
@@ -60,11 +66,7 @@ const initialServices: Service[] = [
     professionalRole: "Empreiteiro",
     avatarUri: "https://storage.googleapis.com/banani-avatars/avatar/male/35-50/European/4",
     status: "aguardando_aprovacao",
-    statusOptions: [
-      { key: "aguardando_aprovacao", label: "Aguardando aprovação" },
-      { key: "em_andamento", label: "Em andamento" },
-      { key: "cancelado", label: "Cancelar" },
-    ],
+    statusOptions: STATUS_OPTIONS,
   },
   {
     id: "3",
@@ -75,10 +77,7 @@ const initialServices: Service[] = [
     professionalRole: "Eletricista",
     avatarUri: "https://storage.googleapis.com/banani-avatars/avatar/male/35-50/African/3",
     status: "concluido",
-    statusOptions: [
-      { key: "concluido", label: "Concluído" },
-      { key: "em_andamento", label: "Reabrir" },
-    ],
+    statusOptions: STATUS_OPTIONS,
   },
 ];
 
@@ -88,10 +87,10 @@ function ServiceCard({
   onOpenMessages,
   onOpenDetail,
 }: {
-  service: Service;
-  onChangeStatus: (id: string, status: StatusKey) => void;
-  onOpenMessages: (service: Service) => void;
-  onOpenDetail?: (service: Service) => void;
+  service: ClientWorkService;
+  onChangeStatus: (id: string, status: ClientWorkStatusKey) => void;
+  onOpenMessages: (service: ClientWorkService) => void;
+  onOpenDetail?: (service: ClientWorkService) => void;
 }) {
   const [review, setReview] = useState("");
   const badge = STATUS_BADGE[service.status];
@@ -200,14 +199,14 @@ export function ClientMyWorkPage({
   onBack,
 }: {
   onNavigate?: (key: ClientNavKey) => void;
-  onOpenDetail?: (service: Service) => void;
+  onOpenDetail?: (service: ClientWorkService) => void;
   onBack?: () => void;
 }) {
-  const [services, setServices] = useState<Service[]>(initialServices);
+  const [services, setServices] = useState<ClientWorkService[]>(initialServices);
   const [filter, setFilter] = useState<FilterKey | null>(null);
   const [activeMessageProfessional, setActiveMessageProfessional] = useState<string | null>(null);
 
-  const handleChangeStatus = (id: string, status: StatusKey) => {
+  const handleChangeStatus = (id: string, status: ClientWorkStatusKey) => {
     setServices((current) => current.map((service) => (service.id === id ? { ...service, status } : service)));
   };
 
