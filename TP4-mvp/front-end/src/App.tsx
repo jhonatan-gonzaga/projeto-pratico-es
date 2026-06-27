@@ -91,6 +91,9 @@ export default function App() {
   >("clientHome");
   const [selectedClientService, setSelectedClientService] =
     useState<ClientWorkService | null>(null);
+  const [contractedClientServices, setContractedClientServices] = useState<
+    ClientWorkService[]
+  >([]);
   const isProfessionalScreen =
     screen === "professionalSetup" || screen === "professionalHome";
 
@@ -173,6 +176,15 @@ export default function App() {
             />
           ) : screen === "clientAds" ? (
             <ClientAdsPage
+              onContractService={(service) => {
+                setContractedClientServices((current) => {
+                  if (current.some((item) => item.id === service.id)) {
+                    return current;
+                  }
+
+                  return [service, ...current];
+                });
+              }}
               onNavigate={(tab) => openClientTab(tab, "clientAds")}
               onBack={() => setScreen("clientHome")}
               onProfilePress={() => openAccountProfile("clientAds")}
@@ -186,6 +198,14 @@ export default function App() {
             />
           ) : screen === "clientWork" ? (
             <ClientMyWorkPage
+              extraServices={contractedClientServices}
+              onChangeExtraServiceStatus={(id, status) => {
+                setContractedClientServices((current) =>
+                  current.map((service) =>
+                    service.id === id ? { ...service, status } : service,
+                  ),
+                );
+              }}
               onNavigate={(tab) => openClientTab(tab)}
               onProfilePress={() => openAccountProfile("clientHome")}
               onOpenDetail={(service) => {

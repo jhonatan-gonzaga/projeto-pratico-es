@@ -195,11 +195,15 @@ function ServiceCard({
 }
 
 export function ClientMyWorkPage({
+  extraServices = [],
+  onChangeExtraServiceStatus,
   onNavigate,
   onOpenDetail,
   onProfilePress,
   onBack,
 }: {
+  extraServices?: ClientWorkService[];
+  onChangeExtraServiceStatus?: (id: string, status: ClientWorkStatusKey) => void;
   onNavigate?: (key: ClientNavKey) => void;
   onOpenDetail?: (service: ClientWorkService) => void;
   onProfilePress?: () => void;
@@ -210,6 +214,11 @@ export function ClientMyWorkPage({
   const [activeMessageProfessional, setActiveMessageProfessional] = useState<string | null>(null);
 
   const handleChangeStatus = (id: string, status: ClientWorkStatusKey) => {
+    if (extraServices.some((service) => service.id === id)) {
+      onChangeExtraServiceStatus?.(id, status);
+      return;
+    }
+
     setServices((current) => current.map((service) => (service.id === id ? { ...service, status } : service)));
   };
 
@@ -217,9 +226,11 @@ export function ClientMyWorkPage({
     setFilter((current) => (current === key ? null : key));
   };
 
-  const countByStatus = (key: FilterKey) => services.filter((service) => service.status === key).length;
+  const allServices = [...extraServices, ...services];
 
-  const visibleServices = filter ? services.filter((service) => service.status === filter) : services;
+  const countByStatus = (key: FilterKey) => allServices.filter((service) => service.status === key).length;
+
+  const visibleServices = filter ? allServices.filter((service) => service.status === filter) : allServices;
 
   if (activeMessageProfessional) {
     return (

@@ -69,14 +69,36 @@ const reviews = [
   },
 ];
 
+export type ClientProfessionalProfile = {
+  about?: string;
+  avatarUri: string;
+  dailyRate?: string;
+  name: string;
+  neighborhood?: string;
+  role: string;
+};
+
+const defaultProfessionalProfile: ClientProfessionalProfile = {
+  about:
+    "Sou Jhon Souza, pintor profissional com mais de 10 anos de experiência em pintura residencial e comercial. Transformo ambientes com acabamento limpo, respeito aos prazos e atendimento dedicado.",
+  avatarUri:
+    "https://storage.googleapis.com/banani-avatars/avatar/male/35-50/European/0",
+  dailyRate: "R$ 200,00",
+  name: "Jhon Souza",
+  neighborhood: "Centro",
+  role: "Pintor",
+};
+
 export function ClientProfilePage({
   onBack,
   onNavigate,
   onProfilePress,
+  professional = defaultProfessionalProfile,
 }: {
   onBack: () => void;
   onNavigate?: (key: ClientNavKey) => void;
   onProfilePress?: () => void;
+  professional?: ClientProfessionalProfile;
 }) {
   const [isShowingPortfolio, setIsShowingPortfolio] = useState(false);
   const [isViewingProjectResult, setIsViewingProjectResult] = useState(false);
@@ -143,16 +165,16 @@ export function ClientProfilePage({
         <View className="items-center gap-2">
           <View className="rounded-full overflow-hidden border-[3px] border-primary">
             <Image
-              source={{ uri: "https://storage.googleapis.com/banani-avatars/avatar/male/35-50/European/0" }}
+              source={{ uri: professional.avatarUri }}
               className="h-24 w-24"
               resizeMode="cover"
-              accessibilityLabel="Foto do profissional"
+              accessibilityLabel={`Foto de ${professional.name}`}
             />
           </View>
 
           <View className="text-center">
-            <Text className="text-xl font-bold text-foreground">Jhon Souza</Text>
-            <Text className="text-sm text-muted-foreground">Pintor</Text>
+            <Text className="text-xl font-bold text-foreground">{professional.name}</Text>
+            <Text className="text-sm text-muted-foreground">{professional.role}</Text>
           </View>
 
           <View className="mt-1 flex-row w-full gap-3">
@@ -176,12 +198,12 @@ export function ClientProfilePage({
               <View className="flex-row items-center gap-1">
                 <Ionicons name="location-outline" size={14} color="#b94b50" />
               </View>
-              <Text className="text-xs text-muted-foreground">Centro</Text>
+              <Text className="text-xs text-muted-foreground">{professional.neighborhood ?? "Centro"}</Text>
             </View>
           </View>
 
           <Text className="text-xl font-bold text-primary mt-1">
-            R$ 200,00
+            {professional.dailyRate ?? "R$ 200,00"}
             <Text className="text-sm font-medium text-muted-foreground">/dia</Text>
           </Text>
 
@@ -224,7 +246,8 @@ export function ClientProfilePage({
             <Text className="text-sm font-bold text-foreground">Sobre mim</Text>
           </View>
           <Text className="text-sm leading-relaxed text-muted-foreground">
-            Sou Jhon Souza, pintor profissional com mais de 10 anos de experiência em pintura residencial e comercial. Transformo ambientes com acabamento limpo, respeito aos prazos e atendimento dedicado.
+            {professional.about ??
+              `${professional.name} atua como ${professional.role.toLowerCase()} com experiência em serviços residenciais, atendimento dedicado e compromisso com prazos.`}
           </Text>
         </View>
 
