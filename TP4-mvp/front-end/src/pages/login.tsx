@@ -1,30 +1,18 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
-import { Alert, Image, Pressable, Text, TextInput, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
 import {
-  AccountRow,
   BrandLogo,
-  Divider,
   Field,
-  PermissionItem,
-  ProfileCard,
-  ProfileInfoField,
-  SocialButtons,
 } from "../components/app-components";
 import type { ValidationStatus } from "../components/app-components";
 import {
-  formatBRPhone,
   isValidEmail,
-  isValidName,
   isValidPassword,
-  isValidPhone,
 } from "../services/validators";
-
-const logo = require("../../assets/logotipo.png");
-
-type ProfileType = "cliente" | "profissional";
+import { ApiError, api } from "../services/api";
 
 const validationStatus = (
   isTouched: boolean,
@@ -39,18 +27,25 @@ const validationStatus = (
 
 export function LoginScreen({
   onCreateAccount,
-  onGoogle,
-  onPhone,
+  onOpenPrivacy,
+  onOpenTerms,
   onSuccess,
 }: {
   onCreateAccount: () => void;
-  onGoogle: () => void;
-  onPhone: () => void;
+  onOpenPrivacy: () => void;
+  onOpenTerms: () => void;
   onSuccess: () => void;
 }) {
-  const [email, setEmail] = useState("joao.silva@email.com");
-  const [password, setPassword] = useState("conecta123");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [temporaryPassword, setTemporaryPassword] = useState<string | null>(null);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isRecoveringPassword, setIsRecoveringPassword] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [forgotError, setForgotError] = useState<string | null>(null);
   const [touched, setTouched] = useState({
     email: false,
     password: false,
@@ -59,6 +54,53 @@ export function LoginScreen({
   const emailIsValid = isValidEmail(email);
   const passwordIsValid = isValidPassword(password);
   const loginIsValid = emailIsValid && passwordIsValid;
+
+  const handleLogin = async () => {
+    if (!loginIsValid || isSubmitting) {
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      await api.login(email, password);
+      onSuccess();
+    } catch (error) {
+      setSubmitError(
+        error instanceof ApiError
+          ? error.message
+          : "Nao foi possivel entrar agora.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+  const handleForgotPassword = async () => {
+    if (!isValidEmail(forgotEmail) || isRecoveringPassword) {
+      setForgotError("Informe o e-mail cadastrado.");
+      return;
+    }
+
+    setIsRecoveringPassword(true);
+    setForgotError(null);
+    setTemporaryPassword(null);
+
+    try {
+      const response = await api.forgotPassword(forgotEmail);
+      setTemporaryPassword(response.temporaryPassword);
+      setEmail(forgotEmail);
+      setPassword(response.temporaryPassword);
+    } catch (error) {
+      setForgotError(
+        error instanceof ApiError
+          ? error.message
+          : "Nao foi possivel recuperar a senha.",
+      );
+    } finally {
+      setIsRecoveringPassword(false);
+    }
+  };
 
   return (
     <View className="relative min-h-[812px] w-full max-w-[480px] overflow-hidden bg-background">
@@ -139,26 +181,74 @@ export function LoginScreen({
           />
         </View>
 
-        <Pressable className="-mt-1 self-end" accessibilityRole="button">
+        <Pressable
+          onPress={() => setShowForgotPassword((current) => !current)}
+          className="-mt-1 self-end"
+          accessibilityRole="button"
+        >
           <Text className="text-[13px] font-semibold text-primary">
             Esqueci minha senha
           </Text>
         </Pressable>
 
+        {showForgotPassword ? (
+          <View className="gap-3 rounded-[16px] border border-input-border bg-background p-4">
+            <Field
+              label="E-mail cadastrado"
+              icon="mail-outline"
+              value={forgotEmail}
+              onChangeText={setForgotEmail}
+              keyboardType="email-address"
+              autoComplete="email"
+              placeholder="seu@email.com"
+              status={forgotEmail ? validationStatus(true, isValidEmail(forgotEmail)) : "default"}
+              helperText={
+                forgotEmail && !isValidEmail(forgotEmail)
+                  ? "Digite um e-mail valido."
+                  : undefined
+              }
+            />
+            <Pressable
+              onPress={handleForgotPassword}
+              disabled={isRecoveringPassword}
+              className="min-h-[46px] items-center justify-center rounded-[14px] bg-primary px-4"
+              accessibilityRole="button"
+            >
+              <Text className="text-sm font-bold text-white">
+                {isRecoveringPassword ? "Gerando..." : "Gerar senha temporaria"}
+              </Text>
+            </Pressable>
+            {temporaryPassword ? (
+              <Text className="text-xs leading-5 text-muted-foreground">
+                Senha temporaria:{" "}
+                <Text className="font-bold text-primary">{temporaryPassword}</Text>
+              </Text>
+            ) : null}
+            {forgotError ? (
+              <Text className="text-xs font-semibold text-primary">{forgotError}</Text>
+            ) : null}
+          </View>
+        ) : null}
+
         <Pressable
-          disabled={!loginIsValid}
-          onPress={onSuccess}
+          disabled={!loginIsValid || isSubmitting}
+          onPress={handleLogin}
           className={`min-h-[58px] flex-row items-center justify-center gap-2.5 rounded-full px-6 shadow-lg shadow-primary/40 ${
-            loginIsValid ? "bg-primary" : "bg-[#d7a0a3]"
+            loginIsValid && !isSubmitting ? "bg-primary" : "bg-[#d7a0a3]"
           }`}
           accessibilityRole="button"
         >
-          <Text className="text-base font-bold text-white">Entrar</Text>
+          <Text className="text-base font-bold text-white">
+            {isSubmitting ? "Entrando..." : "Entrar"}
+          </Text>
           <Ionicons name="arrow-forward" size={18} color="#ffffff" />
         </Pressable>
 
-        <Divider />
-        <SocialButtons onGoogle={onGoogle} onPhone={onPhone} />
+        {submitError ? (
+          <Text className="text-center text-xs font-semibold text-primary">
+            {submitError}
+          </Text>
+        ) : null}
       </View>
 
       <View className="z-10 items-center gap-2.5 px-6 pb-7 pt-5">
@@ -169,15 +259,24 @@ export function LoginScreen({
           </Text>
         </Pressable>
         <Text className="text-center text-xs leading-5 text-muted-foreground">
-          Ao entrar, voce concorda com nossos{" "}
-          <Text className="font-semibold text-primary">Termos de Uso</Text> e{" "}
-          <Text className="font-semibold text-primary">
-            Politica de Privacidade
-          </Text>
-          .
+          Ao entrar, voce concorda com nossos
+        </Text>
+        <View className="flex-row flex-wrap items-center justify-center gap-x-1">
+          <Pressable onPress={onOpenTerms} accessibilityRole="button">
+            <Text className="text-xs font-semibold text-primary">Termos de Uso</Text>
+          </Pressable>
+          <Text className="text-xs text-muted-foreground">e</Text>
+          <Pressable onPress={onOpenPrivacy} accessibilityRole="button">
+            <Text className="text-xs font-semibold text-primary">
+              Politica de Privacidade
+            </Text>
+          </Pressable>
+          <Text className="text-xs text-muted-foreground">.</Text>
+        </View>
+        <Text className="text-center text-xs leading-5 text-muted-foreground">
+          Versao 1.0.0
         </Text>
       </View>
     </View>
   );
 }
-

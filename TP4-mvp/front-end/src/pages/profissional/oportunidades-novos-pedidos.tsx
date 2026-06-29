@@ -18,7 +18,7 @@ export function OportunidadesNovosPedidosScreen({
     <View className="pb-2">
       {requests.map((request) => (
         <NewRequestCard
-          key={request.title}
+          key={request.id ?? request.title}
           request={request}
           onAccept={() => onAccept(request)}
           onDetails={() => onDetails(request)}

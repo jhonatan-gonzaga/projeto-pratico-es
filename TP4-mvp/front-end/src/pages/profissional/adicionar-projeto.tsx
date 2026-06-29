@@ -6,6 +6,7 @@ import { Image, Pressable, ScrollView, Text, TextInput, View } from "react-nativ
 import { professionalServices, projectItems, serviceRequests } from "../../components/profissional/data";
 import { formatBRPhone } from "../../components/profissional/utils";
 import type { ProfessionalArea, ProfessionalTab, ProjectItem } from "../../components/profissional/types";
+import { pickAndUploadImage } from "../../services/image-upload";
 import { getProjectFormErrors, isRequiredText } from "../../services/validators";
 import {
   ChoiceChip,
@@ -34,8 +35,8 @@ import {
   SetupSection,
   SetupTextField,
 } from "../../components/profissional/components";
-
 import { PhotoDetailsScreen } from "./detalhes-foto";
+
 export function AddProjectScreen({
   onBack,
   onProfilePress,
@@ -48,7 +49,11 @@ export function AddProjectScreen({
   const [title, setTitle] = useState("");
   const [neighborhood, setNeighborhood] = useState("");
   const [details, setDetails] = useState("");
-  const [isEditingPhoto, setIsEditingPhoto] = useState(false);
+  const [images, setImages] = useState<NonNullable<ProjectItem["images"]>>([]);
+  const [editingPhotoIndex, setEditingPhotoIndex] = useState<number | null>(null);
+  const [isEditingPhotoDetails, setIsEditingPhotoDetails] = useState(false);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [touched, setTouched] = useState({
     details: false,
@@ -104,16 +109,65 @@ export function AddProjectScreen({
     onSave({
       title: title.trim(),
       location: neighborhood.trim(),
+      description: details.trim(),
       image:
-        "https://storage.googleapis.com/banani-generated-images/generated-images/3a22084a-7d43-47ce-bda1-718b62bd262d.jpg",
+        images.find((image) => image.type === "COVER")?.url ??
+        images[0]?.url ??
+        "",
+      imageType: images.find((image) => image.type === "COVER")?.type ?? images[0]?.type,
+      images,
     });
   };
+  const handlePickImage = async () => {
+    setIsUploadingImage(true);
+    setUploadError(null);
 
-  if (isEditingPhoto) {
+    try {
+      const uploadedUrl = await pickAndUploadImage();
+
+      if (uploadedUrl) {
+        const nextIndex = images.length;
+        setImages((current) => [
+          ...current,
+          {
+            url: uploadedUrl,
+            type: current.length === 0 ? "COVER" : "GENERAL",
+          },
+        ]);
+        setEditingPhotoIndex(nextIndex);
+        setIsEditingPhotoDetails(true);
+      }
+    } catch (error) {
+      setUploadError(
+        error instanceof Error ? error.message : "Nao foi possivel enviar a foto.",
+      );
+    } finally {
+      setIsUploadingImage(false);
+    }
+  };
+
+  const editingImage =
+    editingPhotoIndex !== null ? images[editingPhotoIndex] : undefined;
+
+  if (isEditingPhotoDetails && editingImage) {
     return (
       <PhotoDetailsScreen
-        onBack={() => setIsEditingPhoto(false)}
+        imageUri={editingImage.url}
+        onBack={() => setIsEditingPhotoDetails(false)}
         onProfilePress={onProfilePress}
+        onSave={(type) => {
+          setImages((current) =>
+            current.map((image, index) => {
+              if (type === "COVER" && index !== editingPhotoIndex) {
+                return image.type === "COVER" ? { ...image, type: "GENERAL" } : image;
+              }
+
+              return index === editingPhotoIndex ? { ...image, type } : image;
+            }),
+          );
+          setIsEditingPhotoDetails(false);
+          setEditingPhotoIndex(null);
+        }}
       />
     );
   }
@@ -194,18 +248,6 @@ export function AddProjectScreen({
               placeholderTextColor="#8a8a96"
               accessibilityLabel="Detalhes do projeto"
             />
-            <Pressable
-              onPress={() =>
-                setDetails(
-                  "Texto gerado por audio simulado: reforma realizada com acabamento, revisao eletrica e pintura do ambiente.",
-                )
-              }
-              className="absolute bottom-3 right-3 h-8 w-8 items-center justify-center rounded-full bg-card shadow-sm"
-              accessibilityRole="button"
-              accessibilityLabel="Gravar audio"
-            >
-              <Ionicons name="mic-outline" size={16} color="#b94b50" />
-            </Pressable>
           </View>
           {fieldError("details") ? (
             <Text className="px-1 text-xs leading-4 text-[#dc2626]">
@@ -217,17 +259,36 @@ export function AddProjectScreen({
         <ProjectSection icon="image-outline" title="Fotos do Projeto">
           <View className="mb-1 flex-row items-start justify-between">
             <Text className="text-sm font-bold text-foreground">
-              1 foto adicionada
+              {images.length === 1
+                ? "1 foto adicionada"
+                : `${images.length} fotos adicionadas`}
             </Text>
             <View className="rounded-full bg-[#f5e8e9] px-2 py-0.5">
-              <Text className="text-xs font-semibold text-primary">1/10</Text>
+              <Text className="text-xs font-semibold text-primary">
+                {images.length}/10
+              </Text>
             </View>
           </View>
           <Text className="mb-3 text-xs leading-5 text-muted-foreground">
             Voce pode adicionar mais imagens do mesmo projeto para mostrar
             outros angulos e detalhes.
           </Text>
-          <ProjectPhotoGrid onEditPhoto={() => setIsEditingPhoto(true)} />
+          <ProjectPhotoGrid
+            images={images}
+            onAddPhoto={handlePickImage}
+            onEditPhoto={(index) => {
+              setEditingPhotoIndex(index);
+              setIsEditingPhotoDetails(true);
+            }}
+          />
+          {isUploadingImage ? (
+            <Text className="text-xs text-muted-foreground">Enviando foto...</Text>
+          ) : null}
+          {uploadError ? (
+            <Text className="px-1 text-xs leading-4 text-[#dc2626]">
+              {uploadError}
+            </Text>
+          ) : null}
         </ProjectSection>
       </ScrollView>
 

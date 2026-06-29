@@ -10,6 +10,7 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
+    "seed:categories": "node prisma/seed-categories.js",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -31,6 +32,7 @@
     "@nestjs/testing": "^10.4.15",
     "@types/bcrypt": "^5.0.2",
     "@types/express": "^5.0.6",
+    "@types/multer": "^2.1.0",
     "@types/node": "^22.10.2",
     "prisma": "^6.1.0",
     "typescript": "^5.7.2"
