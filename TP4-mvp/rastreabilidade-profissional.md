@@ -5,7 +5,7 @@ Para um resumo das telas e suas US relacionadas, favor verificar ```rastreabilid
 
 ---
 
-### US27 - Validação de acesso via código utilizando celular da persona Profissional.
+### ([#27](https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/27)) - Validação de acesso via código utilizando celular da persona Profissional.
 
 Telas relacionadas:
 
@@ -13,7 +13,7 @@ Telas relacionadas:
 
 ---
 
-### US28 - Criação de perfil na plataforma da persona Profissional.
+### ([#28](https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/28)) - Criação de perfil na plataforma da persona Profissional.
 
 Telas relacionadas:
 
@@ -27,7 +27,7 @@ Telas relacionadas:
 
 ---
 
-### US29 - Visualização de serviços disponíveis da persona Profissional.
+### ([#29](https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/29)) - Visualização de serviços disponíveis da persona Profissional.
 
 Telas relacionadas:
 
@@ -36,7 +36,7 @@ Telas relacionadas:
 
 ---
 
-### US30 - Confirmação de Fechamento de acordo entre a persona Cliente para Profissional.
+### ([#30](https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/30)) - Confirmação de Fechamento de acordo entre a persona Cliente para Profissional.
 
 Telas relacionadas:
 
@@ -44,7 +44,7 @@ Telas relacionadas:
 
 ---
 
-### US31 - Finalização de Serviço da persona Profissional.
+### ([#31](https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/31)) - Finalização de Serviço da persona Profissional.
 
 Telas relacionadas:
 
@@ -52,7 +52,7 @@ Telas relacionadas:
 
 ---
 
-### US35 - Envio de contraproposta da persona Profissional para Cliente.
+### ([#35](https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/35)) - Envio de contraproposta da persona Profissional para Cliente.
 
 Telas relacionadas:
 
@@ -60,7 +60,7 @@ Telas relacionadas:
 
 ---
 
-### US36 - Visualização própria das mensagens de contraproposta da persona Profissional.
+### ([#36](https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/36)) - Visualização própria das mensagens de contraproposta da persona Profissional.
 
 Telas relacionadas:
 
@@ -68,7 +68,7 @@ Telas relacionadas:
 
 ---
 
-### US37 - Cancelamento próprio da candidatura da persona Profissional para a persona Cliente.
+### ([#37](https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/37)) - Cancelamento próprio da candidatura da persona Profissional para a persona Cliente.
 
 Telas relacionadas:
 
@@ -76,7 +76,7 @@ Telas relacionadas:
 
 ---
 
-### US38 - Visualização dos serviços via menu dashboard da persona Profissional.
+### ([#38](https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/38)) - Visualização dos serviços via menu dashboard da persona Profissional.
 
 Telas relacionadas:
 
@@ -85,7 +85,7 @@ Telas relacionadas:
 
 ---
 
-### US39 - Notificação da mensagem do Cliente no chat para a persona Profissional.
+### ([#39](https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/39)) - Notificação da mensagem do Cliente no chat para a persona Profissional.
 
 Telas relacionadas:
 
@@ -93,7 +93,7 @@ Telas relacionadas:
 
 ---
 
-### US40 - Visualização de informações do cliente da persona do Profissional.
+### ([#40](https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/40)) - Visualização de informações do cliente da persona do Profissional.
 
 Telas relacionadas:
 
@@ -101,7 +101,7 @@ Telas relacionadas:
 
 ---
 
-### US41 - Chat de conversas para a persona Profissional e Cliente.
+### ([#41](https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/41)) - Chat de conversas para a persona Profissional e Cliente.
 
 Telas relacionadas:
 
@@ -109,7 +109,7 @@ Telas relacionadas:
 
 ---
 
-US141 - Recebimento de notificações de trabalhos compatíveis da persona Profissional.
+### ([#141](https://github.com/jhonatan-gonzaga/projeto-pratico-es/issues/141)) - Recebimento de notificações de trabalhos compatíveis da persona Profissional.
 Telas relacionadas:
 
 * notificacoes.tsx (NotificationsScreen) - central de notificações com toggle para ativar ou desativar alertas de novos anúncios de trabalho compatíveis com o perfil do Profissional.
