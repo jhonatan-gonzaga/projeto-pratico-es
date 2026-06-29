@@ -6,8 +6,8 @@ import { Image, Pressable, ScrollView, Text, TextInput, View } from "react-nativ
 import { professionalServices, projectItems, serviceRequests } from "../../components/profissional/data";
 import { formatBRPhone } from "../../components/profissional/utils";
 import type { ProfessionalArea, ProfessionalTab, ProjectItem } from "../../components/profissional/types";
-import { pickAndUploadImage } from "../../services/image-upload";
 import { getProjectFormErrors, isRequiredText } from "../../services/validators";
+import { useProjectImageUpload } from "../../services/use-project-image-upload";
 import {
   ChoiceChip,
   CustomerAvatar,
@@ -62,8 +62,6 @@ export function EditProjectScreen({
   );
   const [editingPhotoIndex, setEditingPhotoIndex] = useState<number | null>(null);
   const [isEditingPhotoDetails, setIsEditingPhotoDetails] = useState(false);
-  const [isUploadingImage, setIsUploadingImage] = useState(false);
-  const [uploadError, setUploadError] = useState<string | null>(null);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [touched, setTouched] = useState({
@@ -130,33 +128,14 @@ export function EditProjectScreen({
       images,
     });
   };
-  const handlePickImage = async () => {
-    setIsUploadingImage(true);
-    setUploadError(null);
-
-    try {
-      const uploadedUrl = await pickAndUploadImage();
-
-      if (uploadedUrl) {
-        const nextIndex = images.length;
-        setImages((current) => [
-          ...current,
-          {
-            url: uploadedUrl,
-            type: current.length === 0 ? "COVER" : "GENERAL",
-          },
-        ]);
-        setEditingPhotoIndex(nextIndex);
-        setIsEditingPhotoDetails(true);
-      }
-    } catch (error) {
-      setUploadError(
-        error instanceof Error ? error.message : "Nao foi possivel enviar a foto.",
-      );
-    } finally {
-      setIsUploadingImage(false);
-    }
-  };
+  const { isUploadingImage, uploadError, handlePickImage } = useProjectImageUpload(
+    images,
+    setImages,
+    (nextIndex) => {
+      setEditingPhotoIndex(nextIndex);
+      setIsEditingPhotoDetails(true);
+    },
+  );
 
   const editingImage =
     editingPhotoIndex !== null ? images[editingPhotoIndex] : undefined;

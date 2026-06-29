@@ -2,6 +2,7 @@ import { BadRequestException, ForbiddenException, Injectable, NotFoundException 
 import { ContractStatus, DirectRequestStatus, NotificationType, UserRole } from '@prisma/client';
 import { optionalFutureDate } from '../../common/utils/date';
 import { PrismaService } from '../../prisma/prisma.service';
+import { contractInclude } from '../contracts/contract-include';
 import { CreateDirectRequestDto } from './dto/create-direct-request.dto';
 
 const directRequestInclude = {
@@ -144,20 +145,7 @@ export class DirectRequestsService {
       });
       return tx.contract.findUniqueOrThrow({
         where: { id: contract.id },
-        include: {
-          client: { include: { user: { select: { id: true, name: true, phone: true, avatarUrl: true } } } },
-          professional: {
-            include: {
-              user: { select: { id: true, name: true, phone: true, avatarUrl: true } },
-              specialties: { include: { category: true } },
-            },
-          },
-          ad: { include: { category: true, images: true } },
-          application: true,
-          directRequest: { include: { images: true } },
-          conversations: { include: { messages: { include: { sender: { select: { id: true, name: true } } } } } },
-          review: true,
-        },
+        include: contractInclude,
       });
     });
   }

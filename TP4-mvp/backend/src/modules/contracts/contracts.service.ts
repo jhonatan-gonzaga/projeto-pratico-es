@@ -1,33 +1,19 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { ContractStatus, NotificationType } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { contractInclude } from './contract-include';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { ReplyReviewDto } from './dto/reply-review.dto';
 import { ReportReviewDto } from './dto/report-review.dto';
 import { UpdateContractStatusDto } from './dto/update-contract-status.dto';
 
-const contractInclude = {
-  client: { include: { user: { select: { id: true, name: true, phone: true, avatarUrl: true } } } },
-  professional: {
-    include: {
-      user: { select: { id: true, name: true, phone: true, avatarUrl: true } },
-      specialties: { include: { category: true } },
-    },
-  },
-  ad: { include: { category: true, images: true } },
-  application: true,
-  directRequest: { include: { images: true } },
-  statusHistory: { orderBy: { createdAt: 'desc' as const } },
-  conversations: {
-    include: {
-      messages: {
-        include: { sender: { select: { id: true, name: true } } },
-        orderBy: { createdAt: 'desc' as const },
-        take: 1,
-      },
-    },
-  },
-  review: true,
+const allowedStatusTransitions: Record<ContractStatus, ContractStatus[]> = {
+  PENDING_START: [ContractStatus.IN_PROGRESS, ContractStatus.COMPLETED, ContractStatus.CANCELED],
+  IN_PROGRESS: [ContractStatus.WAITING_CLIENT_APPROVAL, ContractStatus.COMPLETED, ContractStatus.CANCELED],
+  WAITING_CLIENT_APPROVAL: [ContractStatus.COMPLETED, ContractStatus.REOPENED],
+  COMPLETED: [ContractStatus.REOPENED],
+  REOPENED: [ContractStatus.IN_PROGRESS, ContractStatus.CANCELED],
+  CANCELED: [],
 };
 
 @Injectable()
@@ -158,18 +144,7 @@ export class ContractsService {
   }
 
   async replyReview(userId: string, id: string, dto: ReplyReviewDto) {
-    const review = await this.prisma.review.findUnique({
-      where: { id },
-      include: { professional: true },
-    });
-
-    if (!review) {
-      throw new NotFoundException('Avaliacao nao encontrada.');
-    }
-
-    if (review.professional.userId !== userId) {
-      throw new ForbiddenException('Somente o profissional avaliado pode responder.');
-    }
+    await this.getOwnReview(userId, id, 'Somente o profissional avaliado pode responder.');
 
     return this.prisma.review.update({
       where: { id },
@@ -181,18 +156,7 @@ export class ContractsService {
   }
 
   async reportReview(userId: string, id: string, dto: ReportReviewDto) {
-    const review = await this.prisma.review.findUnique({
-      where: { id },
-      include: { professional: true },
-    });
-
-    if (!review) {
-      throw new NotFoundException('Avaliacao nao encontrada.');
-    }
-
-    if (review.professional.userId !== userId) {
-      throw new ForbiddenException('Somente o profissional avaliado pode reportar.');
-    }
+    await this.getOwnReview(userId, id, 'Somente o profissional avaliado pode reportar.');
 
     return this.prisma.review.update({
       where: { id },
@@ -219,6 +183,23 @@ export class ContractsService {
     }
 
     return contract;
+  }
+
+  private async getOwnReview(userId: string, id: string, forbiddenMessage: string) {
+    const review = await this.prisma.review.findUnique({
+      where: { id },
+      include: { professional: true },
+    });
+
+    if (!review) {
+      throw new NotFoundException('Avaliacao nao encontrada.');
+    }
+
+    if (review.professional.userId !== userId) {
+      throw new ForbiddenException(forbiddenMessage);
+    }
+
+    return review;
   }
 
   private async ensureMissingConversations(userId: string) {
@@ -250,24 +231,7 @@ export class ContractsService {
   }
 
   private assertStatusTransition(current: ContractStatus, next: ContractStatus) {
-    const allowed: Record<ContractStatus, ContractStatus[]> = {
-      PENDING_START: [
-        ContractStatus.IN_PROGRESS,
-        ContractStatus.COMPLETED,
-        ContractStatus.CANCELED,
-      ],
-      IN_PROGRESS: [
-        ContractStatus.WAITING_CLIENT_APPROVAL,
-        ContractStatus.COMPLETED,
-        ContractStatus.CANCELED,
-      ],
-      WAITING_CLIENT_APPROVAL: [ContractStatus.COMPLETED, ContractStatus.REOPENED],
-      COMPLETED: [ContractStatus.REOPENED],
-      REOPENED: [ContractStatus.IN_PROGRESS, ContractStatus.CANCELED],
-      CANCELED: [],
-    };
-
-    if (!allowed[current].includes(next)) {
+    if (!allowedStatusTransitions[current].includes(next)) {
       throw new BadRequestException(`Transicao de status invalida: ${current} -> ${next}.`);
     }
   }

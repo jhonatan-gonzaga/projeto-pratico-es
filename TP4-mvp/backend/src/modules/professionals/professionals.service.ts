@@ -23,6 +23,16 @@ const professionalInclude = {
   portfolio: { include: { images: true } },
 } satisfies Prisma.ProfessionalProfileInclude;
 
+const professionalWithReviewsInclude = {
+  ...professionalInclude,
+  reviews: {
+    include: {
+      client: { include: { user: { select: { id: true, name: true } } } },
+    },
+    orderBy: { createdAt: 'desc' as const },
+  },
+} satisfies Prisma.ProfessionalProfileInclude;
+
 @Injectable()
 export class ProfessionalsService {
   constructor(private readonly prisma: PrismaService) {}
@@ -71,15 +81,7 @@ export class ProfessionalsService {
   async findOne(id: string) {
     const professional = await this.prisma.professionalProfile.findUnique({
       where: { id },
-      include: {
-        ...professionalInclude,
-        reviews: {
-          include: {
-            client: { include: { user: { select: { id: true, name: true } } } },
-          },
-          orderBy: { createdAt: 'desc' },
-        },
-      },
+      include: professionalWithReviewsInclude,
     });
 
     if (!professional) {
@@ -161,15 +163,7 @@ export class ProfessionalsService {
   async findMe(userId: string) {
     const profile = await this.prisma.professionalProfile.findUnique({
       where: { userId },
-      include: {
-        ...professionalInclude,
-        reviews: {
-          include: {
-            client: { include: { user: { select: { id: true, name: true } } } },
-          },
-          orderBy: { createdAt: 'desc' },
-        },
-      },
+      include: professionalWithReviewsInclude,
     });
 
     if (!profile) {

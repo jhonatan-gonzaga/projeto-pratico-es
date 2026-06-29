@@ -1,5 +1,6 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { ApplicationStatus, ContractStatus, NotificationType, ServiceAdStatus } from '@prisma/client';
+import { contractInclude } from '../contracts/contract-include';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { UpdateApplicationDto } from './dto/update-application.dto';
@@ -176,20 +177,7 @@ export class ApplicationsService {
       });
       return tx.contract.findUniqueOrThrow({
         where: { id: created.id },
-        include: {
-          client: { include: { user: { select: { id: true, name: true, phone: true, avatarUrl: true } } } },
-          professional: {
-            include: {
-              user: { select: { id: true, name: true, phone: true, avatarUrl: true } },
-              specialties: { include: { category: true } },
-            },
-          },
-          ad: { include: { category: true, images: true } },
-          application: true,
-          directRequest: { include: { images: true } },
-          conversations: { include: { messages: { include: { sender: { select: { id: true, name: true } } } } } },
-          review: true,
-        },
+        include: contractInclude,
       });
     });
 
