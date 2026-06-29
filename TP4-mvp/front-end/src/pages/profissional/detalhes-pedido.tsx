@@ -52,6 +52,7 @@ export function RequestDetailsScreen({
   const [proposalSent, setProposalSent] = useState(false);
   const [proposalTouched, setProposalTouched] = useState(false);
   const [proposalSubmitted, setProposalSubmitted] = useState(false);
+  const [confirmingReject, setConfirmingReject] = useState(false);
   const proposalIsValid = isValidBRMoney(proposedValue);
   const showProposalError =
     (proposalTouched || proposalSubmitted) && !proposalIsValid;
@@ -100,19 +101,11 @@ export function RequestDetailsScreen({
             </Text>
           </View>
           <View className="flex-row flex-wrap gap-2">
-            {[
-              "Pedreiro",
-              "Eletricista",
-              "Pintor",
-              "Encanador",
-              "Ajudante",
-              "Ar Condicionado",
-              "Carpinteiro",
-            ].map((category) => (
+            {(request.category?.split(",").map((item) => item.trim()).filter(Boolean) ?? []).map((category) => (
               <DetailTag
                 key={category}
                 label={category}
-                active={category === "Pintor"}
+                active
               />
             ))}
           </View>
@@ -219,37 +212,39 @@ export function RequestDetailsScreen({
               Imagens do Servico
             </Text>
           </View>
-          <Image
-            source={{
-              uri: "https://storage.googleapis.com/banani-generated-images/generated-images/115f5264-00fb-47c5-8131-0b9c0c0cc1f9.jpg",
-            }}
-            className="mb-2 h-[170px] w-full rounded-[12px]"
-            resizeMode="cover"
-            accessibilityLabel="Parede antes do servico"
-          />
-          <View className="flex-row gap-2">
-            <Image
-              source={{
-                uri: "https://storage.googleapis.com/banani-generated-images/generated-images/a7392f6c-4409-404d-b138-9700b3cdafb7.jpg",
-              }}
-              className="h-[92px] flex-1 rounded-[12px]"
-              resizeMode="cover"
-              accessibilityLabel="Parede pintada"
-            />
-            <Image
-              source={{
-                uri: "https://storage.googleapis.com/banani-generated-images/generated-images/8e2e8dc8-4a47-4485-a1d8-b3d82ae43a22.jpg",
-              }}
-              className="h-[92px] flex-1 rounded-[12px]"
-              resizeMode="cover"
-              accessibilityLabel="Materiais de pintura"
-            />
-          </View>
+          {request.imageUrls?.length ? (
+            <>
+              <Image
+                source={{ uri: request.imageUrls[0] }}
+                className="mb-2 h-[170px] w-full rounded-[12px]"
+                resizeMode="cover"
+                accessibilityLabel="Imagem do servico"
+              />
+              <View className="flex-row gap-2">
+                {request.imageUrls.slice(1, 3).map((url) => (
+                  <Image
+                    key={url}
+                    source={{ uri: url }}
+                    className="h-[92px] flex-1 rounded-[12px]"
+                    resizeMode="cover"
+                    accessibilityLabel="Imagem adicional do servico"
+                  />
+                ))}
+              </View>
+            </>
+          ) : (
+            <View className="h-[140px] items-center justify-center rounded-[12px] bg-[#f5e8e9]">
+              <Ionicons name="image-outline" size={34} color="#b94b50" />
+              <Text className="mt-2 text-sm font-semibold text-primary">
+                Nenhuma imagem enviada
+              </Text>
+            </View>
+          )}
         </View>
 
         <View className="flex-row gap-3">
           <Pressable
-            onPress={onReject}
+            onPress={() => setConfirmingReject(true)}
             className="min-h-[56px] flex-1 items-center justify-center rounded-[12px] bg-card shadow-sm"
             accessibilityRole="button"
           >
@@ -263,6 +258,32 @@ export function RequestDetailsScreen({
             <Text className="font-semibold text-white">Aceitar</Text>
           </Pressable>
         </View>
+        {confirmingReject ? (
+          <View className="mt-3 gap-3 rounded-[12px] border border-[#f2cdd0] bg-[#fff7f7] p-4">
+            <Text className="text-sm leading-5 text-muted-foreground">
+              Ao recusar, este pedido sai da sua lista e nao entra em seus servicos.
+              Se for um pedido direto, o cliente sera avisado.
+            </Text>
+            <View className="flex-row gap-2">
+              <Pressable
+                onPress={() => setConfirmingReject(false)}
+                className="min-h-[44px] flex-1 items-center justify-center rounded-[12px] border border-input-border bg-card"
+                accessibilityRole="button"
+              >
+                <Text className="text-sm font-semibold text-foreground">Voltar</Text>
+              </Pressable>
+              <Pressable
+                onPress={onReject}
+                className="min-h-[44px] flex-1 items-center justify-center rounded-[12px] bg-primary"
+                accessibilityRole="button"
+              >
+                <Text className="text-sm font-semibold text-white">
+                  Confirmar recusa
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+        ) : null}
       </ScrollView>
     </View>
   );

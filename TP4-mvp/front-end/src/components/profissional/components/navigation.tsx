@@ -1,6 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
+import { useEffect, useState } from "react";
 import { Image, Pressable, Text, TextInput, View } from "react-native";
 
+import { api } from "../../../services/api";
 import { statusMeta } from "../data";
 import type { IconName, ProfessionalArea, ProfessionalService, ProfessionalTab, ProjectItem, ServiceRequest, ServiceStatus } from "../types";
 
@@ -13,6 +15,14 @@ export function ProfessionalHeader({
   onBack: () => void;
   onProfilePress?: () => void;
 }) {
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    api.me()
+      .then((user) => setAvatarUrl(user.avatarUrl ?? null))
+      .catch(() => undefined);
+  }, []);
+
   return (
     <>
       <View className="flex-row items-center justify-between bg-background px-4 pb-4 pt-11">
@@ -40,7 +50,16 @@ export function ProfessionalHeader({
           accessibilityRole="button"
           accessibilityLabel="Abrir perfil"
         >
-          <Ionicons name="person" size={22} color="#b94b50" />
+          {avatarUrl ? (
+            <Image
+              source={{ uri: avatarUrl }}
+              className="h-full w-full"
+              resizeMode="cover"
+              accessibilityLabel="Foto do perfil"
+            />
+          ) : (
+            <Ionicons name="person" size={22} color="#b94b50" />
+          )}
         </Pressable>
       </View>
       <View className="h-px bg-black/5" />
@@ -67,6 +86,14 @@ export function ProfessionalTabToggle({
   activeTab: ProfessionalTab;
   onChangeTab: (tab: ProfessionalTab) => void;
 }) {
+  const [pendingRequests, setPendingRequests] = useState(0);
+
+  useEffect(() => {
+    api.inboxDirectRequestsSummary()
+      .then((summary) => setPendingRequests(summary.pendingDirectRequests))
+      .catch(() => undefined);
+  }, [activeTab]);
+
   return (
     <View className="mx-4 my-4 flex-row rounded-[16px] border border-input-border bg-card p-1">
       <Pressable
@@ -84,9 +111,11 @@ export function ProfessionalTabToggle({
         >
           Novos Pedidos
         </Text>
-        {activeTab === "requests" ? (
+        {activeTab === "requests" && pendingRequests > 0 ? (
           <View className="h-5 w-5 items-center justify-center rounded-full bg-white">
-            <Text className="text-xs font-bold text-primary">2</Text>
+            <Text className="text-xs font-bold text-primary">
+              {pendingRequests > 9 ? "9+" : pendingRequests}
+            </Text>
           </View>
         ) : null}
       </Pressable>
@@ -129,6 +158,16 @@ export function ProfessionalBottomTab({
   activeArea: ProfessionalArea;
   onSelectArea: (area: ProfessionalArea) => void;
 }) {
+  const [opportunityBadge, setOpportunityBadge] = useState(0);
+
+  useEffect(() => {
+    Promise.all([api.inboxDirectRequestsSummary(), api.unreadConversations()])
+      .then(([requests, messages]) =>
+        setOpportunityBadge(requests.pendingDirectRequests + messages.count),
+      )
+      .catch(() => undefined);
+  }, [activeArea]);
+
   const items: Array<{
     area: ProfessionalArea;
     icon: IconName;
@@ -139,7 +178,7 @@ export function ProfessionalBottomTab({
       area: "opportunities",
       icon: "hammer-outline",
       label: "Oportunidades",
-      badge: "3",
+      badge: opportunityBadge > 0 ? String(opportunityBadge) : undefined,
     },
     { area: "projects", icon: "clipboard-outline", label: "Meus Projetos" },
     { area: "settings", icon: "settings-outline", label: "Configuracoes" },
@@ -165,7 +204,7 @@ export function ProfessionalBottomTab({
               {item.badge && activeArea === item.area ? (
                 <View className="absolute -right-2 -top-1 h-4 w-4 items-center justify-center rounded-full bg-primary">
                   <Text className="text-[9px] font-bold text-white">
-                    {item.badge}
+                    {Number(item.badge) > 9 ? "9+" : item.badge}
                   </Text>
                 </View>
               ) : null}

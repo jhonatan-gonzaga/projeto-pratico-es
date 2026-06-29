@@ -1,7 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
+import { EmptyState, ErrorState, LoadingState } from "../../components/feedback-state";
 import {
   CategoryCard,
   ClientBottomNav,
@@ -10,118 +11,18 @@ import {
   ProfessionalCard,
 } from "../../components/cliente";
 import { ProjectHeader } from "../../components/profissional/components";
+import { ApiError, Category, ProfessionalProfile, api, formatMoney } from "../../services/api";
 
-const categories = [
-  {
-    key: "Pintura",
-    title: "Pintores",
-    imageUri:
-      "https://storage.googleapis.com/banani-generated-images/generated-images/4fc9aee0-066e-42e2-bdc1-f0d747e2ed03.jpg",
-  },
-  {
-    key: "Eletrica",
-    title: "Eletricistas",
-    imageUri:
-      "https://storage.googleapis.com/banani-generated-images/generated-images/702be546-1c15-437d-b5f1-fb6dbfdcb84d.jpg",
-  },
-  {
-    key: "Pedreiro",
-    title: "Pedreiros",
-    imageUri:
-      "https://storage.googleapis.com/banani-generated-images/generated-images/bddd6bdf-bc6b-4764-b242-a9379a09aeb6.jpg",
-  },
-  {
-    key: "Encanamento",
-    title: "Encanadores",
-    imageUri:
-      "https://storage.googleapis.com/banani-generated-images/generated-images/dc018ab8-9a3c-47d2-a8ab-451866dc7d1e.jpg",
-  },
-  {
-    key: "Jardinagem",
-    title: "Jardineiros",
-    imageUri:
-      "https://storage.googleapis.com/banani-generated-images/generated-images/47017bff-305f-4aa7-b64b-d81070213515.jpg",
-  },
-  {
-    key: "Montagem",
-    title: "Montadores",
-    imageUri:
-      "https://storage.googleapis.com/banani-generated-images/generated-images/25cb0462-d71b-43d5-9eb9-e76966027a00.jpg",
-  },
-];
+const fallbackCategoryImage =
+  "https://storage.googleapis.com/banani-generated-images/generated-images/25cb0462-d71b-43d5-9eb9-e76966027a00.jpg";
+function getProfessionalRole(professional: ProfessionalProfile) {
+  const categories = professional.specialties.map((item) => item.category.name);
+  return categories.length ? categories.join(", ") : "Profissional";
+}
 
-const professionals = [
-  {
-    category: "Pintura",
-    name: "Jhon Souza",
-    role: "Pintor",
-    price: "R$ 200,00",
-    priceValue: 200,
-    rating: "4.8",
-    ratingValue: 4.8,
-    avatarUri: "https://storage.googleapis.com/banani-avatars/avatar/male/35-50/European/0",
-  },
-  {
-    category: "Encanamento",
-    name: "Jonas Smith",
-    role: "Encanador",
-    price: "R$ 75,00",
-    priceValue: 75,
-    rating: "4.5",
-    ratingValue: 4.5,
-    avatarUri: "https://storage.googleapis.com/banani-avatars/avatar/male/25-35/African/1",
-  },
-  {
-    category: "Encanamento",
-    name: "Oliver da Silva",
-    role: "Encanador",
-    price: "R$ 130,00",
-    priceValue: 130,
-    rating: "4.9",
-    ratingValue: 4.9,
-    avatarUri: "https://storage.googleapis.com/banani-avatars/avatar/male/35-50/European/2",
-  },
-  {
-    category: "Jardinagem",
-    name: "Benson D.",
-    role: "Jardineiro",
-    price: "R$ 90,00",
-    priceValue: 90,
-    rating: "5.0",
-    ratingValue: 5,
-    avatarUri: "https://storage.googleapis.com/banani-avatars/avatar/male/25-35/African/3",
-  },
-  {
-    category: "Eletrica",
-    name: "Roberto Carlos",
-    role: "Eletricista",
-    price: "R$ 180,00",
-    priceValue: 180,
-    rating: "4.7",
-    ratingValue: 4.7,
-    avatarUri: "https://storage.googleapis.com/banani-avatars/avatar/male/35-50/African/3",
-  },
-  {
-    category: "Pedreiro",
-    name: "Marcos Almeida",
-    role: "Pedreiro",
-    price: "R$ 150,00",
-    priceValue: 150,
-    rating: "4.6",
-    ratingValue: 4.6,
-    avatarUri: "https://storage.googleapis.com/banani-avatars/avatar/male/25-35/Hispanic/0",
-  },
-  {
-    category: "Montagem",
-    name: "Andre Montagens",
-    role: "Montador",
-    price: "R$ 110,00",
-    priceValue: 110,
-    rating: "4.4",
-    ratingValue: 4.4,
-    avatarUri: "https://storage.googleapis.com/banani-avatars/avatar/male/25-35/South Asian/1",
-  },
-];
+function getProfessionalCategoryIds(professional: ProfessionalProfile) {
+  return professional.specialties.map((item) => item.category.id);
+}
 
 export function ClientHomePage({
   onNavigate,
@@ -130,18 +31,48 @@ export function ClientHomePage({
   onBack,
 }: {
   onNavigate?: (key: ClientNavKey) => void;
-  onOpenProfessional?: () => void;
+  onOpenProfessional?: (professionalId: string) => void;
   onProfilePress?: () => void;
   onBack?: () => void;
 }) {
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [professionals, setProfessionals] = useState<ProfessionalProfile[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [showFilters, setShowFilters] = useState(false);
   const [showAllCategories, setShowAllCategories] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState<string[]>(["Todos"]);
   const [sortBy, setSortBy] = useState("Relevancia");
   const [minPrice, setMinPrice] = useState("0");
-  const [maxPrice, setMaxPrice] = useState("500");
+  const [maxPrice, setMaxPrice] = useState("");
   const [rating, setRating] = useState("Qualquer");
+
+  const loadData = async () => {
+    setIsLoading(true);
+    setLoadError(null);
+
+    try {
+      const [categoryItems, professionalPage] = await Promise.all([
+        api.categories(),
+        api.professionals(),
+      ]);
+      setCategories(categoryItems);
+      setProfessionals(professionalPage.items);
+    } catch (error) {
+      setLoadError(
+        error instanceof ApiError
+          ? error.message
+          : "Nao foi possivel carregar profissionais.",
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    void loadData();
+  }, []);
 
   const toggleCategory = (item: string) => {
     if (item === "Todos") {
@@ -169,34 +100,48 @@ export function ClientHomePage({
   const visibleCategories = showAllCategories ? categories : categories.slice(0, 4);
   const selectedCategoryLabel = selectedCategories.includes("Todos")
     ? null
-    : selectedCategories.join(", ");
-  const filteredProfessionals = professionals
+    : categories
+        .filter((category) => selectedCategories.includes(category.id))
+        .map((category) => category.name)
+        .join(", ");
+  const filteredProfessionals = useMemo(() => professionals
     .filter((professional) => {
       const matchesCategory =
         selectedCategories.includes("Todos") ||
-        selectedCategories.includes(professional.category);
+        getProfessionalCategoryIds(professional).some((id) =>
+          selectedCategories.includes(id),
+        );
       const matchesQuery =
         !normalizedQuery ||
-        professional.name.toLowerCase().includes(normalizedQuery) ||
-        professional.role.toLowerCase().includes(normalizedQuery);
+        professional.user.name.toLowerCase().includes(normalizedQuery) ||
+        getProfessionalRole(professional).toLowerCase().includes(normalizedQuery);
+      const priceValue = Number(professional.dailyRate ?? 0);
+      const ratingValue = Number(professional.ratingAvg ?? 0);
       const matchesPrice =
-        professional.priceValue >= minPriceNumber &&
-        professional.priceValue <= maxPriceNumber;
-      const matchesRating = professional.ratingValue >= ratingMinimum;
+        priceValue >= minPriceNumber && priceValue <= maxPriceNumber;
+      const matchesRating = ratingValue >= ratingMinimum;
 
       return matchesCategory && matchesQuery && matchesPrice && matchesRating;
     })
     .sort((first, second) => {
       if (sortBy === "Menor Preco") {
-        return first.priceValue - second.priceValue;
+        return Number(first.dailyRate ?? 0) - Number(second.dailyRate ?? 0);
       }
 
       if (sortBy === "Maior Avaliacao") {
-        return second.ratingValue - first.ratingValue;
+        return Number(second.ratingAvg ?? 0) - Number(first.ratingAvg ?? 0);
       }
 
       return 0;
-    });
+    }), [
+      maxPriceNumber,
+      minPriceNumber,
+      normalizedQuery,
+      professionals,
+      ratingMinimum,
+      selectedCategories,
+      sortBy,
+    ]);
 
   return (
     <View className="relative flex-1 w-full max-w-[480px] bg-background">
@@ -288,11 +233,11 @@ export function ClientHomePage({
           >
             {visibleCategories.map((category) => (
               <CategoryCard
-                key={category.title}
-                title={category.title}
-                imageUri={category.imageUri}
-                selected={selectedCategories.includes(category.key)}
-                onPress={() => toggleCategory(category.key)}
+                key={category.id}
+                title={category.name}
+                imageUri={category.imageUrl ?? fallbackCategoryImage}
+                selected={selectedCategories.includes(category.id)}
+                onPress={() => toggleCategory(category.id)}
               />
             ))}
           </ScrollView>
@@ -315,26 +260,27 @@ export function ClientHomePage({
               </Pressable>
             ) : null}
           </View>
-          <View className="flex-row flex-wrap justify-between gap-3">
-            {filteredProfessionals.map((professional) => (
-              <ProfessionalCard
-                key={professional.name}
-                name={professional.name}
-                role={professional.role}
-                price={professional.price}
-                rating={professional.rating}
-                avatarUri={professional.avatarUri}
-                onPress={professional.name === "Jhon Souza" ? onOpenProfessional : undefined}
-              />
-            ))}
-          </View>
-          {filteredProfessionals.length === 0 ? (
-            <View className="mt-3 rounded-[16px] bg-card px-4 py-5 shadow-sm shadow-black/5">
-              <Text className="text-center text-sm font-medium text-muted-foreground">
-                Nenhum profissional encontrado nessa categoria.
-              </Text>
+          {isLoading ? (
+            <LoadingState label="Carregando profissionais..." />
+          ) : loadError ? (
+            <ErrorState message={loadError} onRetry={loadData} />
+          ) : filteredProfessionals.length === 0 ? (
+            <EmptyState message="Nenhum profissional encontrado com esses filtros." />
+          ) : (
+            <View className="flex-row flex-wrap justify-between gap-3">
+              {filteredProfessionals.map((professional) => (
+                <ProfessionalCard
+                  key={professional.id}
+                  name={professional.user.name}
+                  role={getProfessionalRole(professional)}
+                  price={formatMoney(professional.dailyRate)}
+                  rating={Number(professional.ratingAvg ?? 0).toFixed(1)}
+                  avatarUri={professional.user.avatarUrl}
+                  onPress={() => onOpenProfessional?.(professional.id)}
+                />
+              ))}
             </View>
-          ) : null}
+          )}
         </View>
       </ScrollView>
 

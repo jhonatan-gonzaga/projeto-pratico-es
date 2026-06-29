@@ -18,6 +18,9 @@
         "backgroundColor": "#fbf6f7"
       },
       "edgeToEdgeEnabled": true
-    }
+    },
+    "plugins": [
+      "@react-native-community/datetimepicker"
+    ]
   }
 }

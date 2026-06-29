@@ -38,7 +38,7 @@ const validationStatus = (
 };
 
 export function PhoneVerificationScreen({ onBack }: { onBack: () => void }) {
-  const [phone, setPhone] = useState("(11) 99999-9999");
+  const [phone, setPhone] = useState("");
   const [phoneTouched, setPhoneTouched] = useState(false);
   const phoneIsValid = isValidPhone(phone);
 
@@ -189,4 +189,3 @@ export function PhoneVerificationScreen({ onBack }: { onBack: () => void }) {
     </View>
   );
 }
-

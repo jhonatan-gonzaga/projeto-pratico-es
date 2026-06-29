@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Image, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
 import { professionalServices, projectItems, serviceRequests } from "../../components/profissional/data";
@@ -14,6 +14,8 @@ import {
   isValidPhone,
   isValidTime,
 } from "../../services/validators";
+import { ApiError, Category, api } from "../../services/api";
+import { pickAndUploadImage } from "../../services/image-upload";
 import {
   ChoiceChip,
   CustomerAvatar,
@@ -51,17 +53,22 @@ export function ProfessionalSetupScreen({
   onProfilePress: () => void;
   onSave: () => void;
 }) {
-  const [name, setName] = useState("Joao Nonato");
-  const [phone, setPhone] = useState("(92) 99123-4567");
-  const [dailyRate, setDailyRate] = useState("R$ 150");
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [dailyRate, setDailyRate] = useState("");
   const [neighborhood, setNeighborhood] = useState("");
   const [street, setStreet] = useState("");
   const [number, setNumber] = useState("");
   const [about, setAbout] = useState("");
   const [hasProfilePhoto, setHasProfilePhoto] = useState(false);
-  const [startTime, setStartTime] = useState("08:00");
-  const [endTime, setEndTime] = useState("18:00");
+  const [profilePhotoUrl, setProfilePhotoUrl] = useState<string | null>(null);
+  const [photoError, setPhotoError] = useState<string | null>(null);
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [touched, setTouched] = useState({
     about: false,
     dailyRate: false,
@@ -73,17 +80,8 @@ export function ProfessionalSetupScreen({
     startTime: false,
     street: false,
   });
-  const [specialties, setSpecialties] = useState<string[]>([
-    "Pedreiro",
-    "Pintor",
-  ]);
-  const [availableDays, setAvailableDays] = useState<string[]>([
-    "S",
-    "Q1",
-    "Q2",
-    "Sx",
-    "Sa",
-  ]);
+  const [specialties, setSpecialties] = useState<string[]>([]);
+  const [availableDays, setAvailableDays] = useState<string[]>([]);
 
   const specialtyOptions = [
     "Pedreiro",
@@ -104,6 +102,12 @@ export function ProfessionalSetupScreen({
     { id: "Sa", label: "S" },
     { id: "D", label: "D" },
   ];
+
+  useEffect(() => {
+    api.categories()
+      .then(setCategories)
+      .catch(() => setCategories([]));
+  }, []);
 
   const toggleSpecialty = (specialty: string) => {
     setSpecialties((current) =>
@@ -146,14 +150,74 @@ export function ProfessionalSetupScreen({
   const fieldError = (field: keyof typeof touched) =>
     shouldShow(field) ? errors[field] : undefined;
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setSubmitted(true);
 
-    if (hasErrors) {
+    if (hasErrors || isSubmitting) {
       return;
     }
 
-    onSave();
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      const selectedCategoryIds = categories
+        .filter((category) => specialties.includes(category.name))
+        .map((category) => category.id);
+      const dayMap: Record<string, string> = {
+        S: "MONDAY",
+        T: "TUESDAY",
+        Q1: "WEDNESDAY",
+        Q2: "THURSDAY",
+        Sx: "FRIDAY",
+        Sa: "SATURDAY",
+        D: "SUNDAY",
+      };
+
+      await api.upsertProfessionalMe({
+        about,
+        dailyRate: Number(dailyRate.replace(/[^\d,.-]/g, "").replace(",", ".")),
+        profilePhotoUrl: profilePhotoUrl ?? undefined,
+        address: {
+          neighborhood,
+          street,
+          number,
+          city: "Itacoatiara",
+          state: "AM",
+        },
+        categoryIds: selectedCategoryIds,
+        availability: availableDays.map((day) => ({
+          dayOfWeek: dayMap[day],
+          startTime,
+          endTime,
+        })),
+      });
+      onSave();
+    } catch (error) {
+      setSubmitError(
+        error instanceof ApiError
+          ? error.message
+          : "Nao foi possivel salvar seu perfil profissional.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+  const handlePickProfilePhoto = async () => {
+    setPhotoError(null);
+
+    try {
+      const uploadedUrl = await pickAndUploadImage();
+
+      if (uploadedUrl) {
+        setProfilePhotoUrl(uploadedUrl);
+        setHasProfilePhoto(true);
+      }
+    } catch (error) {
+      setPhotoError(
+        error instanceof Error ? error.message : "Nao foi possivel enviar a foto.",
+      );
+    }
   };
 
   return (
@@ -169,14 +233,20 @@ export function ProfessionalSetupScreen({
         <View className="items-center gap-2">
           <View className="relative">
             <View className="h-24 w-24 items-center justify-center rounded-full border-[3px] border-primary bg-[#f7e8e9]">
-              {hasProfilePhoto ? (
+              {profilePhotoUrl ? (
+                <Image
+                  source={{ uri: profilePhotoUrl }}
+                  className="h-full w-full rounded-full"
+                  resizeMode="cover"
+                />
+              ) : hasProfilePhoto ? (
                 <Text className="text-2xl font-bold text-primary">JN</Text>
               ) : (
                 <Ionicons name="person" size={46} color="#b94b50" />
               )}
             </View>
             <Pressable
-              onPress={() => setHasProfilePhoto((current) => !current)}
+              onPress={handlePickProfilePhoto}
               className="absolute bottom-0.5 right-0.5 h-7 w-7 items-center justify-center rounded-full bg-primary shadow-sm"
               accessibilityRole="button"
               accessibilityLabel="Alterar foto"
@@ -187,6 +257,11 @@ export function ProfessionalSetupScreen({
           <Text className="text-[13px] font-semibold text-primary">
             Alterar foto
           </Text>
+          {photoError ? (
+            <Text className="text-center text-xs font-semibold text-primary">
+              {photoError}
+            </Text>
+          ) : null}
         </View>
 
         <SetupSection label="Nome Completo">
@@ -350,30 +425,24 @@ export function ProfessionalSetupScreen({
               status={fieldStatus("about", isRequiredText(about, 20))}
               helperText={fieldError("about")}
             />
-            <View className="items-end">
-              <Pressable
-                onPress={() =>
-                  setAbout(
-                    "Texto gerado por audio simulado: profissional com experiencia em obras residenciais, pintura, reparos e acabamento.",
-                  )
-                }
-                className="h-10 w-10 items-center justify-center rounded-full bg-[#f7e8e9]"
-                accessibilityRole="button"
-                accessibilityLabel="Gravar audio"
-              >
-                <Ionicons name="mic-outline" size={18} color="#b94b50" />
-              </Pressable>
-            </View>
           </View>
         </SetupSection>
 
         <Pressable
           onPress={handleSave}
+          disabled={isSubmitting}
           className="mb-6 min-h-[56px] items-center justify-center rounded-[18px] bg-primary px-6"
           accessibilityRole="button"
         >
-          <Text className="text-base font-bold text-white">Salvar Perfil</Text>
+          <Text className="text-base font-bold text-white">
+            {isSubmitting ? "Salvando..." : "Salvar Perfil"}
+          </Text>
         </Pressable>
+        {submitError ? (
+          <Text className="text-center text-xs font-semibold text-primary">
+            {submitError}
+          </Text>
+        ) : null}
       </ScrollView>
     </View>
   );

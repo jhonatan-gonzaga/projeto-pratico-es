@@ -3,6 +3,8 @@ import { Ionicons } from "@expo/vector-icons";
 export type IconName = keyof typeof Ionicons.glyphMap;
 
 export type ServiceRequest = {
+  id?: string;
+  source?: "direct" | "ad";
   title: string;
   location: string;
   date: string;
@@ -10,6 +12,8 @@ export type ServiceRequest = {
   deadline: string;
   description: string;
   price: string;
+  category?: string;
+  imageUrls?: string[];
   negotiable?: boolean;
 };
 
@@ -28,11 +32,21 @@ export type ProfessionalService = {
   deadline: string;
   address?: string;
   messageCount?: string;
+  conversationId?: string | null;
   action?: string;
 };
 
 export type ProjectItem = {
+  id?: string;
   title: string;
   location: string;
+  description?: string;
   image: string;
+  imageType?: "COVER" | "BEFORE" | "AFTER" | "GENERAL";
+  images?: {
+    id?: string;
+    url: string;
+    type: "COVER" | "BEFORE" | "AFTER" | "GENERAL";
+    altText?: string | null;
+  }[];
 };

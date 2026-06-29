@@ -1,9 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
 import type { ReactNode } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
 
 import { ClientBottomNav, type ClientNavKey } from "../../components/cliente";
+import { EmptyState, ErrorState, LoadingState } from "../../components/feedback-state";
+import { NativeDateTimeField } from "../../components/native-date-time-field";
 import {
   ChoiceChip,
   ProjectHeader,
@@ -13,9 +15,20 @@ import {
 import {
   isPositiveInteger,
   isRequiredText,
+  isFutureOrTodayDate,
   isValidBRMoney,
   isValidTime,
 } from "../../services/validators";
+import {
+  ApiError,
+  Application,
+  Category,
+  ServiceAd,
+  api,
+  formatDate,
+  formatMoney,
+} from "../../services/api";
+import { pickAndUploadImage } from "../../services/image-upload";
 import { ClientProfilePage, type ClientProfessionalProfile } from "./profile";
 import type { ClientWorkService } from "./minha-obra";
 
@@ -36,14 +49,16 @@ type AdItem = {
   location: string;
   candidates: number;
   visits: number;
+  raw: ServiceAd;
 };
 
 type AdFormValues = {
   budget: string;
-  category: string;
+  categoryIds: string[];
   deadline: string;
   description: string;
   hasImages: boolean;
+  imageUrls: string[];
   location: string;
   negotiable: boolean;
   startDate: string;
@@ -63,45 +78,17 @@ type CandidateItem = {
   name: string;
   neighborhood: string;
   newValue?: string;
+  professionalId: string;
   role: string;
 };
 
-const ads: AdItem[] = [
-  {
-    id: "bathroom-renovation",
-    title: "Reforma Completa de Banheiro",
-    status: "active",
-    postedAt: "Postado ha 2 dias",
-    location: "Jardins, Sao Paulo",
-    candidates: 8,
-    visits: 32,
-  },
-  {
-    id: "electrical-panel",
-    title: "Instalacao Eletrica (Quadro)",
-    status: "inactive",
-    postedAt: "Postado hoje",
-    location: "Centro, Sao Paulo",
-    candidates: 0,
-    visits: 5,
-  },
-];
-
-const serviceCategories = [
-  "Construcao",
-  "Eletrica",
-  "Encanamento",
-  "Pintura",
-  "Reparo",
-  "Outros",
-];
-
 const defaultAdFormValues: AdFormValues = {
   budget: "",
-  category: "Construcao",
+  categoryIds: [],
   deadline: "",
   description: "",
   hasImages: false,
+  imageUrls: [],
   location: "",
   negotiable: true,
   startDate: "",
@@ -109,91 +96,72 @@ const defaultAdFormValues: AdFormValues = {
   title: "",
 };
 
-const adFormValuesById: Record<string, AdFormValues> = {
-  "bathroom-renovation": {
-    budget: "R$ 2500",
-    category: "Construcao",
-    deadline: "10",
-    description:
-      "Preciso reformar o banheiro com troca de piso, revestimento, pintura e ajuste hidraulico.",
-    hasImages: true,
-    location: "Jardins, Sao Paulo",
-    negotiable: true,
-    startDate: "10/07/2026",
-    time: "08:00",
-    title: "Reforma Completa de Banheiro",
-  },
-  "electrical-panel": {
-    budget: "R$ 800",
-    category: "Eletrica",
-    deadline: "3",
-    description:
-      "Instalacao eletrica com troca de quadro, organizacao dos disjuntores e revisao de tomadas.",
-    hasImages: false,
-    location: "Centro, Sao Paulo",
-    negotiable: true,
-    startDate: "08/07/2026",
-    time: "09:00",
-    title: "Instalacao Eletrica (Quadro)",
-  },
-};
+function mapAd(item: ServiceAd): AdItem {
+  const statusMap: Record<ServiceAd["status"], AdStatus> = {
+    DRAFT: "inactive",
+    OPEN: "active",
+    PAUSED: "inactive",
+    CONTRACTED: "contracted",
+    CANCELED: "canceled",
+    EXPIRED: "canceled",
+  };
 
-const candidates: CandidateItem[] = [
-  {
-    about:
-      "Marcos Almeida e pedreiro com foco em reformas residenciais, acabamento limpo e organizacao no canteiro.",
-    avatarUrl:
-      "https://storage.googleapis.com/banani-avatars/avatar/male/25-35/Hispanic/0",
-    baseValue: "R$ 1.800,00",
-    dailyRate: "R$ 180,00",
-    hasCounterOffer: false,
-    id: "marcos-almeida",
-    name: "Marcos Almeida",
-    neighborhood: "Jardins",
-    role: "Pedreiro",
-  },
-  {
-    about:
-      "Joao Souza coordena equipes de obra e acompanha reformas completas com planejamento de etapas e prazos.",
-    avatarUrl:
-      "https://storage.googleapis.com/banani-avatars/avatar/male/25-35/South Asian/1",
-    baseValue: "R$ 1.800,00",
-    dailyRate: "R$ 220,00",
-    hasCounterOffer: true,
-    id: "joao-souza",
-    name: "Joao Souza",
-    neighborhood: "Centro",
-    newValue: "R$ 2.100,00",
-    role: "Empreiteiro",
-  },
-  {
-    about:
-      "Silva Reformas atende obras de pequeno e medio porte com equipe propria para construcao e acabamento.",
-    avatarUrl:
-      "https://storage.googleapis.com/banani-avatars/avatar/male/25-35/African/2",
-    baseValue: "R$ 1.800,00",
-    dailyRate: "R$ 250,00",
-    hasCounterOffer: false,
-    id: "silva-reformas",
-    name: "Silva Reformas",
-    neighborhood: "Vila Nova",
-    role: "Construtora",
-  },
-  {
-    about:
-      "Roberto Carlos atua em reformas e reparos gerais, com experiencia em alvenaria, pintura e pequenos ajustes.",
-    avatarUrl:
-      "https://storage.googleapis.com/banani-avatars/avatar/male/25-35/Hispanic/4",
-    baseValue: "R$ 1.800,00",
-    dailyRate: "R$ 190,00",
-    hasCounterOffer: true,
-    id: "roberto-carlos",
-    name: "Roberto Carlos",
-    neighborhood: "Centro",
-    newValue: "R$ 1.950,00",
-    role: "Pedreiro",
-  },
-];
+  return {
+    id: item.id,
+    title: item.title,
+    status: statusMap[item.status],
+    postedAt: `Postado em ${formatDate(item.createdAt)}`,
+    location: item.location,
+    candidates: item.applications?.length ?? 0,
+    visits: item.visits,
+    raw: item,
+  };
+}
+
+function mapAdToForm(item: AdItem): AdFormValues {
+  const categoryIds =
+    item.raw.categories?.map((adCategory) => adCategory.category.id) ??
+    [item.raw.category.id];
+
+  return {
+    budget: item.raw.budget ? String(item.raw.budget) : "",
+    categoryIds,
+    deadline: item.raw.deadlineDays ? String(item.raw.deadlineDays) : "",
+    description: item.raw.description,
+    hasImages: item.raw.images.length > 0,
+    imageUrls: item.raw.images.map((image) => image.url),
+    location: item.raw.location,
+    negotiable: item.raw.negotiable,
+    startDate: item.raw.startDate ? item.raw.startDate.slice(0, 10) : "",
+    time: item.raw.startTime ?? "",
+    title: item.raw.title,
+  };
+}
+
+function mapApplication(item: Application): CandidateItem {
+  const professional = item.professional;
+  return {
+    about: professional.about ?? "Profissional cadastrado na plataforma.",
+    avatarUrl: professional.user.avatarUrl ?? "",
+    baseValue: formatMoney(item.ad?.budget),
+    dailyRate: formatMoney(professional.dailyRate),
+    hasCounterOffer: item.status === "COUNTER_OFFERED",
+    id: item.id,
+    name: professional.user.name,
+    neighborhood: professional.address?.neighborhood ?? "A combinar",
+    newValue: item.proposedValue ? formatMoney(item.proposedValue) : undefined,
+    professionalId: professional.id,
+    role:
+      professional.specialties.map((specialty) => specialty.category.name).join(", ") ||
+      "Profissional",
+  };
+}
+
+function parseMoney(value: string) {
+  const normalized = value.replace(/[^\d,.-]/g, "").replace(".", "").replace(",", ".");
+  const parsed = Number(normalized);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : undefined;
+}
 
 const statusContent: Record<
   AdStatus,
@@ -243,15 +211,21 @@ function IconText({
 function AdCard({
   item,
   onCancel,
+  onConfirmCancel,
+  onDismissCancel,
   onEdit,
   onToggleActive,
   onViewCandidates,
+  pendingCancel,
 }: {
   item: AdItem;
   onCancel: (item: AdItem) => void;
+  onConfirmCancel: (item: AdItem) => void;
+  onDismissCancel: () => void;
   onEdit: (item: AdItem) => void;
   onToggleActive: (item: AdItem) => void;
   onViewCandidates: (item: AdItem) => void;
+  pendingCancel: boolean;
 }) {
   const status = statusContent[item.status];
   const isCanceled = item.status === "canceled";
@@ -277,6 +251,15 @@ function AdCard({
         <IconText icon="calendar-outline">{item.postedAt}</IconText>
         <IconText icon="location-outline">{item.location}</IconText>
       </View>
+
+      {item.raw.images[0]?.url ? (
+        <Image
+          source={{ uri: item.raw.images[0].url }}
+          className="mb-3 h-32 w-full rounded-lg"
+          resizeMode="cover"
+          accessibilityLabel={`Imagem de ${item.title}`}
+        />
+      ) : null}
 
       <View className="h-px bg-input-border" />
 
@@ -347,6 +330,32 @@ function AdCard({
           </Pressable>
         </View>
       ) : null}
+      {pendingCancel ? (
+        <View className="mt-3 gap-3 rounded-[12px] border border-[#f2cdd0] bg-[#fff7f7] p-3">
+          <Text className="text-sm leading-5 text-muted-foreground">
+            Este anuncio saira da lista, profissionais nao poderao mais se candidatar
+            e candidaturas pendentes deixam de avancar por ele.
+          </Text>
+          <View className="flex-row gap-2">
+            <Pressable
+              onPress={onDismissCancel}
+              className="min-h-[42px] flex-1 items-center justify-center rounded-[10px] border border-input-border bg-card"
+              accessibilityRole="button"
+            >
+              <Text className="text-sm font-semibold text-foreground">Voltar</Text>
+            </Pressable>
+            <Pressable
+              onPress={() => onConfirmCancel(item)}
+              className="min-h-[42px] flex-1 items-center justify-center rounded-[10px] bg-primary"
+              accessibilityRole="button"
+            >
+              <Text className="text-sm font-semibold text-white">
+                Confirmar cancelamento
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+      ) : null}
     </View>
   );
 }
@@ -398,11 +407,17 @@ function CandidateCard({
       }`}
     >
       <View className="mb-4 flex-row items-center gap-3">
-        <Image
-          source={{ uri: item.avatarUrl }}
-          className="h-12 w-12 rounded-[12px] bg-muted"
-          accessibilityLabel={`Foto de ${item.name}`}
-        />
+        {item.avatarUrl ? (
+          <Image
+            source={{ uri: item.avatarUrl }}
+            className="h-12 w-12 rounded-[12px] bg-muted"
+            accessibilityLabel={`Foto de ${item.name}`}
+          />
+        ) : (
+          <View className="h-12 w-12 items-center justify-center rounded-[12px] bg-[#f7e8e9]">
+            <Ionicons name="person" size={22} color="#b94b50" />
+          </View>
+        )}
         <View className="flex-1">
           <Text className="text-base font-bold text-foreground">
             {item.name}
@@ -494,13 +509,16 @@ function ClientCandidatesScreen({
 }: {
   ad: AdItem;
   contractedAdIds: string[];
-  onContractCandidate: (ad: AdItem, candidate: CandidateItem) => void;
+  onContractCandidate: (ad: AdItem, candidate: CandidateItem) => void | Promise<void>;
   onBack: () => void;
   onNavigate?: (key: ClientNavKey) => void;
   onProfilePress?: () => void;
 }) {
   const [activeFilter, setActiveFilter] = useState<CandidateFilter>("all");
   const [profileCandidate, setProfileCandidate] = useState<CandidateItem | null>(null);
+  const [candidates, setCandidates] = useState<CandidateItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const isAdContracted = contractedAdIds.includes(ad.id);
   const counterOfferCount = candidates.filter((item) => item.hasCounterOffer).length;
   const visibleCandidates = candidates.filter((item) => {
@@ -514,6 +532,28 @@ function ClientCandidatesScreen({
 
     return true;
   });
+
+  const loadCandidates = async () => {
+    setIsLoading(true);
+    setLoadError(null);
+
+    try {
+      const applications = await api.serviceAdApplications(ad.id);
+      setCandidates(applications.map(mapApplication));
+    } catch (error) {
+      setLoadError(
+        error instanceof ApiError
+          ? error.message
+          : "Nao foi possivel carregar candidatos.",
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    void loadCandidates();
+  }, [ad.id]);
 
   if (profileCandidate) {
     const professional: ClientProfessionalProfile = {
@@ -531,6 +571,9 @@ function ClientCandidatesScreen({
         onBack={() => setProfileCandidate(null)}
         onNavigate={onNavigate}
         onProfilePress={onProfilePress}
+        professionalId={profileCandidate.professionalId}
+        contractMode="application"
+        onContractApplication={() => onContractCandidate(ad, profileCandidate)}
       />
     );
   }
@@ -583,7 +626,13 @@ function ClientCandidatesScreen({
           />
         </ScrollView>
 
-        {visibleCandidates.map((item) => (
+        {isLoading ? (
+          <LoadingState label="Carregando candidatos..." />
+        ) : loadError ? (
+          <ErrorState message={loadError} onRetry={loadCandidates} />
+        ) : visibleCandidates.length === 0 ? (
+          <EmptyState message="Este anuncio ainda nao recebeu candidaturas." />
+        ) : visibleCandidates.map((item) => (
           <CandidateCard
             key={item.id}
             disabled={isAdContracted}
@@ -602,20 +651,26 @@ function ClientCandidatesScreen({
 }
 
 function ClientAdFormScreen({
+  categories,
+  error,
   initialValues = defaultAdFormValues,
+  isSubmitting,
   mode,
   onBack,
   onProfilePress,
   onSubmit,
 }: {
+  categories: Category[];
+  error?: string | null;
   initialValues?: AdFormValues;
+  isSubmitting?: boolean;
   mode: "create" | "edit";
   onBack: () => void;
   onProfilePress?: () => void;
-  onSubmit: () => void;
+  onSubmit: (values: AdFormValues) => void;
 }) {
   const [title, setTitle] = useState(initialValues.title);
-  const [category, setCategory] = useState(initialValues.category);
+  const [categoryIds, setCategoryIds] = useState(initialValues.categoryIds);
   const [description, setDescription] = useState(initialValues.description);
   const [location, setLocation] = useState(initialValues.location);
   const [startDate, setStartDate] = useState(initialValues.startDate);
@@ -624,6 +679,9 @@ function ClientAdFormScreen({
   const [budget, setBudget] = useState(initialValues.budget);
   const [negotiable, setNegotiable] = useState(initialValues.negotiable);
   const [hasImages, setHasImages] = useState(initialValues.hasImages);
+  const [imageUrls, setImageUrls] = useState<string[]>(initialValues.imageUrls);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [touched, setTouched] = useState({
     budget: false,
@@ -645,9 +703,9 @@ function ClientAdFormScreen({
     location: isRequiredText(location, 3)
       ? undefined
       : "Informe bairro e cidade do servico.",
-    startDate: isRequiredText(startDate, 6)
+    startDate: isFutureOrTodayDate(startDate)
       ? undefined
-      : "Informe a data de inicio desejada.",
+      : "Informe uma data valida a partir de hoje no formato YYYY-MM-DD.",
     deadline: isPositiveInteger(deadline)
       ? undefined
       : "Informe um prazo em dias maior que zero.",
@@ -658,6 +716,10 @@ function ClientAdFormScreen({
       budget.trim() && !isValidBRMoney(budget)
         ? "Informe um valor valido ou deixe em branco."
         : undefined,
+    categoryIds:
+      categoryIds.length > 0
+        ? undefined
+        : "Selecione ao menos uma categoria do servico.",
   };
   const shouldShow = (field: keyof typeof touched) => submitted || touched[field];
   const fieldStatus = (field: keyof typeof touched) => {
@@ -677,7 +739,45 @@ function ClientAdFormScreen({
       return;
     }
 
-    onSubmit();
+    onSubmit({
+      budget,
+      categoryIds,
+      deadline,
+      description,
+      hasImages,
+      imageUrls,
+      location,
+      negotiable,
+      startDate,
+      time,
+      title,
+    });
+  };
+  const toggleCategory = (categoryId: string) => {
+    setCategoryIds((current) =>
+      current.includes(categoryId)
+        ? current.filter((item) => item !== categoryId)
+        : [...current, categoryId],
+    );
+  };
+  const handlePickImage = async () => {
+    setIsUploadingImage(true);
+    setUploadError(null);
+
+    try {
+      const uploadedUrl = await pickAndUploadImage();
+
+      if (uploadedUrl) {
+        setImageUrls((current) => [...current, uploadedUrl]);
+        setHasImages(true);
+      }
+    } catch (error) {
+      setUploadError(
+        error instanceof Error ? error.message : "Nao foi possivel enviar a imagem.",
+      );
+    } finally {
+      setIsUploadingImage(false);
+    }
   };
   const screenTitle = mode === "edit" ? "Editar Anuncio" : "Novo Anuncio";
   const submitLabel = mode === "edit" ? "Salvar Alteracoes" : "Publicar Anuncio";
@@ -713,15 +813,25 @@ function ClientAdFormScreen({
 
           <SetupSection label="Categoria do Servico">
             <View className="flex-row flex-wrap gap-2">
-              {serviceCategories.map((item) => (
+              {categories.map((item) => (
                 <ChoiceChip
-                  key={item}
-                  label={item}
-                  selected={category === item}
-                  onPress={() => setCategory(item)}
+                  key={item.id}
+                  label={item.name}
+                  selected={categoryIds.includes(item.id)}
+                  onPress={() => toggleCategory(item.id)}
                 />
               ))}
             </View>
+            {submitted && errors.categoryIds ? (
+              <Text className="px-1 text-xs leading-4 text-[#dc2626]">
+                {errors.categoryIds}
+              </Text>
+            ) : null}
+            {categories.length === 0 ? (
+              <Text className="px-1 text-xs leading-4 text-[#dc2626]">
+                Cadastre categorias no backend antes de publicar anuncios.
+              </Text>
+            ) : null}
           </SetupSection>
 
           <SetupSection label="Descricao detalhada">
@@ -753,14 +863,15 @@ function ClientAdFormScreen({
           </SetupSection>
 
           <SetupSection label="Data de inicio">
-            <SetupTextField
-              icon="calendar-outline"
+            <NativeDateTimeField
+              mode="date"
               value={startDate}
               onBlur={() =>
                 setTouched((current) => ({ ...current, startDate: true }))
               }
-              onChangeText={setStartDate}
-              placeholder="Ex: 10/07/2026"
+              onChange={setStartDate}
+              placeholder="Selecionar data"
+              minimumDate={new Date()}
               status={fieldStatus("startDate")}
               helperText={fieldError("startDate")}
             />
@@ -782,12 +893,12 @@ function ClientAdFormScreen({
           </SetupSection>
 
           <SetupSection label="Horario">
-            <SetupTextField
-              icon="timer-outline"
+            <NativeDateTimeField
+              mode="time"
               value={time}
               onBlur={() => setTouched((current) => ({ ...current, time: true }))}
-              onChangeText={setTime}
-              placeholder="Ex: 08:00"
+              onChange={setTime}
+              placeholder="Selecionar horario"
               status={fieldStatus("time")}
               helperText={fieldError("time")}
             />
@@ -843,9 +954,9 @@ function ClientAdFormScreen({
           <SetupSection label="Imagens do servico">
             <Text className="px-1 text-xs text-muted-foreground">Opcional</Text>
             <Pressable
-              onPress={() => setHasImages((current) => !current)}
+              onPress={handlePickImage}
               className={`items-center justify-center gap-2 rounded-[16px] border-[1.5px] border-dashed px-5 py-8 shadow-sm shadow-black/5 ${
-                hasImages
+                imageUrls.length > 0
                   ? "border-primary bg-[#fff7f7]"
                   : "border-black/10 bg-card"
               }`}
@@ -854,26 +965,53 @@ function ClientAdFormScreen({
             >
               <View className="h-12 w-12 items-center justify-center rounded-full bg-[#fceaea]">
                 <Ionicons
-                  name={hasImages ? "checkmark-circle" : "image-outline"}
+                  name={imageUrls.length > 0 ? "checkmark-circle" : "image-outline"}
                   size={22}
                   color="#b94b50"
                 />
               </View>
               <Text className="text-sm font-medium text-muted-foreground">
-                {hasImages ? "Imagens adicionadas" : "Adicionar imagens"}
+                {isUploadingImage
+                  ? "Enviando imagem..."
+                  : imageUrls.length > 0
+                    ? `${imageUrls.length} imagem(ns) adicionada(s)`
+                    : "Adicionar imagens"}
               </Text>
             </Pressable>
+            {uploadError ? (
+              <Text className="px-1 text-xs leading-4 text-[#dc2626]">
+                {uploadError}
+              </Text>
+            ) : null}
+            {imageUrls.length > 0 ? (
+              <ScrollView horizontal contentContainerClassName="gap-2">
+                {imageUrls.map((url) => (
+                  <Image
+                    key={url}
+                    source={{ uri: url }}
+                    className="h-20 w-20 rounded-lg"
+                    resizeMode="cover"
+                  />
+                ))}
+              </ScrollView>
+            ) : null}
           </SetupSection>
 
           <Pressable
             onPress={handleSubmit}
+            disabled={isSubmitting}
             className="mb-8 mt-2 min-h-[56px] items-center justify-center rounded-full bg-primary px-6"
             accessibilityRole="button"
           >
             <Text className="text-[17px] font-bold text-white">
-              {submitLabel}
+              {isSubmitting ? "Salvando..." : submitLabel}
             </Text>
           </Pressable>
+          {error ? (
+            <Text className="text-center text-xs font-semibold text-primary">
+              {error}
+            </Text>
+          ) : null}
         </View>
       </ScrollView>
     </View>
@@ -886,68 +1024,166 @@ export function ClientAdsPage({
   onNavigate,
   onProfilePress,
 }: ClientAdsPageProps) {
-  const [adItems, setAdItems] = useState<AdItem[]>(ads);
+  const [adItems, setAdItems] = useState<AdItem[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCreatingAd, setIsCreatingAd] = useState(false);
   const [editingAd, setEditingAd] = useState<AdItem | null>(null);
   const [selectedCandidatesAd, setSelectedCandidatesAd] =
     useState<AdItem | null>(null);
   const [contractedAdIds, setContractedAdIds] = useState<string[]>([]);
+  const [pendingCancelAdId, setPendingCancelAdId] = useState<string | null>(null);
 
-  const updateAdStatus = (item: AdItem, status: AdStatus) => {
-    setAdItems((current) =>
-      current.map((ad) => (ad.id === item.id ? { ...ad, status } : ad)),
-    );
+  const loadAds = async () => {
+    setIsLoading(true);
+    setLoadError(null);
+
+    try {
+      const [categoryItems, adsPage] = await Promise.all([
+        api.categories(),
+        api.myServiceAds(),
+      ]);
+      setCategories(categoryItems);
+      setAdItems(adsPage.items.map(mapAd));
+    } catch (error) {
+      setLoadError(
+        error instanceof ApiError
+          ? error.message
+          : "Nao foi possivel carregar seus anuncios.",
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleToggleActive = (item: AdItem) => {
-    if (item.status === "inactive") {
-      updateAdStatus(item, "active");
-      return;
-    }
+  useEffect(() => {
+    void loadAds();
+  }, []);
 
-    if (item.status === "active") {
-      updateAdStatus(item, "inactive");
+  const handleToggleActive = async (item: AdItem) => {
+    const nextStatus = item.status === "inactive" ? "OPEN" : "PAUSED";
+
+    try {
+      const updated = await api.updateServiceAdStatus(item.id, nextStatus);
+      setAdItems((current) =>
+        current.map((ad) => (ad.id === item.id ? mapAd(updated) : ad)),
+      );
+    } catch (error) {
+      setLoadError(
+        error instanceof ApiError ? error.message : "Nao foi possivel atualizar.",
+      );
+    }
+  };
+
+  const cancelAd = async (item: AdItem) => {
+    try {
+      await api.deleteServiceAd(item.id);
+      setAdItems((current) => current.filter((ad) => ad.id !== item.id));
+      setPendingCancelAdId(null);
+    } catch (error) {
+      setLoadError(
+        error instanceof ApiError ? error.message : "Nao foi possivel cancelar.",
+      );
     }
   };
 
   const handleCancel = (item: AdItem) => {
-    setAdItems((current) => current.filter((ad) => ad.id !== item.id));
+    setPendingCancelAdId((current) => (current === item.id ? null : item.id));
   };
 
-  const handleContractCandidate = (ad: AdItem, candidate: CandidateItem) => {
+  const handleContractCandidate = async (ad: AdItem, candidate: CandidateItem) => {
     if (contractedAdIds.includes(ad.id)) {
       return;
     }
 
-    setContractedAdIds((current) => [...current, ad.id]);
-    updateAdStatus(ad, "contracted");
-    onContractService?.({
-      avatarUri: candidate.avatarUrl,
-      dateLabel: "Início:",
-      dateValue: "Hoje",
-      id: `contract-${ad.id}-${candidate.id}`,
-      professionalName: candidate.name,
-      professionalRole: candidate.role,
-      status: "em_andamento",
-      statusOptions: [
-        { key: "aguardando_aprovacao", label: "Aguardando aprovação" },
-        { key: "em_andamento", label: "Em andamento" },
-        { key: "concluido", label: "Concluído" },
-        { key: "reabrir_servico", label: "Reabrir Serviço" },
-      ],
-      title: ad.title,
-    });
-    setSelectedCandidatesAd(null);
-    onNavigate?.("work");
+    try {
+      await api.acceptApplication(candidate.id);
+      setContractedAdIds((current) => [...current, ad.id]);
+      setAdItems((current) =>
+        current.map((item) =>
+          item.id === ad.id ? { ...item, status: "contracted" } : item,
+        ),
+      );
+      onContractService?.({
+        avatarUri: candidate.avatarUrl,
+        dateLabel: "Início:",
+        dateValue: "Hoje",
+        id: `contract-${ad.id}-${candidate.id}`,
+        professionalName: candidate.name,
+        professionalId: candidate.professionalId,
+        professionalRole: candidate.role,
+        status: "em_andamento",
+        statusOptions: [
+          { key: "aguardando_aprovacao", label: "Aguardando aprovação" },
+          { key: "em_andamento", label: "Em andamento" },
+          { key: "concluido", label: "Concluído" },
+          { key: "reabrir_servico", label: "Reabrir Serviço" },
+        ],
+        title: ad.title,
+      });
+      setSelectedCandidatesAd(null);
+      onNavigate?.("work");
+    } catch (error) {
+      setLoadError(
+        error instanceof ApiError ? error.message : "Nao foi possivel contratar.",
+      );
+    }
+  };
+
+  const submitAd = async (values: AdFormValues, ad?: AdItem) => {
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      const payload = {
+        categoryId: values.categoryIds[0],
+        categoryIds: values.categoryIds,
+        title: values.title,
+        description: values.description,
+        location: values.location,
+        startDate: values.startDate,
+        startTime: values.time,
+        deadlineDays: Number(values.deadline),
+        budget: parseMoney(values.budget),
+        negotiable: values.negotiable,
+        imageUrls: values.imageUrls,
+      };
+      const saved = ad
+        ? await api.updateServiceAd(ad.id, payload)
+        : await api.createServiceAd(payload);
+      setAdItems((current) =>
+        ad
+          ? current.map((item) => (item.id === ad.id ? mapAd(saved) : item))
+          : [mapAd(saved), ...current],
+      );
+      setIsCreatingAd(false);
+      setEditingAd(null);
+    } catch (error) {
+      setSubmitError(
+        error instanceof ApiError ? error.message : "Nao foi possivel salvar.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (isCreatingAd) {
     return (
       <ClientAdFormScreen
+        categories={categories}
+        error={submitError}
+        isSubmitting={isSubmitting}
+        initialValues={{
+          ...defaultAdFormValues,
+          categoryIds: categories[0]?.id ? [categories[0].id] : [],
+        }}
         mode="create"
         onBack={() => setIsCreatingAd(false)}
         onProfilePress={onProfilePress}
-        onSubmit={() => setIsCreatingAd(false)}
+        onSubmit={(values) => submitAd(values)}
       />
     );
   }
@@ -955,15 +1191,14 @@ export function ClientAdsPage({
   if (editingAd) {
     return (
       <ClientAdFormScreen
+        categories={categories}
+        error={submitError}
+        isSubmitting={isSubmitting}
         mode="edit"
-        initialValues={adFormValuesById[editingAd.id] ?? {
-          ...defaultAdFormValues,
-          location: editingAd.location,
-          title: editingAd.title,
-        }}
+        initialValues={mapAdToForm(editingAd)}
         onBack={() => setEditingAd(null)}
         onProfilePress={onProfilePress}
-        onSubmit={() => setEditingAd(null)}
+        onSubmit={(values) => submitAd(values, editingAd)}
       />
     );
   }
@@ -1018,14 +1253,25 @@ export function ClientAdsPage({
           Meus Anuncios
         </Text>
 
-        {adItems.map((item) => (
+        {isLoading ? (
+          <LoadingState label="Carregando anuncios..." />
+        ) : loadError ? (
+          <ErrorState message={loadError} onRetry={loadAds} />
+        ) : adItems.length === 0 ? (
+          <EmptyState message="Voce ainda nao publicou nenhum anuncio." />
+        ) : adItems.map((item) => (
           <AdCard
             key={item.id}
             item={item}
             onCancel={handleCancel}
+            onConfirmCancel={(ad) => {
+              void cancelAd(ad);
+            }}
+            onDismissCancel={() => setPendingCancelAdId(null)}
             onEdit={setEditingAd}
             onToggleActive={handleToggleActive}
             onViewCandidates={setSelectedCandidatesAd}
+            pendingCancel={pendingCancelAdId === item.id}
           />
         ))}
       </ScrollView>

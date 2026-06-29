@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Image, Pressable, Text, View } from "react-native";
 
 import {
@@ -13,6 +13,8 @@ import {
   isValidName,
   isValidPhone,
 } from "../services/validators";
+import { ApiError, api } from "../services/api";
+import { pickAndUploadImage } from "../services/image-upload";
 
 const logo = require("../../assets/logotipo.png");
 
@@ -38,10 +40,14 @@ export function AccountProfileScreen({
   onSave: () => void;
   onSignOut: () => void;
 }) {
-  const [name, setName] = useState("Maria da Silva");
-  const [phone, setPhone] = useState("(11) 99999-9999");
-  const [email, setEmail] = useState("maria@email.com");
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasProfilePhoto, setHasProfilePhoto] = useState(false);
+  const [profilePhotoUrl, setProfilePhotoUrl] = useState<string | null>(null);
+  const [photoError, setPhotoError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [touched, setTouched] = useState({
@@ -65,14 +71,56 @@ export function AccountProfileScreen({
   const fieldError = (field: keyof typeof touched) =>
     shouldShow(field) ? errors[field] : undefined;
 
-  const handleSave = () => {
+  useEffect(() => {
+    api.me()
+      .then((user) => {
+        setName(user.name);
+        setPhone(user.phone ?? "");
+        setEmail(user.email);
+        setProfilePhotoUrl(user.avatarUrl ?? null);
+        setHasProfilePhoto(Boolean(user.avatarUrl));
+      })
+      .catch(() => undefined);
+  }, []);
+
+  const handleSave = async () => {
     setSubmitted(true);
 
-    if (Object.values(errors).some(Boolean)) {
+    if (Object.values(errors).some(Boolean) || isSubmitting) {
       return;
     }
 
-    onSave();
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      await api.updateMe({ name, phone, email, avatarUrl: profilePhotoUrl ?? undefined });
+      onSave();
+    } catch (error) {
+      setSubmitError(
+        error instanceof ApiError
+          ? error.message
+          : "Nao foi possivel salvar os dados.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+  const handlePickProfilePhoto = async () => {
+    setPhotoError(null);
+
+    try {
+      const uploadedUrl = await pickAndUploadImage();
+
+      if (uploadedUrl) {
+        setProfilePhotoUrl(uploadedUrl);
+        setHasProfilePhoto(true);
+      }
+    } catch (error) {
+      setPhotoError(
+        error instanceof Error ? error.message : "Nao foi possivel enviar a foto.",
+      );
+    }
   };
 
   return (
@@ -108,14 +156,18 @@ export function AccountProfileScreen({
       <View className="z-10 items-center pb-6 pt-4">
         <View className="relative mb-3">
           <View className="h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-card bg-[#f7e8e9]">
-            {hasProfilePhoto ? (
-              <Text className="text-2xl font-bold text-primary">MS</Text>
+            {profilePhotoUrl ? (
+              <Image
+                source={{ uri: profilePhotoUrl }}
+                className="h-full w-full"
+                resizeMode="cover"
+              />
             ) : (
               <Ionicons name="person" size={46} color="#b94b50" />
             )}
           </View>
           <Pressable
-            onPress={() => setHasProfilePhoto((current) => !current)}
+            onPress={handlePickProfilePhoto}
             className="absolute bottom-0 right-0 h-8 w-8 items-center justify-center rounded-full border-2 border-card bg-primary"
             accessibilityRole="button"
             accessibilityLabel="Trocar foto de perfil"
@@ -126,6 +178,11 @@ export function AccountProfileScreen({
         <Text className="text-sm font-semibold text-primary">
           Trocar foto de perfil
         </Text>
+        {photoError ? (
+          <Text className="mt-2 text-center text-xs font-semibold text-primary">
+            {photoError}
+          </Text>
+        ) : null}
       </View>
 
       <View className="z-10 mx-4 rounded-[24px] bg-card px-5 pb-6 pt-6">
@@ -165,14 +222,20 @@ export function AccountProfileScreen({
 
         <Pressable
           onPress={handleSave}
+          disabled={isSubmitting}
           className="mt-4 min-h-[56px] flex-row items-center justify-center gap-2 rounded-[16px] bg-primary px-6"
           accessibilityRole="button"
         >
           <Text className="text-base font-semibold text-white">
-            Salvar alteracoes
+            {isSubmitting ? "Salvando..." : "Salvar alteracoes"}
           </Text>
           <Ionicons name="checkmark" size={18} color="#ffffff" />
         </Pressable>
+        {submitError ? (
+          <Text className="mt-3 text-center text-xs font-semibold text-primary">
+            {submitError}
+          </Text>
+        ) : null}
       </View>
 
       <View className="z-10 items-center gap-3 px-5 py-6">

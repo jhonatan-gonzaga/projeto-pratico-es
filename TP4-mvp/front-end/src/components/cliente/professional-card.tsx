@@ -6,7 +6,7 @@ type ProfessionalCardProps = {
   role: string;
   price: string;
   rating: string;
-  avatarUri: string;
+  avatarUri?: string | null;
   onPress?: () => void;
 };
 
@@ -27,12 +27,18 @@ export function ProfessionalCard({
       accessibilityRole={onPress ? "button" : undefined}
     >
       <View className="relative h-[150px]">
-        <Image
-          source={{ uri: avatarUri }}
-          className="h-full w-full"
-          resizeMode="cover"
-          accessibilityLabel={name}
-        />
+        {avatarUri ? (
+          <Image
+            source={{ uri: avatarUri }}
+            className="h-full w-full"
+            resizeMode="cover"
+            accessibilityLabel={name}
+          />
+        ) : (
+          <View className="h-full w-full items-center justify-center bg-[#f7e8e9]">
+            <Ionicons name="person" size={46} color="#b94b50" />
+          </View>
+        )}
         <View className="absolute right-3 top-3 flex-row items-center gap-1 rounded-[14px] bg-card px-2 py-1 shadow-sm shadow-black/10">
           <Ionicons name="star" size={12} color="#9e8e8f" />
           <Text className="text-xs font-semibold text-foreground">{rating}</Text>
