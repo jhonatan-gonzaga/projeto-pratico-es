@@ -8,3 +8,6 @@
 
 ## Tela Inicial 
 <img width="300" alt="Tela Inicial do Cliente" src="https://github.com/user-attachments/assets/774e5992-0521-4d53-be57-b85ac579c642" />
+
+## Tela Buscar por Profissonal
+<img width="300" alt="Tela Perfil do Profissional" src="https://github.com/user-attachments/assets/84120cda-e4e5-4ff0-a921-d146595638f0" />
