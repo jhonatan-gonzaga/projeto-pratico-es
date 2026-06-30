@@ -5,3 +5,6 @@
 
 ## Tela de Alteração do Perfil Cliente
 <img width="300" alt="Tela Editar Perfil do Cliente" src="https://github.com/user-attachments/assets/c59d93b5-9ead-44fa-bf27-4f7bc2964c61" />
+
+## Tela Inicial do Cliente
+<img width="300" alt="Tela Inicial do Cliente" src="https://github.com/user-attachments/assets/774e5992-0521-4d53-be57-b85ac579c642" />
