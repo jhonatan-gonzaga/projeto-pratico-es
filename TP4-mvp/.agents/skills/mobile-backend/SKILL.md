@@ -2,6 +2,7 @@
 ---
 
 ## name: mobile-backend
+
 description: Use esta skill quando a tarefa envolver backend para app mobile com Node.js, NestJS, TypeScript, Prisma, autenticação, controllers, services, DTOs, API REST ou integração com MySQL.
 
 Você é especialista em backend para aplicativos mobile usando NestJS.
@@ -14,7 +15,7 @@ Criar e manter API REST para aplicativo mobile usando:
 * NestJS
 * TypeScript
 * Prisma ORM
-* MySQL ou MariaDB
+* MySQL/MariaDB
 * DTOs para validação
 * Arquitetura modular
 

@@ -14,15 +14,460 @@ enum UserRole {
   SUPORTE
 }
 
+enum WeekDay {
+  SUNDAY
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+}
+
+enum ServiceAdStatus {
+  DRAFT
+  OPEN
+  PAUSED
+  CONTRACTED
+  CANCELED
+  EXPIRED
+}
+
+enum ApplicationStatus {
+  SENT
+  COUNTER_OFFERED
+  ACCEPTED
+  REJECTED
+  CANCELED
+}
+
+enum DirectRequestStatus {
+  SENT
+  ACCEPTED
+  REJECTED
+  CANCELED
+  EXPIRED
+}
+
+enum ContractStatus {
+  PENDING_START
+  IN_PROGRESS
+  WAITING_CLIENT_APPROVAL
+  COMPLETED
+  CANCELED
+  REOPENED
+}
+
+enum NotificationType {
+  APPLICATION_RECEIVED
+  APPLICATION_ACCEPTED
+  APPLICATION_REJECTED
+  DIRECT_REQUEST_RECEIVED
+  DIRECT_REQUEST_ACCEPTED
+  DIRECT_REQUEST_REJECTED
+  CONTRACT_STATUS_CHANGED
+  NEW_MESSAGE
+  REVIEW_RECEIVED
+}
+
+enum PortfolioImageType {
+  COVER
+  BEFORE
+  AFTER
+  GENERAL
+}
+
+enum MessageType {
+  TEXT
+  AUDIO
+}
+
 model User {
-  id           String   @id @default(cuid())
-  name         String
-  email        String   @unique
-  phone        String?  @unique
-  passwordHash String
-  role         UserRole @default(CLIENTE)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id                        String               @id @default(cuid())
+  name                      String
+  email                     String               @unique
+  phone                     String?              @unique
+  avatarUrl                 String?
+  passwordHash              String
+  role                      UserRole             @default(CLIENTE)
+  clientProfile             ClientProfile?
+  professionalProfile       ProfessionalProfile?
+  notifications             Notification[]
+  deviceTokens              DeviceToken[]
+  sentMessages              Message[]
+  clientConversations       Conversation[]       @relation("ClientConversationUser")
+  professionalConversations Conversation[]       @relation("ProfessionalConversationUser")
+  createdAt                 DateTime             @default(now())
+  updatedAt                 DateTime             @updatedAt
 
   @@map("users")
+}
+
+model ClientProfile {
+  id             String          @id @default(cuid())
+  userId         String          @unique
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  address        Address?
+  ads            ServiceAd[]
+  directRequests DirectRequest[]
+  contracts      Contract[]
+  reviews        Review[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  @@map("client_profiles")
+}
+
+model ProfessionalProfile {
+  id             String                     @id @default(cuid())
+  userId         String                     @unique
+  user           User                       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  about          String?                    @db.Text
+  dailyRate      Decimal?                   @db.Decimal(10, 2)
+  ratingAvg      Decimal?                   @db.Decimal(3, 2)
+  servicesDone   Int                        @default(0)
+  address        Address?
+  specialties    ProfessionalSpecialty[]
+  availability   ProfessionalAvailability[]
+  applications   Application[]
+  directRequests DirectRequest[]
+  contracts      Contract[]
+  portfolio      PortfolioProject[]
+  reviews        Review[]
+  createdAt      DateTime                   @default(now())
+  updatedAt      DateTime                   @updatedAt
+
+  @@map("professional_profiles")
+}
+
+model Address {
+  id                    String               @id @default(cuid())
+  clientProfileId       String?              @unique
+  professionalProfileId String?              @unique
+  street                String?
+  number                String?
+  neighborhood          String
+  city                  String
+  state                 String?
+  zipCode               String?
+  complement            String?
+  clientProfile         ClientProfile?       @relation(fields: [clientProfileId], references: [id], onDelete: Cascade)
+  professionalProfile   ProfessionalProfile? @relation(fields: [professionalProfileId], references: [id], onDelete: Cascade)
+  createdAt             DateTime             @default(now())
+  updatedAt             DateTime             @updatedAt
+
+  @@map("addresses")
+}
+
+model Category {
+  id            String                  @id @default(cuid())
+  name          String                  @unique
+  description   String?
+  imageUrl      String?
+  ads           ServiceAd[]
+  serviceAds    ServiceAdCategory[]
+  professionals ProfessionalSpecialty[]
+  createdAt     DateTime                @default(now())
+  updatedAt     DateTime                @updatedAt
+
+  @@map("categories")
+}
+
+model ProfessionalSpecialty {
+  professionalId String
+  categoryId     String
+  professional   ProfessionalProfile @relation(fields: [professionalId], references: [id], onDelete: Cascade)
+  category       Category            @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt      DateTime            @default(now())
+
+  @@id([professionalId, categoryId])
+  @@map("professional_specialties")
+}
+
+model ProfessionalAvailability {
+  id             String              @id @default(cuid())
+  professionalId String
+  dayOfWeek      WeekDay
+  startTime      String
+  endTime        String
+  professional   ProfessionalProfile @relation(fields: [professionalId], references: [id], onDelete: Cascade)
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+
+  @@unique([professionalId, dayOfWeek])
+  @@map("professional_availability")
+}
+
+model ServiceAd {
+  id           String              @id @default(cuid())
+  clientId     String
+  categoryId   String
+  title        String
+  description  String              @db.Text
+  location     String
+  startDate    DateTime?
+  startTime    String?
+  deadlineDays Int?
+  budget       Decimal?            @db.Decimal(10, 2)
+  negotiable   Boolean             @default(true)
+  status       ServiceAdStatus     @default(OPEN)
+  visits       Int                 @default(0)
+  client       ClientProfile       @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  category     Category            @relation(fields: [categoryId], references: [id])
+  categories   ServiceAdCategory[]
+  images       ServiceAdImage[]
+  applications Application[]
+  contract     Contract?
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+
+  @@index([clientId])
+  @@index([categoryId])
+  @@index([status])
+  @@map("service_ads")
+}
+
+model ServiceAdCategory {
+  adId       String
+  categoryId String
+  ad         ServiceAd @relation(fields: [adId], references: [id], onDelete: Cascade)
+  category   Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt  DateTime  @default(now())
+
+  @@id([adId, categoryId])
+  @@map("service_ad_categories")
+}
+
+model ServiceAdImage {
+  id        String    @id @default(cuid())
+  adId      String
+  url       String
+  altText   String?
+  ad        ServiceAd @relation(fields: [adId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+
+  @@index([adId])
+  @@map("service_ad_images")
+}
+
+model Application {
+  id             String              @id @default(cuid())
+  adId           String
+  professionalId String
+  proposedValue  Decimal?            @db.Decimal(10, 2)
+  message        String?             @db.Text
+  status         ApplicationStatus   @default(SENT)
+  ad             ServiceAd           @relation(fields: [adId], references: [id], onDelete: Cascade)
+  professional   ProfessionalProfile @relation(fields: [professionalId], references: [id], onDelete: Cascade)
+  contract       Contract?
+  conversations  Conversation[]
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+
+  @@unique([adId, professionalId])
+  @@index([professionalId])
+  @@index([status])
+  @@map("applications")
+}
+
+model DirectRequestImage {
+  id              String        @id @default(cuid())
+  directRequestId String
+  url             String
+  altText         String?
+  directRequest   DirectRequest @relation(fields: [directRequestId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+
+  @@index([directRequestId])
+  @@map("direct_request_images")
+}
+
+model DirectRequest {
+  id             String               @id @default(cuid())
+  clientId       String
+  professionalId String
+  title          String
+  description    String               @db.Text
+  location       String
+  startDate      DateTime?
+  startTime      String?
+  deadlineDays   Int?
+  budget         Decimal?             @db.Decimal(10, 2)
+  status         DirectRequestStatus  @default(SENT)
+  client         ClientProfile        @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  professional   ProfessionalProfile  @relation(fields: [professionalId], references: [id], onDelete: Cascade)
+  contract       Contract?
+  conversations  Conversation[]
+  images         DirectRequestImage[]
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+
+  @@index([clientId])
+  @@index([professionalId])
+  @@index([status])
+  @@map("direct_requests")
+}
+
+model Contract {
+  id              String                  @id @default(cuid())
+  clientId        String
+  professionalId  String
+  adId            String?                 @unique
+  applicationId   String?                 @unique
+  directRequestId String?                 @unique
+  title           String
+  description     String                  @db.Text
+  agreedValue     Decimal?                @db.Decimal(10, 2)
+  startDate       DateTime?
+  endDate         DateTime?
+  status          ContractStatus          @default(PENDING_START)
+  client          ClientProfile           @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  professional    ProfessionalProfile     @relation(fields: [professionalId], references: [id], onDelete: Cascade)
+  ad              ServiceAd?              @relation(fields: [adId], references: [id])
+  application     Application?            @relation(fields: [applicationId], references: [id])
+  directRequest   DirectRequest?          @relation(fields: [directRequestId], references: [id])
+  statusHistory   ContractStatusHistory[]
+  conversations   Conversation[]
+  review          Review?
+  createdAt       DateTime                @default(now())
+  updatedAt       DateTime                @updatedAt
+
+  @@index([clientId])
+  @@index([professionalId])
+  @@index([status])
+  @@map("contracts")
+}
+
+model ContractStatusHistory {
+  id         String          @id @default(cuid())
+  contractId String
+  fromStatus ContractStatus?
+  toStatus   ContractStatus
+  note       String?
+  contract   Contract        @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  createdAt  DateTime        @default(now())
+
+  @@index([contractId])
+  @@map("contract_status_history")
+}
+
+model PortfolioProject {
+  id             String                  @id @default(cuid())
+  professionalId String
+  title          String
+  location       String
+  description    String?                 @db.Text
+  professional   ProfessionalProfile     @relation(fields: [professionalId], references: [id], onDelete: Cascade)
+  images         PortfolioProjectImage[]
+  createdAt      DateTime                @default(now())
+  updatedAt      DateTime                @updatedAt
+
+  @@index([professionalId])
+  @@map("portfolio_projects")
+}
+
+model PortfolioProjectImage {
+  id        String             @id @default(cuid())
+  projectId String
+  url       String
+  type      PortfolioImageType @default(GENERAL)
+  altText   String?
+  project   PortfolioProject   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdAt DateTime           @default(now())
+
+  @@index([projectId])
+  @@map("portfolio_project_images")
+}
+
+model Review {
+  id                String              @id @default(cuid())
+  contractId        String              @unique
+  clientId          String
+  professionalId    String
+  rating            Int
+  comment           String?             @db.Text
+  professionalReply String?             @db.Text
+  repliedAt         DateTime?
+  reportReason      String?
+  reportDetails     String?             @db.Text
+  reportedAt        DateTime?
+  contract          Contract            @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  client            ClientProfile       @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  professional      ProfessionalProfile @relation(fields: [professionalId], references: [id], onDelete: Cascade)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  @@index([clientId])
+  @@index([professionalId])
+  @@map("reviews")
+}
+
+model Conversation {
+  id                 String         @id @default(cuid())
+  clientUserId       String
+  professionalUserId String
+  contractId         String?
+  applicationId      String?
+  directRequestId    String?
+  clientUser         User           @relation("ClientConversationUser", fields: [clientUserId], references: [id], onDelete: Cascade)
+  professionalUser   User           @relation("ProfessionalConversationUser", fields: [professionalUserId], references: [id], onDelete: Cascade)
+  contract           Contract?      @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  application        Application?   @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  directRequest      DirectRequest? @relation(fields: [directRequestId], references: [id], onDelete: Cascade)
+  messages           Message[]
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+
+  @@index([clientUserId])
+  @@index([professionalUserId])
+  @@index([contractId])
+  @@index([applicationId])
+  @@index([directRequestId])
+  @@map("conversations")
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  senderId       String
+  type           MessageType  @default(TEXT)
+  text           String?      @db.Text
+  audioUrl       String?
+  durationMs     Int?
+  readAt         DateTime?
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+
+  @@index([conversationId])
+  @@index([senderId])
+  @@map("messages")
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType
+  title     String
+  body      String
+  data      Json?
+  readAt    DateTime?
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime         @default(now())
+
+  @@index([userId, readAt])
+  @@map("notifications")
+}
+
+model DeviceToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  platform  String?
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@map("device_tokens")
 }

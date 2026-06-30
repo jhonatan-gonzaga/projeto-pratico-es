@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import { useState } from "react";
 import { Image, Pressable, Text, TextInput, View } from "react-native";
 
 import { statusMeta } from "../data";
@@ -26,11 +27,24 @@ export function NewRequestCard({
   onReject,
   request,
 }: {
-  onAccept: () => void;
+  onAccept: () => void | Promise<void>;
   onDetails: () => void;
   onReject: () => void;
   request: ServiceRequest;
 }) {
+  const [confirmingReject, setConfirmingReject] = useState(false);
+  const [isAwaitingApproval, setIsAwaitingApproval] = useState(false);
+
+  const handleAccept = async () => {
+    setIsAwaitingApproval(true);
+
+    try {
+      await onAccept();
+    } catch {
+      setIsAwaitingApproval(false);
+    }
+  };
+
   return (
     <View className="mx-4 mb-4 rounded-[8px] bg-card p-4 shadow-md shadow-black/10">
       <Text className="mb-3 text-xl font-bold leading-6 text-foreground">
@@ -70,7 +84,7 @@ export function NewRequestCard({
 
       <View className="flex-row gap-2">
         <Pressable
-          onPress={onReject}
+          onPress={() => setConfirmingReject(true)}
           className="min-h-[44px] flex-1 items-center justify-center rounded-[12px] border border-input-border bg-card px-4"
           accessibilityRole="button"
         >
@@ -79,11 +93,14 @@ export function NewRequestCard({
           </Text>
         </Pressable>
         <Pressable
-          onPress={onAccept}
+          onPress={handleAccept}
+          disabled={isAwaitingApproval}
           className="min-h-[44px] flex-1 items-center justify-center rounded-[12px] bg-primary px-4"
           accessibilityRole="button"
         >
-          <Text className="text-sm font-bold text-white">Aceitar</Text>
+          <Text className="text-sm font-bold text-white">
+            {isAwaitingApproval ? "Aguardando aprovacao" : "Aceitar"}
+          </Text>
         </Pressable>
       </View>
 
@@ -95,33 +112,75 @@ export function NewRequestCard({
         <Ionicons name="document-text-outline" size={15} color="#b94b50" />
         <Text className="text-sm font-semibold text-primary">Ver detalhes</Text>
       </Pressable>
+      {confirmingReject ? (
+        <View className="mt-3 gap-3 rounded-[12px] border border-[#f2cdd0] bg-[#fff7f7] p-3">
+          <Text className="text-sm leading-5 text-muted-foreground">
+            Ao recusar, este pedido sai da sua lista e nao entra em seus servicos.
+          </Text>
+          <View className="flex-row gap-2">
+            <Pressable
+              onPress={() => setConfirmingReject(false)}
+              className="min-h-[42px] flex-1 items-center justify-center rounded-[10px] border border-input-border bg-card"
+              accessibilityRole="button"
+            >
+              <Text className="text-sm font-semibold text-foreground">Voltar</Text>
+            </Pressable>
+            <Pressable
+              onPress={onReject}
+              className="min-h-[42px] flex-1 items-center justify-center rounded-[10px] bg-primary"
+              accessibilityRole="button"
+            >
+              <Text className="text-sm font-semibold text-white">Confirmar recusa</Text>
+            </Pressable>
+          </View>
+        </View>
+      ) : null}
     </View>
   );
 }
 
-export function ServiceFilterChips() {
-  const filters = ["Todos (6)", "Em Andamento (1)", "Concluido"];
+export type ServiceListFilter = "all" | "active" | "completed";
+
+export function ServiceFilterChips({
+  activeFilter = "all",
+  counts = { all: 0, active: 0, completed: 0 },
+  onChangeFilter,
+}: {
+  activeFilter?: ServiceListFilter;
+  counts?: Record<ServiceListFilter, number>;
+  onChangeFilter?: (filter: ServiceListFilter) => void;
+}) {
+  const filters: Array<{ key: ServiceListFilter; label: string }> = [
+    { key: "all", label: `Todos (${counts.all})` },
+    { key: "active", label: `Em andamento (${counts.active})` },
+    { key: "completed", label: `Concluido (${counts.completed})` },
+  ];
 
   return (
     <View className="flex-row gap-2 px-4 pb-4">
-      {filters.map((filter, index) => (
+      {filters.map((filter) => {
+        const selected = activeFilter === filter.key;
+
+        return (
         <Pressable
-          key={filter}
+          key={filter.key}
+          onPress={() => onChangeFilter?.(filter.key)}
           className={`rounded-[12px] px-4 py-2 shadow-sm ${
-            index === 0 ? "bg-primary" : "bg-card"
+            selected ? "bg-primary" : "bg-card"
           }`}
           accessibilityRole="button"
-          accessibilityState={{ selected: index === 0 }}
+          accessibilityState={{ selected }}
         >
           <Text
             className={`text-sm font-semibold ${
-              index === 0 ? "text-white" : "text-foreground"
+              selected ? "text-white" : "text-foreground"
             }`}
           >
-            {filter}
+            {filter.label}
           </Text>
         </Pressable>
-      ))}
+        );
+      })}
     </View>
   );
 }
@@ -171,6 +230,7 @@ export function ServiceOrderCard({
   service: ProfessionalService;
 }) {
   const compact = service.status === "completed";
+  const canStartService = service.status === "pending" && service.canStart !== false;
 
   return (
     <View className="mx-4 mb-4 rounded-[8px] bg-card p-4 shadow-md shadow-black/10">
@@ -236,15 +296,29 @@ export function ServiceOrderCard({
             ) : null}
           </Pressable>
         ) : null}
-        <Pressable
-          onPress={onPrimaryAction}
-          className="min-h-[44px] flex-1 items-center justify-center rounded-[12px] bg-primary px-4"
-          accessibilityRole="button"
-        >
-          <Text className="text-sm font-bold text-white">
-            {compact ? "Reabrir Servico" : service.action}
-          </Text>
-        </Pressable>
+        {compact ? (
+          <View className="min-h-[44px] flex-1 items-center justify-center rounded-[12px] bg-[#d1fae5] px-4">
+            <Text className="text-sm font-bold text-[#065f46]">
+              Finalizado
+            </Text>
+          </View>
+        ) : canStartService ? (
+          <Pressable
+            onPress={onPrimaryAction}
+            className="min-h-[44px] flex-1 items-center justify-center rounded-[12px] bg-primary px-4"
+            accessibilityRole="button"
+          >
+            <Text className="text-sm font-bold text-white">
+              {service.action}
+            </Text>
+          </Pressable>
+        ) : (
+          <View className="min-h-[44px] flex-1 items-center justify-center rounded-[12px] bg-[#f3eced] px-4">
+            <Text className="text-sm font-bold text-primary">
+              {service.status === "pending" ? "Aguardando aprovacao" : "Em andamento"}
+            </Text>
+          </View>
+        )}
       </View>
 
       <Pressable
@@ -261,29 +335,56 @@ export function ServiceOrderCard({
   );
 }
 
-export function ProjectPhotoGrid({ onEditPhoto }: { onEditPhoto: () => void }) {
+export function ProjectPhotoGrid({
+  images,
+  imageUri,
+  onAddPhoto,
+  onTakePhoto,
+  onEditPhoto,
+}: {
+  images?: ProjectItem["images"];
+  imageUri?: string;
+  onAddPhoto?: () => void;
+  onTakePhoto?: () => void;
+  onEditPhoto: (index: number) => void;
+}) {
+  const photos = images?.length
+    ? images
+    : imageUri
+      ? [{ url: imageUri, type: "COVER" as const }]
+      : [];
+  const mainPhoto = photos[0];
+
   return (
     <View className="flex-row flex-wrap gap-2">
       <View className="w-[48%]">
-        <Image
-          source={{
-            uri: "https://storage.googleapis.com/banani-generated-images/generated-images/3a22084a-7d43-47ce-bda1-718b62bd262d.jpg",
-          }}
-          className="h-[130px] w-full rounded-[12px]"
-          resizeMode="cover"
-          accessibilityLabel="Foto principal do projeto"
-        />
+        {mainPhoto ? (
+          <Image
+            source={{ uri: mainPhoto.url }}
+            className="h-[170px] w-full rounded-[12px]"
+            resizeMode="cover"
+            accessibilityLabel="Foto principal do projeto"
+          />
+        ) : (
+          <View className="h-[170px] w-full items-center justify-center rounded-[12px] bg-[#f5e8e9]">
+            <Ionicons name="image-outline" size={28} color="#b94b50" />
+          </View>
+        )}
         <View className="mt-1.5 flex-row items-center justify-between px-0.5">
           <View>
             <Text className="text-xs font-semibold text-foreground">
               Foto prin...
             </Text>
             <Text className="text-xs text-muted-foreground">
-              Capa do projeto
+              {mainPhoto?.type === "COVER"
+                ? "Capa do projeto"
+                : mainPhoto?.type ?? "Sem foto"}
             </Text>
           </View>
           <Pressable
-            onPress={onEditPhoto}
+            onPress={() =>
+              mainPhoto ? onEditPhoto(0) : onAddPhoto?.()
+            }
             className="h-7 w-7 items-center justify-center rounded-full bg-[#f5e8e9]"
             accessibilityRole="button"
             accessibilityLabel="Editar foto principal"
@@ -294,8 +395,8 @@ export function ProjectPhotoGrid({ onEditPhoto }: { onEditPhoto: () => void }) {
       </View>
 
       <Pressable
-        onPress={onEditPhoto}
-        className="h-[130px] w-[48%] items-center justify-center gap-1.5 rounded-[12px] border-[1.5px] border-dashed border-primary/30 bg-[#fdf0f0] px-2"
+        onPress={onAddPhoto ?? (() => onEditPhoto(Math.max(photos.length - 1, 0)))}
+        className="h-[170px] w-[48%] items-center justify-center gap-1.5 rounded-[12px] border-[1.5px] border-dashed border-primary/30 bg-[#fdf0f0] px-2"
         accessibilityRole="button"
       >
         <Ionicons name="images-outline" size={28} color="#b94b50" />
@@ -306,12 +407,36 @@ export function ProjectPhotoGrid({ onEditPhoto }: { onEditPhoto: () => void }) {
       </Pressable>
 
       <Pressable
-        className="h-[100px] w-[48%] items-center justify-center gap-2 rounded-[12px] bg-primary"
+        onPress={onTakePhoto ?? onAddPhoto ?? (() => onEditPhoto(Math.max(photos.length - 1, 0)))}
+        className="h-[130px] w-[48%] items-center justify-center gap-2 rounded-[12px] bg-primary"
         accessibilityRole="button"
       >
         <Ionicons name="camera-outline" size={26} color="#ffffff" />
         <Text className="text-sm font-semibold text-white">Tirar nova foto</Text>
       </Pressable>
+      {photos.slice(1).map((photo, index) => (
+        <Pressable
+          key={`${photo.url}-${index}`}
+          onPress={() => onEditPhoto(index + 1)}
+          className="w-[48%]"
+          accessibilityRole="button"
+        >
+          <Image
+            source={{ uri: photo.url }}
+            className="h-[130px] w-full rounded-[12px]"
+            resizeMode="cover"
+          />
+          <Text className="mt-1 text-xs font-semibold text-foreground">
+            {photo.type === "BEFORE"
+              ? "Antes"
+              : photo.type === "AFTER"
+                ? "Depois"
+                : photo.type === "COVER"
+                  ? "Capa"
+                  : "Imagem adicional"}
+          </Text>
+        </Pressable>
+      ))}
     </View>
   );
 }
@@ -329,14 +454,22 @@ export function ProjectListCard({
   project: ProjectItem;
   readOnly?: boolean;
 }) {
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+
   return (
     <View className="flex-row items-center gap-3 rounded-[8px] bg-card p-3 shadow-sm shadow-black/5">
-      <Image
-        source={{ uri: project.image }}
-        className="h-20 w-20 rounded-[6px]"
-        resizeMode="cover"
-        accessibilityLabel={project.title}
-      />
+      {project.image ? (
+        <Image
+          source={{ uri: project.image }}
+          className="h-20 w-20 rounded-[6px]"
+          resizeMode="cover"
+          accessibilityLabel={project.title}
+        />
+      ) : (
+        <View className="h-20 w-20 items-center justify-center rounded-[6px] bg-[#f5e8e9]">
+          <Ionicons name="image-outline" size={24} color="#b94b50" />
+        </View>
+      )}
 
       <View className="min-w-0 flex-1">
         <Text
@@ -374,7 +507,7 @@ export function ProjectListCard({
             <Ionicons name="pencil" size={15} color="#0f1720" />
           </Pressable>
           <Pressable
-            onPress={onDelete}
+            onPress={() => setConfirmingDelete(true)}
             className="h-9 w-9 items-center justify-center rounded-full bg-[#f5e8e9]"
             accessibilityRole="button"
             accessibilityLabel={`Excluir ${project.title}`}
@@ -383,6 +516,27 @@ export function ProjectListCard({
           </Pressable>
         </View>
       )}
+      {!readOnly && confirmingDelete ? (
+        <View className="absolute inset-x-3 bottom-3 gap-2 rounded-[12px] border border-[#f2cdd0] bg-[#fff7f7] p-3">
+          <Text className="text-xs leading-4 text-muted-foreground">
+            Este projeto sera removido do seu portfolio.
+          </Text>
+          <View className="flex-row gap-2">
+            <Pressable
+              onPress={() => setConfirmingDelete(false)}
+              className="min-h-[36px] flex-1 items-center justify-center rounded-[10px] border border-input-border bg-card"
+            >
+              <Text className="text-xs font-semibold text-foreground">Voltar</Text>
+            </Pressable>
+            <Pressable
+              onPress={onDelete}
+              className="min-h-[36px] flex-1 items-center justify-center rounded-[10px] bg-primary"
+            >
+              <Text className="text-xs font-semibold text-white">Excluir</Text>
+            </Pressable>
+          </View>
+        </View>
+      ) : null}
     </View>
   );
 }
@@ -455,52 +609,67 @@ export function SettingsDivider() {
   return <View className="mx-4 border-b border-input-border" />;
 }
 
-export function EditProjectPhotoGrid({ onEditPhoto }: { onEditPhoto: () => void }) {
-  const photos = [
-    {
-      label: "CAPA",
-      color: "#b94b50",
-      image:
-        "https://storage.googleapis.com/banani-generated-images/generated-images/59b1f7e0-fd40-4144-aa26-a53271da7969.jpg",
-    },
-    {
-      label: "ANTES",
-      color: "#5a6a7a",
-      image:
-        "https://storage.googleapis.com/banani-generated-images/generated-images/bd906ca1-8db2-4c0c-98a8-ca75f63726c7.jpg",
-    },
-    {
-      label: "DEPOIS",
-      color: "#3a8a5a",
-      image:
-        "https://storage.googleapis.com/banani-generated-images/generated-images/8d181b67-7364-44b6-82de-1785a9037616.jpg",
-    },
-  ];
+export function EditProjectPhotoGrid({
+  images,
+  imageUri,
+  onAddPhoto,
+  onTakePhoto,
+  onEditPhoto,
+}: {
+  images?: ProjectItem["images"];
+  imageUri?: string;
+  onAddPhoto?: () => void;
+  onTakePhoto?: () => void;
+  onEditPhoto: (index: number) => void;
+}) {
+  const sourcePhotos = images?.length
+    ? images
+    : imageUri
+      ? [{ url: imageUri, type: "COVER" as const }]
+      : [];
+  const colorByType = {
+    COVER: "#b94b50",
+    BEFORE: "#5a6a7a",
+    AFTER: "#3a8a5a",
+    GENERAL: "#5a6e8a",
+  };
+  const labelByType = {
+    COVER: "CAPA",
+    BEFORE: "ANTES",
+    AFTER: "DEPOIS",
+    GENERAL: "ADICIONAL",
+  };
 
   return (
     <>
       <View className="mb-2 flex-row gap-2">
-        {photos.map((photo) => (
-          <View key={photo.label} className="relative flex-1">
-            <Image
-              source={{ uri: photo.image }}
-              className="h-[88px] w-full rounded-[12px]"
-              resizeMode="cover"
-              accessibilityLabel={`Foto ${photo.label.toLowerCase()}`}
-            />
+        {sourcePhotos.slice(0, 3).map((photo, index) => (
+          <View key={`${photo.url}-${index}`} className="relative flex-1">
+            {photo.url ? (
+              <Image
+                source={{ uri: photo.url }}
+                className="h-[132px] w-full rounded-[12px]"
+                resizeMode="cover"
+                accessibilityLabel={`Foto ${labelByType[photo.type].toLowerCase()}`}
+              />
+            ) : (
+              <View className="h-[132px] w-full items-center justify-center rounded-[12px] bg-[#f5e8e9]">
+                <Ionicons name="image-outline" size={20} color="#b94b50" />
+              </View>
+            )}
             <View
               className="absolute left-1.5 top-1.5 rounded-full px-1.5 py-0.5"
-              style={{ backgroundColor: photo.color }}
+              style={{ backgroundColor: colorByType[photo.type] }}
             >
               <Text className="text-[9px] font-bold text-white">
-                {photo.label}
+                {labelByType[photo.type]}
               </Text>
             </View>
             <Pressable
-              onPress={onEditPhoto}
+              onPress={() => onEditPhoto(index)}
               className="absolute right-1.5 top-1.5 h-5 w-5 items-center justify-center rounded-full bg-card shadow-sm"
               accessibilityRole="button"
-              accessibilityLabel={`Editar foto ${photo.label.toLowerCase()}`}
+              accessibilityLabel={`Editar foto ${labelByType[photo.type].toLowerCase()}`}
             >
               <Ionicons name="pencil" size={10} color="#b94b50" />
             </Pressable>
@@ -510,8 +679,8 @@ export function EditProjectPhotoGrid({ onEditPhoto }: { onEditPhoto: () => void 
 
       <View className="mt-3 flex-row gap-2">
         <Pressable
-          onPress={onEditPhoto}
-          className="h-[72px] flex-1 items-center justify-center gap-1.5 rounded-[12px] bg-primary"
+          onPress={onTakePhoto ?? onAddPhoto ?? (() => onEditPhoto(Math.max(sourcePhotos.length - 1, 0)))}
+          className="h-[82px] flex-1 items-center justify-center gap-1.5 rounded-[12px] bg-primary"
           accessibilityRole="button"
           accessibilityLabel="Tirar nova foto do projeto"
         >
@@ -521,8 +690,8 @@ export function EditProjectPhotoGrid({ onEditPhoto }: { onEditPhoto: () => void 
           </Text>
         </Pressable>
         <Pressable
-          onPress={onEditPhoto}
-          className="h-[72px] flex-1 items-center justify-center gap-1.5 rounded-[12px] border-[1.5px] border-dashed border-primary/30 bg-[#fdf0f0]"
+          onPress={onAddPhoto ?? (() => onEditPhoto(Math.max(sourcePhotos.length - 1, 0)))}
+          className="h-[82px] flex-1 items-center justify-center gap-1.5 rounded-[12px] border-[1.5px] border-dashed border-primary/30 bg-[#fdf0f0]"
           accessibilityRole="button"
           accessibilityLabel="Adicionar fotos ao projeto"
         >

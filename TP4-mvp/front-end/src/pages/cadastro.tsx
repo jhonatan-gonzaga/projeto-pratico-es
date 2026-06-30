@@ -1,17 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
-import { Alert, Image, Pressable, Text, TextInput, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
 import {
-  AccountRow,
   BrandLogo,
-  Divider,
   Field,
-  PermissionItem,
-  ProfileCard,
-  ProfileInfoField,
-  SocialButtons,
 } from "../components/app-components";
 import type { ValidationStatus } from "../components/app-components";
 import {
@@ -21,10 +14,7 @@ import {
   isValidPassword,
   isValidPhone,
 } from "../services/validators";
-
-const logo = require("../../assets/logotipo.png");
-
-type ProfileType = "cliente" | "profissional";
+import { ApiError, api } from "../services/api";
 
 const validationStatus = (
   isTouched: boolean,
@@ -39,20 +29,22 @@ const validationStatus = (
 
 export function SignupScreen({
   onLogin,
-  onGoogle,
-  onPhone,
+  onOpenPrivacy,
+  onOpenTerms,
   onSuccess,
 }: {
   onLogin: () => void;
-  onGoogle: () => void;
-  onPhone: () => void;
+  onOpenPrivacy: () => void;
+  onOpenTerms: () => void;
   onSuccess: () => void;
 }) {
-  const [name, setName] = useState("Maria da Silva");
-  const [phone, setPhone] = useState("(11) 99999-9999");
-  const [email, setEmail] = useState("maria@email.com");
-  const [password, setPassword] = useState("conecta12");
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [touched, setTouched] = useState({
     name: false,
     phone: false,
@@ -66,6 +58,34 @@ export function SignupScreen({
   const passwordIsValid = isValidPassword(password);
   const signupIsValid =
     nameIsValid && phoneIsValid && emailIsValid && passwordIsValid;
+
+  const handleSignup = async () => {
+    if (!signupIsValid || isSubmitting) {
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      await api.register({
+        name,
+        phone,
+        email,
+        password,
+        role: "CLIENTE",
+      });
+      onSuccess();
+    } catch (error) {
+      setSubmitError(
+        error instanceof ApiError
+          ? error.message
+          : "Nao foi possivel cadastrar agora.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <View className="relative min-h-[812px] w-full max-w-[480px] overflow-hidden bg-background">
@@ -170,19 +190,24 @@ export function SignupScreen({
         />
 
         <Pressable
-          disabled={!signupIsValid}
-          onPress={onSuccess}
+          disabled={!signupIsValid || isSubmitting}
+          onPress={handleSignup}
           className={`mt-1 min-h-[56px] flex-row items-center justify-center gap-2 rounded-full px-6 shadow-lg shadow-primary/40 ${
-            signupIsValid ? "bg-primary" : "bg-[#d7a0a3]"
+            signupIsValid && !isSubmitting ? "bg-primary" : "bg-[#d7a0a3]"
           }`}
           accessibilityRole="button"
         >
-          <Text className="text-base font-bold text-white">Cadastrar</Text>
+          <Text className="text-base font-bold text-white">
+            {isSubmitting ? "Cadastrando..." : "Cadastrar"}
+          </Text>
           <Ionicons name="arrow-forward" size={18} color="#ffffff" />
         </Pressable>
 
-        <Divider />
-        <SocialButtons onGoogle={onGoogle} onPhone={onPhone} />
+        {submitError ? (
+          <Text className="text-center text-xs font-semibold text-primary">
+            {submitError}
+          </Text>
+        ) : null}
       </View>
 
       <View className="z-10 items-center gap-2.5 px-6 pb-6 pt-[18px]">
@@ -193,15 +218,24 @@ export function SignupScreen({
           </Text>
         </Pressable>
         <Text className="text-center text-xs leading-5 text-muted-foreground">
-          Ao cadastrar, voce concorda com nossos{" "}
-          <Text className="font-semibold text-primary">Termos de Uso</Text> e{" "}
-          <Text className="font-semibold text-primary">
-            Politica de Privacidade
-          </Text>
-          .
+          Ao cadastrar, voce concorda com nossos
+        </Text>
+        <View className="flex-row flex-wrap items-center justify-center gap-x-1">
+          <Pressable onPress={onOpenTerms} accessibilityRole="button">
+            <Text className="text-xs font-semibold text-primary">Termos de Uso</Text>
+          </Pressable>
+          <Text className="text-xs text-muted-foreground">e</Text>
+          <Pressable onPress={onOpenPrivacy} accessibilityRole="button">
+            <Text className="text-xs font-semibold text-primary">
+              Politica de Privacidade
+            </Text>
+          </Pressable>
+          <Text className="text-xs text-muted-foreground">.</Text>
+        </View>
+        <Text className="text-center text-xs leading-5 text-muted-foreground">
+          Versao 1.0.0
         </Text>
       </View>
     </View>
   );
 }
-

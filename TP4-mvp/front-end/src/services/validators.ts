@@ -66,6 +66,18 @@ export const isPositiveInteger = (value: string) =>
 export const isValidTime = (value: string) =>
   /^([01]\d|2[0-3]):[0-5]\d$/.test(value.trim());
 
+export const isFutureOrTodayDate = (value: string) => {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value.trim())) {
+    return false;
+  }
+
+  const date = new Date(`${value.trim()}T00:00:00`);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  return Number.isFinite(date.getTime()) && date >= today;
+};
+
 export const parseBRMoney = (value: string) => {
   const cleaned = value
     .trim()

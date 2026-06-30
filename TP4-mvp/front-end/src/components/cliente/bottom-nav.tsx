@@ -1,5 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
+import { useEffect, useState } from "react";
 import { Pressable, Text, View } from "react-native";
+
+import { api } from "../../services/api";
 
 export type ClientNavKey = "home" | "work" | "search" | "ads" | "settings";
 
@@ -19,16 +22,40 @@ const navItems: NavItem[] = [
   { key: "home", label: "Inicio", icon: "home-outline" },
   { key: "work", label: "minha obra", icon: "hammer-outline" },
   { key: "search", label: "Buscar", icon: "search-outline" },
-  { key: "ads", label: "Anunciar", icon: "megaphone-outline", badge: "3" },
+  { key: "ads", label: "Anunciar", icon: "megaphone-outline" },
   { key: "settings", label: "Configuracoes", icon: "settings-outline" },
 ];
 
 export function ClientBottomNav({ active = "home", onSelect }: ClientBottomNavProps) {
+  const [badges, setBadges] = useState<Partial<Record<ClientNavKey, number>>>({});
+
+  useEffect(() => {
+    let isMounted = true;
+
+    Promise.all([api.myServiceAdsSummary(), api.unreadConversations()])
+      .then(([ads, messages]) => {
+        if (!isMounted) {
+          return;
+        }
+
+        setBadges({
+          ads: ads.receivedApplications,
+          work: messages.count,
+        });
+      })
+      .catch(() => undefined);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [active]);
+
   return (
     <View className="border-t border-input-border bg-card px-2 py-3 shadow-lg shadow-black/10">
       <View className="flex-row items-center justify-around">
         {navItems.map((item) => {
           const isActive = active === item.key;
+          const badge = badges[item.key];
 
           return (
             <Pressable
@@ -44,10 +71,10 @@ export function ClientBottomNav({ active = "home", onSelect }: ClientBottomNavPr
                   size={24}
                   color={isActive ? "#b94b50" : "#9e8e8f"}
                 />
-                {item.badge ? (
+                {badge ? (
                   <View className="absolute -right-2 -top-1 h-4 w-4 items-center justify-center rounded-full bg-primary">
                     <Text className="text-[10px] font-bold text-white">
-                      {item.badge}
+                      {badge > 9 ? "9+" : badge}
                     </Text>
                   </View>
                 ) : null}

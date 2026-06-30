@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Image, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
 import { professionalServices, projectItems, serviceRequests } from "../../components/profissional/data";
@@ -13,6 +13,8 @@ import {
   isValidName,
   isValidTime,
 } from "../../services/validators";
+import { pickAndUploadImage } from "../../services/image-upload";
+import { ApiError, ProfessionalProfile, api, formatDate, formatMoney } from "../../services/api";
 import {
   ChoiceChip,
   CustomerAvatar,
@@ -47,25 +49,42 @@ import { TermsOfUseScreen } from "./termos-uso";
 
 type SettingsPage = "home" | "profile" | "notifications" | "privacy" | "help" | "terms";
 
-const professionalReviewItems = [
-  {
-    author: "Maria S.",
-    initials: "MS",
-    rating: 4,
-    text: "Excelente profissional, deixou o acabamento muito bem feito.",
-    date: "Ha 2 dias",
-  },
-  {
-    author: "Roberto A.",
-    initials: "RA",
-    rating: 4,
-    text: "Muito bom! Trabalho rapido e caprichado.",
-    date: "Ha 3 dias",
-  },
-];
-
-type ProfessionalReview = (typeof professionalReviewItems)[number];
+type ProfessionalReview = {
+  author: string;
+  date: string;
+  id: string;
+  initials: string;
+  rating: number;
+  reply?: string;
+  reported?: boolean;
+  text: string;
+};
 type ReviewAction = "reply" | "report";
+
+function getInitials(name: string) {
+  return name
+    .split(" ")
+    .filter(Boolean)
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+}
+
+function mapProfileReview(review: NonNullable<ProfessionalProfile["reviews"]>[number]): ProfessionalReview {
+  const author = review.client.user.name;
+
+  return {
+    author,
+    date: formatDate(review.createdAt),
+    id: review.id,
+    initials: getInitials(author),
+    rating: review.rating,
+    reply: review.professionalReply ?? undefined,
+    reported: Boolean(review.reportedAt),
+    text: review.comment ?? "Avaliacao sem comentario.",
+  };
+}
 
 function ReviewStars({ rating, size = 15 }: { rating: number; size?: number }) {
   return (
@@ -91,7 +110,11 @@ function ReviewActionScreen({
 }: {
   action: ReviewAction;
   onBack: () => void;
-  onDone: () => void;
+  onDone: (result: {
+    reply?: string;
+    reportDetails?: string;
+    reportReason?: string;
+  }) => void | Promise<void>;
   onProfilePress: () => void;
   review: ProfessionalReview;
 }) {
@@ -113,14 +136,36 @@ function ReviewActionScreen({
     : !isRequiredText(reportDetails, 15)
       ? "Descreva o motivo do reporte com pelo menos 15 caracteres."
       : undefined;
-  const handleDone = () => {
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const handleDone = async () => {
     setSubmitted(true);
+    setSubmitError(null);
 
     if (detailsError) {
       return;
     }
 
-    onDone();
+    setIsSubmitting(true);
+
+    try {
+      await onDone(
+        isReply
+          ? { reply: reply.trim() }
+          : {
+              reportDetails: reportDetails.trim(),
+              reportReason: selectedReason,
+            },
+      );
+    } catch (error) {
+      setSubmitError(
+        error instanceof ApiError
+          ? error.message
+          : "Nao foi possivel enviar sua acao.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -270,13 +315,23 @@ function ReviewActionScreen({
         <View className="gap-3">
           <Pressable
             onPress={handleDone}
+            disabled={isSubmitting}
             className="min-h-[56px] items-center justify-center rounded-[16px] bg-primary px-6"
             accessibilityRole="button"
           >
             <Text className="text-base font-bold text-white">
-              {isReply ? "Enviar Resposta" : "Enviar Reporte"}
+              {isSubmitting
+                ? "Enviando..."
+                : isReply
+                  ? "Enviar Resposta"
+                  : "Enviar Reporte"}
             </Text>
           </Pressable>
+          {submitError ? (
+            <Text className="text-center text-xs font-semibold text-primary">
+              {submitError}
+            </Text>
+          ) : null}
 
           <Pressable
             onPress={onBack}
@@ -302,7 +357,8 @@ function ProfessionalProfileSettingsScreen({
   onProfilePress: () => void;
   onSave: () => void;
 }) {
-  const [name, setName] = useState("Joao Nonato");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [dailyRate, setDailyRate] = useState("R$ 150");
   const [neighborhood, setNeighborhood] = useState("Centro");
   const [street, setStreet] = useState("Rua Borba");
@@ -340,6 +396,10 @@ function ProfessionalProfileSettingsScreen({
   const [selectedReview, setSelectedReview] =
     useState<ProfessionalReview | null>(null);
   const [reviewAction, setReviewAction] = useState<ReviewAction | null>(null);
+  const [profilePhotoUrl, setProfilePhotoUrl] = useState<string | null>(null);
+  const [photoError, setPhotoError] = useState<string | null>(null);
+  const [reviews, setReviews] = useState<ProfessionalReview[]>([]);
+  const [reviewLoadError, setReviewLoadError] = useState<string | null>(null);
 
   const specialtyOptions = [
     "Pedreiro",
@@ -348,6 +408,7 @@ function ProfessionalProfileSettingsScreen({
     "Encanador",
     "Ajudante",
     "Ar Condicionado",
+    "Carpinteiro",
   ];
   const days = [
     { id: "S", label: "S" },
@@ -383,6 +444,93 @@ function ProfessionalProfileSettingsScreen({
   const closeReviewAction = () => {
     setSelectedReview(null);
     setReviewAction(null);
+  };
+
+  useEffect(() => {
+    api.professionalMe()
+      .then((profile) => {
+        setName(profile.user.name);
+        setEmail(profile.user.email);
+        setDailyRate(formatMoney(profile.dailyRate));
+        setNeighborhood(profile.address?.neighborhood ?? "");
+        setStreet(profile.address?.street ?? "");
+        setNumber(profile.address?.number ?? "");
+        setAbout(profile.about ?? "");
+        setSpecialties(profile.specialties.map((item) => item.category.name));
+        setProfilePhotoUrl(profile.user.avatarUrl ?? null);
+        setReviews((profile.reviews ?? []).map(mapProfileReview));
+
+        const firstAvailability = profile.availability[0];
+        if (firstAvailability) {
+          setStartTime(firstAvailability.startTime);
+          setEndTime(firstAvailability.endTime);
+        }
+      })
+      .catch((error) => {
+        setReviewLoadError(
+          error instanceof ApiError
+            ? error.message
+            : "Nao foi possivel carregar as avaliacoes.",
+        );
+      });
+  }, []);
+
+  const reviewAverage = useMemo(() => {
+    if (reviews.length === 0) {
+      return 0;
+    }
+
+    return reviews.reduce((total, review) => total + review.rating, 0) / reviews.length;
+  }, [reviews]);
+
+  const handleReviewActionDone = async (result: {
+    reply?: string;
+    reportDetails?: string;
+    reportReason?: string;
+  }) => {
+    if (!selectedReview) {
+      closeReviewAction();
+      return;
+    }
+
+    if (result.reply) {
+      await api.replyReview(selectedReview.id, { reply: result.reply });
+    } else if (result.reportDetails && result.reportReason) {
+      await api.reportReview(selectedReview.id, {
+        details: result.reportDetails,
+        reason: result.reportReason,
+      });
+    }
+
+    setReviews((current) =>
+      current.map((review) =>
+        review.id === selectedReview.id
+          ? {
+              ...review,
+              reply: result.reply ?? review.reply,
+              reported: result.reportDetails ? true : review.reported,
+            }
+          : review,
+      ),
+    );
+    closeReviewAction();
+  };
+
+  const handlePickProfilePhoto = async () => {
+    setPhotoError(null);
+
+    try {
+      const uploadedUrl = await pickAndUploadImage();
+
+      if (uploadedUrl) {
+        setProfilePhotoUrl(uploadedUrl);
+        await api.updateMe({ avatarUrl: uploadedUrl });
+      }
+    } catch (error) {
+      setPhotoError(
+        error instanceof Error ? error.message : "Nao foi possivel enviar a foto.",
+      );
+    }
   };
 
   const errors = getProfessionalProfileErrors({
@@ -424,7 +572,7 @@ function ProfessionalProfileSettingsScreen({
       <ReviewActionScreen
         action={reviewAction}
         onBack={closeReviewAction}
-        onDone={closeReviewAction}
+        onDone={handleReviewActionDone}
         onProfilePress={onProfilePress}
         review={selectedReview}
       />
@@ -444,9 +592,18 @@ function ProfessionalProfileSettingsScreen({
         <View className="items-center px-4 pb-2 pt-6">
           <View className="relative mb-5">
             <View className="h-28 w-28 items-center justify-center rounded-full border-4 border-primary bg-[#f7e8e9]">
-              <Text className="text-3xl font-bold text-primary">JN</Text>
+              {profilePhotoUrl ? (
+                <Image
+                  source={{ uri: profilePhotoUrl }}
+                  className="h-full w-full rounded-full"
+                  resizeMode="cover"
+                />
+              ) : (
+                <Text className="text-3xl font-bold text-primary">JN</Text>
+              )}
             </View>
             <Pressable
+              onPress={handlePickProfilePhoto}
               className="absolute bottom-1 right-1 h-8 w-8 items-center justify-center rounded-full border-2 border-background bg-primary"
               accessibilityRole="button"
               accessibilityLabel="Alterar foto do perfil profissional"
@@ -454,12 +611,19 @@ function ProfessionalProfileSettingsScreen({
               <Ionicons name="camera" size={15} color="#ffffff" />
             </Pressable>
           </View>
+          {photoError ? (
+            <Text className="mb-3 text-center text-xs font-semibold text-primary">
+              {photoError}
+            </Text>
+          ) : null}
 
           <View className="w-full items-center rounded-[8px] bg-card px-6 py-5 shadow-md shadow-black/10">
-            <Text className="mb-1 text-4xl font-bold text-foreground">4.0</Text>
-            <ReviewStars rating={4} size={22} />
+            <Text className="mb-1 text-4xl font-bold text-foreground">
+              {reviewAverage.toFixed(1)}
+            </Text>
+            <ReviewStars rating={Math.round(reviewAverage)} size={22} />
             <Text className="mt-1 text-sm text-muted-foreground">
-              Baseado em 12 avaliacoes
+              Baseado em {reviews.length} avaliacao(oes)
             </Text>
           </View>
         </View>
@@ -470,15 +634,24 @@ function ProfessionalProfileSettingsScreen({
           </Text>
         </View>
 
-        <ScrollView
-          horizontal
-          className="mt-3"
-          contentContainerClassName="gap-3 px-4 pb-2"
-          showsHorizontalScrollIndicator={false}
-        >
-          {professionalReviewItems.map((review) => (
+        {reviewLoadError ? (
+          <Text className="mt-3 px-4 text-sm font-semibold text-primary">
+            {reviewLoadError}
+          </Text>
+        ) : reviews.length === 0 ? (
+          <Text className="mt-3 px-4 text-sm text-muted-foreground">
+            Voce ainda nao recebeu avaliacoes.
+          </Text>
+        ) : (
+          <ScrollView
+            horizontal
+            className="mt-3"
+            contentContainerClassName="gap-3 px-4 pb-2"
+            showsHorizontalScrollIndicator={false}
+          >
+          {reviews.map((review) => (
             <View
-              key={review.author}
+              key={review.id}
               className="w-64 rounded-[8px] bg-card p-4 shadow-md shadow-black/10"
             >
               <View className="mb-2 flex-row items-center justify-between gap-2">
@@ -500,6 +673,16 @@ function ProfessionalProfileSettingsScreen({
               <Text className="mb-3 text-xs text-muted-foreground">
                 {review.date}
               </Text>
+              {review.reply ? (
+                <Text className="mb-3 rounded-[10px] bg-[#f7eced] px-3 py-2 text-xs leading-5 text-primary">
+                  Resposta: {review.reply}
+                </Text>
+              ) : null}
+              {review.reported ? (
+                <Text className="mb-3 text-xs font-semibold text-muted-foreground">
+                  Reporte enviado para analise.
+                </Text>
+              ) : null}
               <View className="flex-row gap-4">
                 <Pressable
                   onPress={() => openReviewAction(review, "reply")}
@@ -534,7 +717,8 @@ function ProfessionalProfileSettingsScreen({
               </View>
             </View>
           ))}
-        </ScrollView>
+          </ScrollView>
+        )}
 
         <View className="mt-5 gap-5 px-4">
           <SetupSection label="Nome Completo">
@@ -705,6 +889,23 @@ export function SettingsScreen({
   onSelectArea: (area: ProfessionalArea) => void;
 }) {
   const [settingsPage, setSettingsPage] = useState<SettingsPage>("home");
+  const [settingsUser, setSettingsUser] = useState({
+    avatarUrl: null as string | null,
+    email: "",
+    name: "",
+  });
+
+  useEffect(() => {
+    api.me()
+      .then((user) =>
+        setSettingsUser({
+          avatarUrl: user.avatarUrl ?? null,
+          email: user.email,
+          name: user.name,
+        }),
+      )
+      .catch(() => undefined);
+  }, []);
 
   if (settingsPage === "notifications") {
     return (
@@ -768,12 +969,23 @@ export function SettingsScreen({
           accessibilityLabel="Editar perfil profissional"
         >
           <View className="h-16 w-16 items-center justify-center rounded-[14px] border-2 border-primary bg-[#f7e8e9]">
-            <Ionicons name="person" size={32} color="#b94b50" />
+            {settingsUser.avatarUrl ? (
+              <Image
+                source={{ uri: settingsUser.avatarUrl }}
+                className="h-full w-full rounded-[12px]"
+                resizeMode="cover"
+                accessibilityLabel="Foto do profissional"
+              />
+            ) : (
+              <Ionicons name="person" size={32} color="#b94b50" />
+            )}
           </View>
           <View className="flex-1">
-            <Text className="text-lg font-bold text-foreground">Jhon Souza</Text>
+            <Text className="text-lg font-bold text-foreground">
+              {settingsUser.name || "Profissional"}
+            </Text>
             <Text className="mt-0.5 text-sm text-muted-foreground">
-              jhon.souza@email.com
+              {settingsUser.email || "E-mail nao informado"}
             </Text>
           </View>
           <Ionicons name="chevron-forward" size={18} color="#8a8490" />

@@ -3,6 +3,8 @@ import { JwtService } from '@nestjs/jwt';
 import { User, UserRole } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { GoogleAuthDto } from './dto/google-auth.dto';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 
@@ -42,6 +44,43 @@ export class AuthService {
     return this.buildAuthResponse(user);
   }
 
+  async google(googleAuthDto: GoogleAuthDto) {
+    const email = googleAuthDto.email.toLowerCase();
+    const existingUser = await this.usersService.findByEmail(email);
+
+    if (existingUser) {
+      return this.buildAuthResponse(existingUser);
+    }
+
+    const passwordHash = await bcrypt.hash(this.generateTemporaryPassword(), 10);
+    const user = await this.usersService.create({
+      name: googleAuthDto.name,
+      email,
+      avatarUrl: googleAuthDto.avatarUrl,
+      passwordHash,
+      role: UserRole.CLIENTE,
+    });
+
+    return this.buildAuthResponse(user);
+  }
+
+  async forgotPassword(forgotPasswordDto: ForgotPasswordDto) {
+    const user = await this.usersService.findByEmail(forgotPasswordDto.email.toLowerCase());
+
+    if (!user) {
+      throw new NotFoundException('E-mail nao encontrado.');
+    }
+
+    const temporaryPassword = this.generateTemporaryPassword();
+    const passwordHash = await bcrypt.hash(temporaryPassword, 10);
+    await this.usersService.updatePasswordHash(user.id, passwordHash);
+
+    return {
+      message: 'Senha temporaria gerada com sucesso.',
+      temporaryPassword,
+    };
+  }
+
   async profile(userId: string) {
     const user = await this.usersService.findById(userId);
 
@@ -71,9 +110,15 @@ export class AuthService {
       name: user.name,
       email: user.email,
       phone: user.phone,
+      avatarUrl: user.avatarUrl,
       role: user.role,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };
+  }
+
+  private generateTemporaryPassword() {
+    const suffix = Math.random().toString(36).slice(2, 8);
+    return `Conecta${suffix}1`;
   }
 }

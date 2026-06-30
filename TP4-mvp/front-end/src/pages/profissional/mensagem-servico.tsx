@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
-import { Linking, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { Audio } from "expo-av";
+import { useEffect, useState } from "react";
+import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
 import type { ProfessionalService } from "../../components/profissional/types";
 import {
@@ -8,7 +9,21 @@ import {
   ProjectHeader,
   StatusBadge,
 } from "../../components/profissional/components";
+import { EmptyState, ErrorState, LoadingState } from "../../components/feedback-state";
+import {
+  AudioRecordingState,
+  startAudioRecording,
+  stopAndUploadAudio,
+} from "../../services/audio-upload";
+import { ApiError, MessageItem, api } from "../../services/api";
 import { validateMessage } from "../../services/validators";
+
+function formatAudioDuration(durationMs?: number | null) {
+  const totalSeconds = Math.max(0, Math.round((durationMs ?? 0) / 1000));
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = String(totalSeconds % 60).padStart(2, "0");
+  return `${minutes}:${seconds}`;
+}
 
 export function ServiceMessageScreen({
   onBack,
@@ -20,58 +35,151 @@ export function ServiceMessageScreen({
   service: ProfessionalService;
 }) {
   const [message, setMessage] = useState("");
-  const [messageTouched, setMessageTouched] = useState(false);
-  const [messageSubmitted, setMessageSubmitted] = useState(false);
-  const [messages, setMessages] = useState([
-    {
-      id: "1",
-      fromMe: false,
-      text: "Bom dia! Podemos confirmar o horario do servico?",
-      time: "08:12",
-    },
-    {
-      id: "2",
-      fromMe: true,
-      text: "Bom dia, posso sim. Chego no endereco as 8h.",
-      time: "08:15",
-    },
-    {
-      id: "3",
-      fromMe: false,
-      text: "Perfeito. Vou deixar o material separado.",
-      time: "08:18",
-    },
-  ]);
+  const [messages, setMessages] = useState<MessageItem[]>([]);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(Boolean(service.conversationId));
+  const [error, setError] = useState<string | null>(null);
+  const [recordingState, setRecordingState] = useState<AudioRecordingState>({
+    recording: null,
+    startedAt: null,
+  });
+  const [playingAudio, setPlayingAudio] = useState<{
+    id: string;
+    isPlaying: boolean;
+    sound: Audio.Sound;
+  } | null>(null);
 
-  const openWhatsapp = () => {
-    Linking.openURL("https://wa.me/5592999999999");
-  };
-
-  const sendMessage = () => {
-    const trimmed = message.trim();
-    const validation = validateMessage(message);
-    setMessageSubmitted(true);
-
-    if (!validation.isValid) {
+  const loadMessages = async () => {
+    if (!service.conversationId) {
+      setIsLoading(false);
       return;
     }
 
-    setMessages((current) => [
-      ...current,
-      {
-        id: `${Date.now()}`,
-        fromMe: true,
-        text: trimmed,
-        time: "Agora",
-      },
-    ]);
-    setMessage("");
-    setMessageSubmitted(false);
-    setMessageTouched(false);
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const [user, items] = await Promise.all([
+        api.me(),
+        api.conversationMessages(service.conversationId),
+      ]);
+      setCurrentUserId(user.id);
+      setMessages(items);
+    } catch (loadError) {
+      setError(
+        loadError instanceof ApiError
+          ? loadError.message
+          : "Nao foi possivel carregar mensagens.",
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
-  const messageValidation = validateMessage(message);
-  const showMessageError =
-    (messageTouched || messageSubmitted) && !messageValidation.isValid;
+
+  useEffect(() => {
+    void loadMessages();
+  }, [service.conversationId]);
+
+  useEffect(() => {
+    return () => {
+      void playingAudio?.sound.unloadAsync();
+    };
+  }, [playingAudio?.sound]);
+
+  const sendMessage = async () => {
+    const validation = validateMessage(message);
+
+    if (!validation.isValid || !service.conversationId) {
+      setError(validation.message ?? "Digite uma mensagem.");
+      return;
+    }
+
+    try {
+      const sent = await api.sendMessage(service.conversationId, {
+        text: message.trim(),
+      });
+      setMessages((current) => [...current, sent]);
+      setMessage("");
+      setError(null);
+    } catch (sendError) {
+      setError(
+        sendError instanceof ApiError
+          ? sendError.message
+          : "Nao foi possivel enviar mensagem.",
+      );
+    }
+  };
+
+  const toggleAudio = async () => {
+    if (!service.conversationId) {
+      return;
+    }
+
+    try {
+      if (recordingState.recording) {
+        const uploaded = await stopAndUploadAudio(recordingState);
+        setRecordingState({ recording: null, startedAt: null });
+
+        if (uploaded) {
+          const sent = await api.sendMessage(service.conversationId, {
+            type: "AUDIO",
+            audioUrl: uploaded.url,
+            durationMs: uploaded.durationMs,
+          });
+          setMessages((current) => [...current, sent]);
+        }
+        return;
+      }
+
+      setRecordingState(await startAudioRecording());
+    } catch (audioError) {
+      setRecordingState({ recording: null, startedAt: null });
+      setError(
+        audioError instanceof Error
+          ? audioError.message
+          : "Nao foi possivel gravar audio.",
+      );
+    }
+  };
+
+  const togglePlayAudio = async (item: MessageItem) => {
+    if (!item.audioUrl) {
+      return;
+    }
+
+    if (playingAudio?.id === item.id) {
+      const status = await playingAudio.sound.getStatusAsync();
+
+      if (status.isLoaded && status.isPlaying) {
+        await playingAudio.sound.pauseAsync();
+        setPlayingAudio((current) =>
+          current?.id === item.id ? { ...current, isPlaying: false } : current,
+        );
+        return;
+      }
+
+      await playingAudio.sound.playAsync();
+      setPlayingAudio((current) =>
+        current?.id === item.id ? { ...current, isPlaying: true } : current,
+      );
+      return;
+    }
+
+    if (playingAudio) {
+      await playingAudio.sound.unloadAsync();
+    }
+
+    const { sound } = await Audio.Sound.createAsync(
+      { uri: item.audioUrl },
+      { shouldPlay: true },
+    );
+    sound.setOnPlaybackStatusUpdate((status) => {
+      if (status.isLoaded && status.didJustFinish) {
+        setPlayingAudio((current) => (current?.id === item.id ? null : current));
+      }
+    });
+    setPlayingAudio({ id: item.id, isPlaying: true, sound });
+  };
 
   return (
     <View className="h-full w-full max-w-[480px] self-center bg-background">
@@ -97,72 +205,86 @@ export function ServiceMessageScreen({
         contentContainerClassName="gap-3 px-4 py-5"
         showsVerticalScrollIndicator={false}
       >
-        {messages.map((item) => (
-          <View
-            key={item.id}
-            className={`max-w-[78%] rounded-[16px] px-4 py-3 ${
-              item.fromMe
-                ? "self-end rounded-tr-[4px] bg-primary"
-                : "self-start rounded-tl-[4px] bg-card shadow-sm shadow-black/5"
-            }`}
-          >
-            <Text
-              className={`text-sm leading-5 ${
-                item.fromMe ? "text-white" : "text-foreground"
-              }`}
-            >
-              {item.text}
-            </Text>
-            <Text
-              className={`mt-1 text-[11px] ${
-                item.fromMe ? "text-right text-white/80" : "text-muted-foreground"
-              }`}
-            >
-              {item.time}
-            </Text>
-          </View>
-        ))}
+        {isLoading ? (
+          <LoadingState label="Carregando mensagens..." />
+        ) : error ? (
+          <ErrorState message={error} onRetry={loadMessages} />
+        ) : !service.conversationId ? (
+          <EmptyState message="Este servico ainda nao possui conversa." />
+        ) : messages.length === 0 ? (
+          <EmptyState message="Nenhuma mensagem enviada ainda." />
+        ) : (
+          messages.map((item) => {
+            const isMine = item.sender.id === currentUserId;
 
-        <Pressable
-          onPress={openWhatsapp}
-          className="mt-2 flex-row items-center justify-center gap-2 rounded-[12px] border border-primary bg-[#f7eced] px-4 py-3"
-          accessibilityRole="button"
-        >
-          <Ionicons name="logo-whatsapp" size={18} color="#b94b50" />
-          <Text className="text-sm font-semibold text-primary">
-            Continuar conversa pelo WhatsApp
-          </Text>
-        </Pressable>
+            return (
+              <View
+                key={item.id}
+                className={`max-w-[78%] rounded-[16px] px-4 py-3 ${
+                  isMine
+                    ? "self-end rounded-tr-[4px] bg-primary"
+                    : "self-start rounded-tl-[4px] bg-card shadow-sm shadow-black/5"
+                }`}
+              >
+                {item.type === "AUDIO" && item.audioUrl ? (
+                  <Pressable
+                    onPress={() => void togglePlayAudio(item)}
+                    className="flex-row items-center gap-2"
+                  >
+                    <Ionicons
+                      name={
+                        playingAudio?.id === item.id && playingAudio.isPlaying
+                          ? "pause-circle"
+                          : "play-circle"
+                      }
+                      size={20}
+                      color={isMine ? "#ffffff" : "#b94b50"}
+                    />
+                    <Text className={`text-sm ${isMine ? "text-white" : "text-foreground"}`}>
+                      Audio {formatAudioDuration(item.durationMs)}
+                    </Text>
+                  </Pressable>
+                ) : (
+                  <Text className={`text-sm leading-5 ${isMine ? "text-white" : "text-foreground"}`}>
+                    {item.text}
+                  </Text>
+                )}
+                <Text className={`mt-1 text-[11px] ${isMine ? "text-right text-white/80" : "text-muted-foreground"}`}>
+                  {new Intl.DateTimeFormat("pt-BR", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  }).format(new Date(item.createdAt))}
+                </Text>
+              </View>
+            );
+          })
+        )}
       </ScrollView>
 
       <View className="border-t border-input-border bg-card px-4 py-3">
         <View className="flex-row items-center gap-2">
-          <View
-            className={`min-h-[44px] flex-1 flex-row items-center rounded-[12px] border px-4 ${
-              showMessageError
-                ? "border-[#dc2626] bg-[#fff7f7]"
-                : messageTouched
-                  ? "border-[#16a34a] bg-[#f7fff9]"
-                  : "border-transparent bg-background"
+          <TextInput
+            value={message}
+            onChangeText={setMessage}
+            className="min-h-[44px] flex-1 rounded-[12px] bg-background px-4 text-sm text-foreground"
+            placeholder="Digite uma mensagem..."
+            placeholderTextColor="#8a8a96"
+            accessibilityLabel="Mensagem"
+          />
+          <Pressable
+            onPress={toggleAudio}
+            className={`h-11 w-11 items-center justify-center rounded-full ${
+              recordingState.recording ? "bg-[#dc2626]" : "bg-background"
             }`}
+            accessibilityRole="button"
+            accessibilityLabel="Gravar audio"
           >
-            <TextInput
-              value={message}
-              onBlur={() => setMessageTouched(true)}
-              onChangeText={setMessage}
-              className="min-h-[42px] flex-1 p-0 text-sm text-foreground"
-              placeholder="Digite uma mensagem..."
-              placeholderTextColor="#8a8a96"
-              accessibilityLabel="Mensagem"
+            <Ionicons
+              name={recordingState.recording ? "stop" : "mic-outline"}
+              size={18}
+              color={recordingState.recording ? "#ffffff" : "#b94b50"}
             />
-            {messageTouched || messageSubmitted ? (
-              <Ionicons
-                name={messageValidation.isValid ? "checkmark-circle" : "alert-circle"}
-                size={18}
-                color={messageValidation.isValid ? "#16a34a" : "#dc2626"}
-              />
-            ) : null}
-          </View>
+          </Pressable>
           <Pressable
             onPress={sendMessage}
             className="h-11 w-11 items-center justify-center rounded-full bg-primary"
@@ -172,11 +294,6 @@ export function ServiceMessageScreen({
             <Ionicons name="send" size={17} color="#ffffff" />
           </Pressable>
         </View>
-        {showMessageError ? (
-          <Text className="mt-1 px-1 text-xs leading-4 text-[#dc2626]">
-            {messageValidation.message}
-          </Text>
-        ) : null}
       </View>
     </View>
   );

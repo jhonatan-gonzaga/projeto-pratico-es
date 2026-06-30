@@ -154,15 +154,18 @@ export function AccountRow({
   avatar,
   email,
   name,
+  onPress,
   selected,
 }: {
   avatar?: string;
   email?: string;
   name: string;
+  onPress?: () => void;
   selected?: boolean;
 }) {
   return (
     <Pressable
+      onPress={onPress}
       className={`mb-3 min-h-[66px] flex-row items-center gap-3 rounded-[16px] border px-4 py-3 ${
         selected ? "border-primary" : "border-input-border"
       }`}

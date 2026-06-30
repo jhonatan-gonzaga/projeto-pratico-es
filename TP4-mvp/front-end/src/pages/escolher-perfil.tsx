@@ -1,41 +1,13 @@
 import { Ionicons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
-import { useState } from "react";
-import { Alert, Image, Pressable, Text, TextInput, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Image, Pressable, Text, View } from "react-native";
 
-import {
-  AccountRow,
-  BrandLogo,
-  Divider,
-  Field,
-  PermissionItem,
-  ProfileCard,
-  ProfileInfoField,
-  SocialButtons,
-} from "../components/app-components";
-import type { ValidationStatus } from "../components/app-components";
-import {
-  formatBRPhone,
-  isValidEmail,
-  isValidName,
-  isValidPassword,
-  isValidPhone,
-} from "../services/validators";
+import { ProfileCard } from "../components/app-components";
+import { api } from "../services/api";
 
 const logo = require("../../assets/logotipo.png");
 
 type ProfileType = "cliente" | "profissional";
-
-const validationStatus = (
-  isTouched: boolean,
-  isValid: boolean,
-): ValidationStatus => {
-  if (!isTouched) {
-    return "default";
-  }
-
-  return isValid ? "valid" : "error";
-};
 
 export function ProfileChoiceScreen({
   onBack,
@@ -47,6 +19,13 @@ export function ProfileChoiceScreen({
   onProfilePress: () => void;
 }) {
   const [selectedProfile, setSelectedProfile] = useState<ProfileType>("cliente");
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    api.me()
+      .then((user) => setAvatarUrl(user.avatarUrl ?? null))
+      .catch(() => setAvatarUrl(null));
+  }, []);
 
   return (
     <View className="min-h-[812px] w-full max-w-[480px] bg-background">
@@ -73,7 +52,16 @@ export function ProfileChoiceScreen({
           accessibilityRole="button"
           accessibilityLabel="Abrir perfil"
         >
-          <Ionicons name="person" size={20} color="#b94b50" />
+          {avatarUrl ? (
+            <Image
+              source={{ uri: avatarUrl }}
+              className="h-full w-full rounded-full"
+              resizeMode="cover"
+              accessibilityLabel="Foto do perfil"
+            />
+          ) : (
+            <Ionicons name="person" size={20} color="#b94b50" />
+          )}
         </Pressable>
       </View>
 
@@ -128,4 +116,3 @@ export function ProfileChoiceScreen({
     </View>
   );
 }
-

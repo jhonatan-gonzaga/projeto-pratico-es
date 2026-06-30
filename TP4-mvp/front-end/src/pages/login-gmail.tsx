@@ -1,43 +1,80 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
-import { Alert, Image, Pressable, Text, TextInput, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
 import {
   AccountRow,
-  BrandLogo,
-  Divider,
   Field,
   PermissionItem,
-  ProfileCard,
-  ProfileInfoField,
-  SocialButtons,
 } from "../components/app-components";
-import type { ValidationStatus } from "../components/app-components";
-import {
-  formatBRPhone,
-  isValidEmail,
-  isValidName,
-  isValidPassword,
-  isValidPhone,
-} from "../services/validators";
+import { ApiError, api } from "../services/api";
+import { isValidEmail, isValidName } from "../services/validators";
 
-const logo = require("../../assets/logotipo.png");
+const googleAccounts = [
+  {
+    avatarUrl:
+      "https://storage.googleapis.com/banani-avatars/avatar/female/25-35/Hispanic/0",
+    email: "maria.silva@gmail.com",
+    name: "Maria da Silva",
+  },
+  {
+    avatarUrl:
+      "https://storage.googleapis.com/banani-avatars/avatar/female/25-35/Hispanic/1",
+    email: "m.silva.work@gmail.com",
+    name: "Maria Silva",
+  },
+];
 
-type ProfileType = "cliente" | "profissional";
+export function GoogleSignInScreen({
+  onBack,
+  onSuccess,
+}: {
+  onBack: () => void;
+  onSuccess: () => void;
+}) {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [useOtherAccount, setUseOtherAccount] = useState(false);
+  const [otherName, setOtherName] = useState("");
+  const [otherEmail, setOtherEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const selectedAccount = googleAccounts[selectedIndex];
+  const canSubmit = useOtherAccount
+    ? isValidName(otherName) && isValidEmail(otherEmail)
+    : Boolean(selectedAccount);
 
-const validationStatus = (
-  isTouched: boolean,
-  isValid: boolean,
-): ValidationStatus => {
-  if (!isTouched) {
-    return "default";
-  }
+  const handleContinue = async () => {
+    if (!canSubmit || isSubmitting) {
+      setSubmitError("Selecione uma conta ou informe nome e e-mail validos.");
+      return;
+    }
 
-  return isValid ? "valid" : "error";
-};
+    setIsSubmitting(true);
+    setSubmitError(null);
 
-export function GoogleSignInScreen({ onBack }: { onBack: () => void }) {
+    try {
+      await api.googleAuth(
+        useOtherAccount
+          ? { email: otherEmail, name: otherName }
+          : {
+              avatarUrl: selectedAccount.avatarUrl,
+              email: selectedAccount.email,
+              name: selectedAccount.name,
+            },
+      );
+      onSuccess();
+    } catch (error) {
+      setSubmitError(
+        error instanceof ApiError
+          ? error.message
+          : "Nao foi possivel entrar com Google.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <View className="min-h-[812px] w-full max-w-[480px] bg-background">
       <LinearGradient
@@ -77,17 +114,51 @@ export function GoogleSignInScreen({ onBack }: { onBack: () => void }) {
             Selecione uma conta
           </Text>
           <AccountRow
-            selected
-            name="Maria da Silva"
-            email="maria.silva@gmail.com"
-            avatar="https://storage.googleapis.com/banani-avatars/avatar/female/25-35/Hispanic/0"
+            selected={!useOtherAccount && selectedIndex === 0}
+            name={googleAccounts[0].name}
+            email={googleAccounts[0].email}
+            avatar={googleAccounts[0].avatarUrl}
+            onPress={() => {
+              setUseOtherAccount(false);
+              setSelectedIndex(0);
+            }}
           />
           <AccountRow
-            name="Maria Silva"
-            email="m.silva.work@gmail.com"
-            avatar="https://storage.googleapis.com/banani-avatars/avatar/female/25-35/Hispanic/1"
+            selected={!useOtherAccount && selectedIndex === 1}
+            name={googleAccounts[1].name}
+            email={googleAccounts[1].email}
+            avatar={googleAccounts[1].avatarUrl}
+            onPress={() => {
+              setUseOtherAccount(false);
+              setSelectedIndex(1);
+            }}
           />
-          <AccountRow name="Usar outra conta" />
+          <AccountRow
+            selected={useOtherAccount}
+            name="Usar outra conta"
+            onPress={() => setUseOtherAccount(true)}
+          />
+
+          {useOtherAccount ? (
+            <View className="mb-4 gap-3 rounded-[16px] border border-input-border bg-background p-4">
+              <Field
+                label="Nome"
+                icon="person-outline"
+                value={otherName}
+                onChangeText={setOtherName}
+                placeholder="Nome da conta Google"
+              />
+              <Field
+                label="E-mail"
+                icon="mail-outline"
+                value={otherEmail}
+                onChangeText={setOtherEmail}
+                keyboardType="email-address"
+                autoComplete="email"
+                placeholder="email@gmail.com"
+              />
+            </View>
+          ) : null}
 
           <View className="mb-4 flex-row items-center gap-3">
             <View className="h-px flex-1 bg-input-border" />
@@ -110,14 +181,21 @@ export function GoogleSignInScreen({ onBack }: { onBack: () => void }) {
           </View>
 
           <Pressable
+            onPress={handleContinue}
+            disabled={isSubmitting}
             className="mb-5 min-h-[56px] flex-row items-center justify-center gap-2 rounded-[16px] bg-[#c0392b] px-6"
             accessibilityRole="button"
           >
             <Text className="text-lg font-bold text-white">G</Text>
             <Text className="text-base font-semibold text-white">
-              Continuar com Google
+              {isSubmitting ? "Entrando..." : "Continuar com Google"}
             </Text>
           </Pressable>
+          {submitError ? (
+            <Text className="mb-4 text-center text-xs font-semibold text-primary">
+              {submitError}
+            </Text>
+          ) : null}
         </View>
       </View>
 
@@ -135,4 +213,3 @@ export function GoogleSignInScreen({ onBack }: { onBack: () => void }) {
     </View>
   );
 }
-

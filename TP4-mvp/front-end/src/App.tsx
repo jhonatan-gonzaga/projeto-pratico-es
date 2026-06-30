@@ -16,15 +16,15 @@ import {
   ClientSettingsScreen,
   ClientSearchPage,
   type ClientWorkService,
-  GoogleSignInScreen,
+  LegalDocumentScreen,
   LoginScreen,
-  PhoneVerificationScreen,
   ProfileChoiceScreen,
   SignupScreen,
 } from "./pages";
 import type { ProfessionalService, ServiceStatus } from "./components/profissional/types";
 import { ClientMessageScreen } from "./pages/cliente/mensagem-profissional";
 import { ServiceDetailsScreen } from "./pages/profissional";
+import { api } from "./services/api";
 
 type ReturnScreen = "login" | "signup";
 type ProfileReturnScreen =
@@ -40,8 +40,6 @@ type ProfileReturnScreen =
   | "clientProfile";
 type Screen =
   | ReturnScreen
-  | "phone"
-  | "google"
   | "profileChoice"
   | "accountProfile"
   | "professionalSetup"
@@ -53,7 +51,9 @@ type Screen =
   | "clientServiceDetails"
   | "clientServiceMessage"
   | "clientSettings"
-  | "clientProfile";
+  | "clientProfile"
+  | "privacy"
+  | "terms";
 
 const clientStatusToProfessionalStatus: Record<
   ClientWorkService["status"],
@@ -69,12 +69,17 @@ function toServiceDetailsItem(service: ClientWorkService): ProfessionalService {
   return {
     title: service.title,
     status: clientStatusToProfessionalStatus[service.status],
-    order: `CLI-${service.id.padStart(4, "0")}`,
+    order: service.id,
     customer: service.professionalName,
-    price: "A combinar",
+    price: service.price ?? "A combinar",
     date: service.dateValue,
-    time: "08:00 - 17:00",
-    deadline: "5 dias",
+    time: service.time ?? "A combinar",
+    deadline: service.deadline ?? "A combinar",
+    address: service.address,
+    category: service.categoryLabel,
+    description: service.description,
+    imageUrls: service.imageUrls,
+    hasReview: service.hasReview,
     messageCount: service.unreadMessages
       ? String(service.unreadMessages)
       : undefined,
@@ -83,33 +88,39 @@ function toServiceDetailsItem(service: ClientWorkService): ProfessionalService {
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>("login");
-  const [previousScreen, setPreviousScreen] = useState<ReturnScreen>("signup");
   const [profileReturnScreen, setProfileReturnScreen] =
     useState<ProfileReturnScreen>("profileChoice");
   const [clientWorkReturnScreen, setClientWorkReturnScreen] = useState<
     "clientHome" | "clientSearch" | "clientAds"
   >("clientHome");
+  const [clientProfileReturnScreen, setClientProfileReturnScreen] = useState<
+    "clientHome" | "clientSearch" | "clientWork"
+  >("clientHome");
+  const [legalReturnScreen, setLegalReturnScreen] =
+    useState<ReturnScreen>("login");
   const [selectedClientService, setSelectedClientService] =
     useState<ClientWorkService | null>(null);
+  const [selectedProfessionalId, setSelectedProfessionalId] = useState<string | null>(
+    null,
+  );
   const [contractedClientServices, setContractedClientServices] = useState<
     ClientWorkService[]
   >([]);
   const isProfessionalScreen =
     screen === "professionalSetup" || screen === "professionalHome";
 
-  const openPhoneScreen = (from: ReturnScreen) => {
-    setPreviousScreen(from);
-    setScreen("phone");
-  };
-
-  const openGoogleScreen = (from: ReturnScreen) => {
-    setPreviousScreen(from);
-    setScreen("google");
-  };
-
   const openAccountProfile = (from: ProfileReturnScreen) => {
     setProfileReturnScreen(from);
     setScreen("accountProfile");
+  };
+
+  const openProfessionalArea = async () => {
+    try {
+      await api.professionalMe();
+      setScreen("professionalHome");
+    } catch {
+      setScreen("professionalSetup");
+    }
   };
 
   const openClientTab = (
@@ -136,25 +147,45 @@ export default function App() {
     screen === "login" ? (
             <LoginScreen
               onCreateAccount={() => setScreen("signup")}
-              onGoogle={() => openGoogleScreen("login")}
-              onPhone={() => openPhoneScreen("login")}
+              onOpenPrivacy={() => {
+                setLegalReturnScreen("login");
+                setScreen("privacy");
+              }}
+              onOpenTerms={() => {
+                setLegalReturnScreen("login");
+                setScreen("terms");
+              }}
               onSuccess={() => setScreen("profileChoice")}
             />
           ) : screen === "signup" ? (
             <SignupScreen
               onLogin={() => setScreen("login")}
-              onGoogle={() => openGoogleScreen("signup")}
-              onPhone={() => openPhoneScreen("signup")}
+              onOpenPrivacy={() => {
+                setLegalReturnScreen("signup");
+                setScreen("privacy");
+              }}
+              onOpenTerms={() => {
+                setLegalReturnScreen("signup");
+                setScreen("terms");
+              }}
               onSuccess={() => setScreen("profileChoice")}
             />
-          ) : screen === "phone" ? (
-            <PhoneVerificationScreen onBack={() => setScreen(previousScreen)} />
+          ) : screen === "terms" ? (
+            <LegalDocumentScreen
+              type="terms"
+              onBack={() => setScreen(legalReturnScreen)}
+            />
+          ) : screen === "privacy" ? (
+            <LegalDocumentScreen
+              type="privacy"
+              onBack={() => setScreen(legalReturnScreen)}
+            />
           ) : screen === "profileChoice" ? (
             <ProfileChoiceScreen
               onBack={() => setScreen("login")}
               onContinue={(profile) => {
                 if (profile === "profissional") {
-                  setScreen("professionalSetup");
+                  void openProfessionalArea();
                 } else {
                   setScreen("clientHome");
                 }
@@ -164,7 +195,11 @@ export default function App() {
           ) : screen === "clientHome" ? (
             <ClientHomePage
               onNavigate={(tab) => openClientTab(tab, "clientHome")}
-              onOpenProfessional={() => setScreen("clientProfile")}
+              onOpenProfessional={(professionalId) => {
+                setSelectedProfessionalId(professionalId);
+                setClientProfileReturnScreen("clientHome");
+                setScreen("clientProfile");
+              }}
               onProfilePress={() => openAccountProfile("clientHome")}
               onBack={() => setScreen("profileChoice")}
             />
@@ -172,6 +207,11 @@ export default function App() {
             <ClientSearchPage
               onBack={() => setScreen("clientHome")}
               onNavigate={(tab) => openClientTab(tab, "clientSearch")}
+              onOpenProfessional={(professionalId) => {
+                setSelectedProfessionalId(professionalId);
+                setClientProfileReturnScreen("clientSearch");
+                setScreen("clientProfile");
+              }}
               onProfilePress={() => openAccountProfile("clientSearch")}
             />
           ) : screen === "clientAds" ? (
@@ -208,6 +248,11 @@ export default function App() {
               }}
               onNavigate={(tab) => openClientTab(tab)}
               onProfilePress={() => openAccountProfile("clientHome")}
+              onOpenProfessional={(professionalId) => {
+                setSelectedProfessionalId(professionalId);
+                setClientProfileReturnScreen("clientWork");
+                setScreen("clientProfile");
+              }}
               onOpenDetail={(service) => {
                 setSelectedClientService(service);
                 setScreen("clientServiceDetails");
@@ -225,13 +270,15 @@ export default function App() {
             />
           ) : screen === "clientServiceMessage" && selectedClientService ? (
             <ClientMessageScreen
+              conversationId={selectedClientService.conversationId}
               professionalName={selectedClientService.professionalName}
               onBack={() => setScreen("clientServiceDetails")}
               onProfilePress={() => openAccountProfile("clientServiceMessage")}
             />
           ) : screen === "clientProfile" ? (
             <ClientProfilePage
-              onBack={() => setScreen("clientHome")}
+              professionalId={selectedProfessionalId ?? undefined}
+              onBack={() => setScreen(clientProfileReturnScreen)}
               onNavigate={(tab) => openClientTab(tab)}
               onProfilePress={() => openAccountProfile("clientProfile")}
             />
@@ -243,7 +290,7 @@ export default function App() {
             />
           ) : screen === "professionalHome" ? (
             <ProfessionalHomeScreen
-              onBack={() => setScreen("professionalSetup")}
+              onBack={() => setScreen("profileChoice")}
               onProfilePress={() => openAccountProfile("professionalHome")}
             />
           ) : screen === "accountProfile" ? (
@@ -253,9 +300,7 @@ export default function App() {
               onSignOut={() => setScreen("login")}
               onDeleteAccount={() => setScreen("signup")}
             />
-          ) : (
-            <GoogleSignInScreen onBack={() => setScreen(previousScreen)} />
-          );
+          ) : null;
 
   return (
     <SafeAreaView className="flex-1 bg-background">

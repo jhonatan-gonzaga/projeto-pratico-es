@@ -6,6 +6,7 @@ import { Image, Pressable, ScrollView, Text, TextInput, View } from "react-nativ
 import { professionalServices, projectItems, serviceRequests } from "../../components/profissional/data";
 import { formatBRPhone } from "../../components/profissional/utils";
 import type { ProfessionalArea, ProfessionalTab, ProjectItem } from "../../components/profissional/types";
+import { captureAndUploadImage, pickAndUploadImage } from "../../services/image-upload";
 import { getProjectFormErrors, isRequiredText } from "../../services/validators";
 import {
   ChoiceChip,
@@ -34,25 +35,36 @@ import {
   SetupSection,
   SetupTextField,
 } from "../../components/profissional/components";
-
 import { PhotoDetailsScreen } from "./detalhes-foto";
+
 export function EditProjectScreen({
   onBack,
   onProfilePress,
+  onDelete,
   onSave,
   project,
 }: {
   onBack: () => void;
   onProfilePress: () => void;
+  onDelete: (project: ProjectItem) => void;
   onSave: (project: ProjectItem) => void;
   project: ProjectItem;
 }) {
   const [title, setTitle] = useState(project.title);
   const [neighborhood, setNeighborhood] = useState(project.location);
-  const [details, setDetails] = useState(
-    "Construcao de uma residencia de 2 andares no bairro centro, com acabamento padrao medio.",
+  const [details, setDetails] = useState(project.description ?? "");
+  const [images, setImages] = useState<NonNullable<ProjectItem["images"]>>(
+    project.images?.length
+      ? project.images
+      : project.image
+        ? [{ url: project.image, type: project.imageType ?? "COVER" }]
+        : [],
   );
-  const [isEditingPhoto, setIsEditingPhoto] = useState(false);
+  const [editingPhotoIndex, setEditingPhotoIndex] = useState<number | null>(null);
+  const [isEditingPhotoDetails, setIsEditingPhotoDetails] = useState(false);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [touched, setTouched] = useState({
     details: false,
@@ -105,18 +117,76 @@ export function EditProjectScreen({
       return;
     }
 
+    const cleanImages = images.map(({ url, type, altText }) => ({
+      url,
+      type,
+      altText,
+    }));
+
     onSave({
       ...project,
       title: title.trim(),
       location: neighborhood.trim(),
+      description: details.trim(),
+      image:
+        cleanImages.find((image) => image.type === "COVER")?.url ??
+        cleanImages[0]?.url ??
+        "",
+      imageType: cleanImages.find((image) => image.type === "COVER")?.type ?? cleanImages[0]?.type,
+      images: cleanImages,
     });
   };
+  const handleAddImage = async (source: "camera" | "library") => {
+    setIsUploadingImage(true);
+    setUploadError(null);
 
-  if (isEditingPhoto) {
+    try {
+      const uploadedUrl =
+        source === "camera" ? await captureAndUploadImage() : await pickAndUploadImage();
+
+      if (uploadedUrl) {
+        const nextIndex = images.length;
+        setImages((current) => [
+          ...current,
+          {
+            url: uploadedUrl,
+            type: current.length === 0 ? "COVER" : "GENERAL",
+          },
+        ]);
+        setEditingPhotoIndex(nextIndex);
+        setIsEditingPhotoDetails(true);
+      }
+    } catch (error) {
+      setUploadError(
+        error instanceof Error ? error.message : "Nao foi possivel enviar a foto.",
+      );
+    } finally {
+      setIsUploadingImage(false);
+    }
+  };
+
+  const editingImage =
+    editingPhotoIndex !== null ? images[editingPhotoIndex] : undefined;
+
+  if (isEditingPhotoDetails && editingImage) {
     return (
       <PhotoDetailsScreen
-        onBack={() => setIsEditingPhoto(false)}
+        imageUri={editingImage.url}
+        onBack={() => setIsEditingPhotoDetails(false)}
         onProfilePress={onProfilePress}
+        onSave={(type) => {
+          setImages((current) =>
+            current.map((image, index) => {
+              if (type === "COVER" && index !== editingPhotoIndex) {
+                return image.type === "COVER" ? { ...image, type: "GENERAL" } : image;
+              }
+
+              return index === editingPhotoIndex ? { ...image, type } : image;
+            }),
+          );
+          setIsEditingPhotoDetails(false);
+          setEditingPhotoIndex(null);
+        }}
       />
     );
   }
@@ -206,18 +276,6 @@ export function EditProjectScreen({
               placeholderTextColor="#8a8a96"
               accessibilityLabel="Detalhes do projeto"
             />
-            <Pressable
-              onPress={() =>
-                setDetails(
-                  "Texto gerado por audio simulado: projeto atualizado com novas fotos, detalhes do acabamento e observacoes do servico.",
-                )
-              }
-              className="absolute bottom-3 right-3 h-8 w-8 items-center justify-center rounded-full bg-card shadow-sm"
-              accessibilityRole="button"
-              accessibilityLabel="Gravar audio"
-            >
-              <Ionicons name="mic-outline" size={16} color="#b94b50" />
-            </Pressable>
           </View>
           {fieldError("details") ? (
             <Text className="px-1 text-xs leading-4 text-[#dc2626]">
@@ -229,16 +287,36 @@ export function EditProjectScreen({
         <ProjectSection icon="image-outline" title="Fotos do Projeto">
           <View className="mb-1 flex-row items-start justify-between">
             <Text className="text-sm font-bold text-foreground">
-              3 fotos adicionadas
+              {images.length === 1
+                ? "1 foto adicionada"
+                : `${images.length} fotos adicionadas`}
             </Text>
             <View className="rounded-full bg-[#f5e8e9] px-2 py-0.5">
-              <Text className="text-xs font-semibold text-primary">3/10</Text>
+              <Text className="text-xs font-semibold text-primary">
+                {images.length}/10
+              </Text>
             </View>
           </View>
           <Text className="mb-3 text-xs leading-5 text-muted-foreground">
             Toque em uma foto para editar ou remover.
           </Text>
-          <EditProjectPhotoGrid onEditPhoto={() => setIsEditingPhoto(true)} />
+          <EditProjectPhotoGrid
+            images={images}
+            onAddPhoto={() => handleAddImage("library")}
+            onTakePhoto={() => handleAddImage("camera")}
+            onEditPhoto={(index) => {
+              setEditingPhotoIndex(index);
+              setIsEditingPhotoDetails(true);
+            }}
+          />
+          {isUploadingImage ? (
+            <Text className="text-xs text-muted-foreground">Enviando foto...</Text>
+          ) : null}
+          {uploadError ? (
+            <Text className="px-1 text-xs leading-4 text-[#dc2626]">
+              {uploadError}
+            </Text>
+          ) : null}
         </ProjectSection>
 
         <View className="rounded-[8px] bg-card p-4 shadow-sm shadow-black/5">
@@ -249,6 +327,7 @@ export function EditProjectScreen({
             </Text>
           </View>
           <Pressable
+            onPress={() => setConfirmingDelete(true)}
             className="min-h-[48px] flex-row items-center justify-center gap-2 rounded-[12px] bg-[#f5e8e9]"
             accessibilityRole="button"
           >
@@ -257,6 +336,32 @@ export function EditProjectScreen({
               Excluir este projeto
             </Text>
           </Pressable>
+          {confirmingDelete ? (
+            <View className="mt-3 gap-3 rounded-[12px] border border-[#f2cdd0] bg-[#fff7f7] p-3">
+              <Text className="text-sm leading-5 text-muted-foreground">
+                Este projeto sera removido do seu portfolio e os clientes nao verao
+                mais esse resultado no seu perfil.
+              </Text>
+              <View className="flex-row gap-2">
+                <Pressable
+                  onPress={() => setConfirmingDelete(false)}
+                  className="min-h-[42px] flex-1 items-center justify-center rounded-[10px] border border-input-border bg-card"
+                  accessibilityRole="button"
+                >
+                  <Text className="text-sm font-semibold text-foreground">Voltar</Text>
+                </Pressable>
+                <Pressable
+                  onPress={() => onDelete(project)}
+                  className="min-h-[42px] flex-1 items-center justify-center rounded-[10px] bg-primary"
+                  accessibilityRole="button"
+                >
+                  <Text className="text-sm font-semibold text-white">
+                    Confirmar exclusao
+                  </Text>
+                </Pressable>
+              </View>
+            </View>
+          ) : null}
         </View>
       </ScrollView>
 
