@@ -15,8 +15,6 @@ Estas telas servem ambas as personas e compõem o fluxo de entrada na plataforma
 | Arquivo                     | Nome do Componente        | Função                                                              |
 | --------------------------- | ------------------------- | ------------------------------------------------------------------- |
 | `pages/login.tsx`           | `LoginScreen`             | Tela de login com e-mail e senha                                    |
-| `pages/login-gmail.tsx`     | `GoogleSignInScreen`      | Autenticação via conta Google                                       |
-| `pages/login-telefone.tsx`  | `PhoneVerificationScreen` | Validação de acesso por código SMS/celular                          |
 | `pages/cadastro.tsx`        | `SignupScreen`            | Cadastro de nova conta (suporta perfil `cliente` ou `profissional`) |
 | `pages/escolher-perfil.tsx` | `ProfileChoiceScreen`     | Seleção do tipo de perfil ao entrar na plataforma                   |
 | `pages/perfil.tsx`          | `AccountProfileScreen`    | Edição dos dados de identificação da conta                          |
