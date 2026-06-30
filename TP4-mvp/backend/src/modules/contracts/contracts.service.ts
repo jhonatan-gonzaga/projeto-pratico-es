@@ -158,19 +158,7 @@ export class ContractsService {
   }
 
   async replyReview(userId: string, id: string, dto: ReplyReviewDto) {
-    const review = await this.prisma.review.findUnique({
-      where: { id },
-      include: { professional: true },
-    });
-
-    if (!review) {
-      throw new NotFoundException('Avaliacao nao encontrada.');
-    }
-
-    if (review.professional.userId !== userId) {
-      throw new ForbiddenException('Somente o profissional avaliado pode responder.');
-    }
-
+    await this.getOwnReview(userId, id);
     return this.prisma.review.update({
       where: { id },
       data: {
@@ -181,6 +169,18 @@ export class ContractsService {
   }
 
   async reportReview(userId: string, id: string, dto: ReportReviewDto) {
+    await this.getOwnReview(userId, id);
+    return this.prisma.review.update({
+      where: { id },
+      data: {
+        reportReason: dto.reason,
+        reportDetails: dto.details,
+        reportedAt: new Date(),
+      },
+    });
+  }
+
+  private async getOwnReview(userId: string, id: string) {
     const review = await this.prisma.review.findUnique({
       where: { id },
       include: { professional: true },
@@ -191,17 +191,10 @@ export class ContractsService {
     }
 
     if (review.professional.userId !== userId) {
-      throw new ForbiddenException('Somente o profissional avaliado pode reportar.');
+      throw new ForbiddenException('Somente o profissional avaliado pode realizar esta acao.');
     }
 
-    return this.prisma.review.update({
-      where: { id },
-      data: {
-        reportReason: dto.reason,
-        reportDetails: dto.details,
-        reportedAt: new Date(),
-      },
-    });
+    return review;
   }
 
   private async getVisibleContract(userId: string, id: string) {

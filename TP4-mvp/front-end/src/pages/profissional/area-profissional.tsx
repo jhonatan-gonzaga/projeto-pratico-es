@@ -294,19 +294,18 @@ export function ProfessionalHomeScreen({
     );
   }
 
-  if (activeArea === "opportunities" && selectedService && serviceView === "details") {
-    return (
-      <ServiceDetailsScreen
-        service={selectedService}
-        onBack={() => setServiceView(null)}
-        onMessage={() => setServiceView("message")}
-        onProfilePress={onProfilePress}
-        onStatusAction={() => runServicePrimaryAction(selectedService)}
-      />
-    );
-  }
-
-  if (activeArea === "opportunities" && selectedService && serviceView === "message") {
+  if (activeArea === "opportunities" && selectedService && serviceView) {
+    if (serviceView === "details") {
+      return (
+        <ServiceDetailsScreen
+          service={selectedService}
+          onBack={() => setServiceView(null)}
+          onMessage={() => setServiceView("message")}
+          onProfilePress={onProfilePress}
+          onStatusAction={() => runServicePrimaryAction(selectedService)}
+        />
+      );
+    }
     return (
       <ServiceMessageScreen
         service={selectedService}
