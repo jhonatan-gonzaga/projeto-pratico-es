@@ -1,7 +1,8 @@
 ## Print da Tela de Login
 
-<h1 align="center">Tela Login</h1>
+<h1>TELA LOGIN</h1>
 
-<p align="center">
-  <img src="telalogin.png" alt="Tela Login do Conecta Obras Itacoatiara" width="350">
-</p>
+<img 
+  src="prints/WhatsApp%20Image%202026-06-28%20at%2020.44.55.jpeg" 
+  alt="Tela Login" 
+  width="350">
