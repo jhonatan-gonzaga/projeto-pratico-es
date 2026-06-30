@@ -34,8 +34,8 @@ export class ServiceAdsController {
   }
 
   @Get('open')
-  findOpen(@Query() query: ServiceAdQueryDto) {
-    return this.serviceAdsService.findOpen(query);
+  findOpen(@CurrentUser() user: AuthenticatedUser, @Query() query: ServiceAdQueryDto) {
+    return this.serviceAdsService.findOpen(user.id, query);
   }
 
   @Get(':id')
@@ -64,6 +64,11 @@ export class ServiceAdsController {
   @Delete(':id')
   remove(@CurrentUser() user: AuthenticatedUser, @Param('id') id: string) {
     return this.serviceAdsService.remove(user.id, id);
+  }
+
+  @Post(':id/dismiss')
+  dismiss(@CurrentUser() user: AuthenticatedUser, @Param('id') id: string) {
+    return this.serviceAdsService.dismiss(user.id, id);
   }
 
   @Post(':id/applications')

@@ -25,12 +25,18 @@ export type ProfessionalService = {
   title: string;
   status: ServiceStatus;
   order: string;
+  source?: "contract" | "application";
   customer: string;
   price: string;
   date: string;
   time: string;
   deadline: string;
+  category?: string;
+  description?: string;
+  imageUrls?: string[];
   address?: string;
+  hasReview?: boolean;
+  canStart?: boolean;
   messageCount?: string;
   conversationId?: string | null;
   action?: string;

@@ -27,12 +27,23 @@ export function NewRequestCard({
   onReject,
   request,
 }: {
-  onAccept: () => void;
+  onAccept: () => void | Promise<void>;
   onDetails: () => void;
   onReject: () => void;
   request: ServiceRequest;
 }) {
   const [confirmingReject, setConfirmingReject] = useState(false);
+  const [isAwaitingApproval, setIsAwaitingApproval] = useState(false);
+
+  const handleAccept = async () => {
+    setIsAwaitingApproval(true);
+
+    try {
+      await onAccept();
+    } catch {
+      setIsAwaitingApproval(false);
+    }
+  };
 
   return (
     <View className="mx-4 mb-4 rounded-[8px] bg-card p-4 shadow-md shadow-black/10">
@@ -82,11 +93,14 @@ export function NewRequestCard({
           </Text>
         </Pressable>
         <Pressable
-          onPress={onAccept}
+          onPress={handleAccept}
+          disabled={isAwaitingApproval}
           className="min-h-[44px] flex-1 items-center justify-center rounded-[12px] bg-primary px-4"
           accessibilityRole="button"
         >
-          <Text className="text-sm font-bold text-white">Aceitar</Text>
+          <Text className="text-sm font-bold text-white">
+            {isAwaitingApproval ? "Aguardando aprovacao" : "Aceitar"}
+          </Text>
         </Pressable>
       </View>
 
@@ -216,6 +230,7 @@ export function ServiceOrderCard({
   service: ProfessionalService;
 }) {
   const compact = service.status === "completed";
+  const canStartService = service.status === "pending" && service.canStart !== false;
 
   return (
     <View className="mx-4 mb-4 rounded-[8px] bg-card p-4 shadow-md shadow-black/10">
@@ -281,15 +296,29 @@ export function ServiceOrderCard({
             ) : null}
           </Pressable>
         ) : null}
-        <Pressable
-          onPress={onPrimaryAction}
-          className="min-h-[44px] flex-1 items-center justify-center rounded-[12px] bg-primary px-4"
-          accessibilityRole="button"
-        >
-          <Text className="text-sm font-bold text-white">
-            {compact ? "Reabrir Servico" : service.action}
-          </Text>
-        </Pressable>
+        {compact ? (
+          <View className="min-h-[44px] flex-1 items-center justify-center rounded-[12px] bg-[#d1fae5] px-4">
+            <Text className="text-sm font-bold text-[#065f46]">
+              Finalizado
+            </Text>
+          </View>
+        ) : canStartService ? (
+          <Pressable
+            onPress={onPrimaryAction}
+            className="min-h-[44px] flex-1 items-center justify-center rounded-[12px] bg-primary px-4"
+            accessibilityRole="button"
+          >
+            <Text className="text-sm font-bold text-white">
+              {service.action}
+            </Text>
+          </Pressable>
+        ) : (
+          <View className="min-h-[44px] flex-1 items-center justify-center rounded-[12px] bg-[#f3eced] px-4">
+            <Text className="text-sm font-bold text-primary">
+              {service.status === "pending" ? "Aguardando aprovacao" : "Em andamento"}
+            </Text>
+          </View>
+        )}
       </View>
 
       <Pressable
@@ -310,11 +339,13 @@ export function ProjectPhotoGrid({
   images,
   imageUri,
   onAddPhoto,
+  onTakePhoto,
   onEditPhoto,
 }: {
   images?: ProjectItem["images"];
   imageUri?: string;
   onAddPhoto?: () => void;
+  onTakePhoto?: () => void;
   onEditPhoto: (index: number) => void;
 }) {
   const photos = images?.length
@@ -330,12 +361,12 @@ export function ProjectPhotoGrid({
         {mainPhoto ? (
           <Image
             source={{ uri: mainPhoto.url }}
-            className="h-[130px] w-full rounded-[12px]"
+            className="h-[170px] w-full rounded-[12px]"
             resizeMode="cover"
             accessibilityLabel="Foto principal do projeto"
           />
         ) : (
-          <View className="h-[130px] w-full items-center justify-center rounded-[12px] bg-[#f5e8e9]">
+          <View className="h-[170px] w-full items-center justify-center rounded-[12px] bg-[#f5e8e9]">
             <Ionicons name="image-outline" size={28} color="#b94b50" />
           </View>
         )}
@@ -365,7 +396,7 @@ export function ProjectPhotoGrid({
 
       <Pressable
         onPress={onAddPhoto ?? (() => onEditPhoto(Math.max(photos.length - 1, 0)))}
-        className="h-[130px] w-[48%] items-center justify-center gap-1.5 rounded-[12px] border-[1.5px] border-dashed border-primary/30 bg-[#fdf0f0] px-2"
+        className="h-[170px] w-[48%] items-center justify-center gap-1.5 rounded-[12px] border-[1.5px] border-dashed border-primary/30 bg-[#fdf0f0] px-2"
         accessibilityRole="button"
       >
         <Ionicons name="images-outline" size={28} color="#b94b50" />
@@ -376,8 +407,8 @@ export function ProjectPhotoGrid({
       </Pressable>
 
       <Pressable
-        onPress={onAddPhoto ?? (() => onEditPhoto(Math.max(photos.length - 1, 0)))}
-        className="h-[100px] w-[48%] items-center justify-center gap-2 rounded-[12px] bg-primary"
+        onPress={onTakePhoto ?? onAddPhoto ?? (() => onEditPhoto(Math.max(photos.length - 1, 0)))}
+        className="h-[130px] w-[48%] items-center justify-center gap-2 rounded-[12px] bg-primary"
         accessibilityRole="button"
       >
         <Ionicons name="camera-outline" size={26} color="#ffffff" />
@@ -392,7 +423,7 @@ export function ProjectPhotoGrid({
         >
           <Image
             source={{ uri: photo.url }}
-            className="h-[100px] w-full rounded-[12px]"
+            className="h-[130px] w-full rounded-[12px]"
             resizeMode="cover"
           />
           <Text className="mt-1 text-xs font-semibold text-foreground">
@@ -582,11 +613,13 @@ export function EditProjectPhotoGrid({
   images,
   imageUri,
   onAddPhoto,
+  onTakePhoto,
   onEditPhoto,
 }: {
   images?: ProjectItem["images"];
   imageUri?: string;
   onAddPhoto?: () => void;
+  onTakePhoto?: () => void;
   onEditPhoto: (index: number) => void;
 }) {
   const sourcePhotos = images?.length
@@ -615,12 +648,12 @@ export function EditProjectPhotoGrid({
             {photo.url ? (
               <Image
                 source={{ uri: photo.url }}
-                className="h-[88px] w-full rounded-[12px]"
+                className="h-[132px] w-full rounded-[12px]"
                 resizeMode="cover"
                 accessibilityLabel={`Foto ${labelByType[photo.type].toLowerCase()}`}
               />
             ) : (
-              <View className="h-[88px] w-full items-center justify-center rounded-[12px] bg-[#f5e8e9]">
+              <View className="h-[132px] w-full items-center justify-center rounded-[12px] bg-[#f5e8e9]">
                 <Ionicons name="image-outline" size={20} color="#b94b50" />
               </View>
             )}
@@ -646,8 +679,8 @@ export function EditProjectPhotoGrid({
 
       <View className="mt-3 flex-row gap-2">
         <Pressable
-          onPress={onAddPhoto ?? (() => onEditPhoto(Math.max(sourcePhotos.length - 1, 0)))}
-          className="h-[72px] flex-1 items-center justify-center gap-1.5 rounded-[12px] bg-primary"
+          onPress={onTakePhoto ?? onAddPhoto ?? (() => onEditPhoto(Math.max(sourcePhotos.length - 1, 0)))}
+          className="h-[82px] flex-1 items-center justify-center gap-1.5 rounded-[12px] bg-primary"
           accessibilityRole="button"
           accessibilityLabel="Tirar nova foto do projeto"
         >
@@ -658,7 +691,7 @@ export function EditProjectPhotoGrid({
         </Pressable>
         <Pressable
           onPress={onAddPhoto ?? (() => onEditPhoto(Math.max(sourcePhotos.length - 1, 0)))}
-          className="h-[72px] flex-1 items-center justify-center gap-1.5 rounded-[12px] border-[1.5px] border-dashed border-primary/30 bg-[#fdf0f0]"
+          className="h-[82px] flex-1 items-center justify-center gap-1.5 rounded-[12px] border-[1.5px] border-dashed border-primary/30 bg-[#fdf0f0]"
           accessibilityRole="button"
           accessibilityLabel="Adicionar fotos ao projeto"
         >

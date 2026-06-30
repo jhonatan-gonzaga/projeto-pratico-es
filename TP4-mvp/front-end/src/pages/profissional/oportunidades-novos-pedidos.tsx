@@ -2,6 +2,7 @@ import { View } from "react-native";
 
 import type { ServiceRequest } from "../../components/profissional/types";
 import { NewRequestCard } from "../../components/profissional/components";
+import { api } from "../../services/api";
 
 export function OportunidadesNovosPedidosScreen({
   onAccept,
@@ -14,6 +15,14 @@ export function OportunidadesNovosPedidosScreen({
   onReject: (request: ServiceRequest) => void;
   requests: ServiceRequest[];
 }) {
+  const handleReject = async (request: ServiceRequest) => {
+    if (request.source === "ad" && request.id) {
+      await api.dismissServiceAd(request.id);
+    }
+
+    onReject(request);
+  };
+
   return (
     <View className="pb-2">
       {requests.map((request) => (
@@ -22,7 +31,9 @@ export function OportunidadesNovosPedidosScreen({
           request={request}
           onAccept={() => onAccept(request)}
           onDetails={() => onDetails(request)}
-          onReject={() => onReject(request)}
+          onReject={() => {
+            void handleReject(request).catch(() => undefined);
+          }}
         />
       ))}
     </View>

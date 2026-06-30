@@ -1,13 +1,14 @@
 import { Pressable, Text, TextInput, View } from "react-native";
 
-export const clientFilterCategories = [
-  "Todos",
-  "Pintura",
-  "Eletrica",
-  "Encanamento",
-  "Pedreiro",
-  "Jardinagem",
-  "Montagem",
+const defaultClientFilterCategories = [
+  { key: "Todos", label: "Todos" },
+  { key: "Pedreiro", label: "Pedreiro" },
+  { key: "Eletricista", label: "Eletricista" },
+  { key: "Pintor", label: "Pintor" },
+  { key: "Encanador", label: "Encanador" },
+  { key: "Ajudante", label: "Ajudante" },
+  { key: "Ar Condicionado", label: "Ar Condicionado" },
+  { key: "Carpinteiro", label: "Carpinteiro" },
 ];
 
 export const clientSortOptions = [
@@ -97,22 +98,29 @@ export type ClientFilterActions = {
 
 export function ClientSearchFilters({
   actions,
+  categories = defaultClientFilterCategories,
   values,
 }: {
   actions: ClientFilterActions;
+  categories?: { key: string; label: string }[];
   values: ClientFilterValues;
 }) {
+  const filterCategories = [
+    { key: "Todos", label: "Todos" },
+    ...categories.filter((category) => category.key !== "Todos"),
+  ];
+
   return (
     <>
       <View className="gap-3">
         <Text className="text-[17px] font-bold text-foreground">Categorias</Text>
         <View className="flex-row flex-wrap gap-2">
-          {clientFilterCategories.map((item) => (
+          {filterCategories.map((item) => (
             <FilterChip
-              key={item}
-              label={item}
-              selected={values.selectedCategories.includes(item)}
-              onPress={() => actions.onToggleCategory(item)}
+              key={item.key}
+              label={item.label}
+              selected={values.selectedCategories.includes(item.key)}
+              onPress={() => actions.onToggleCategory(item.key)}
             />
           ))}
         </View>

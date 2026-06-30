@@ -358,6 +358,7 @@ function ProfessionalProfileSettingsScreen({
   onSave: () => void;
 }) {
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [dailyRate, setDailyRate] = useState("R$ 150");
   const [neighborhood, setNeighborhood] = useState("Centro");
   const [street, setStreet] = useState("Rua Borba");
@@ -449,6 +450,7 @@ function ProfessionalProfileSettingsScreen({
     api.professionalMe()
       .then((profile) => {
         setName(profile.user.name);
+        setEmail(profile.user.email);
         setDailyRate(formatMoney(profile.dailyRate));
         setNeighborhood(profile.address?.neighborhood ?? "");
         setStreet(profile.address?.street ?? "");
@@ -887,6 +889,23 @@ export function SettingsScreen({
   onSelectArea: (area: ProfessionalArea) => void;
 }) {
   const [settingsPage, setSettingsPage] = useState<SettingsPage>("home");
+  const [settingsUser, setSettingsUser] = useState({
+    avatarUrl: null as string | null,
+    email: "",
+    name: "",
+  });
+
+  useEffect(() => {
+    api.me()
+      .then((user) =>
+        setSettingsUser({
+          avatarUrl: user.avatarUrl ?? null,
+          email: user.email,
+          name: user.name,
+        }),
+      )
+      .catch(() => undefined);
+  }, []);
 
   if (settingsPage === "notifications") {
     return (
@@ -950,12 +969,23 @@ export function SettingsScreen({
           accessibilityLabel="Editar perfil profissional"
         >
           <View className="h-16 w-16 items-center justify-center rounded-[14px] border-2 border-primary bg-[#f7e8e9]">
-            <Ionicons name="person" size={32} color="#b94b50" />
+            {settingsUser.avatarUrl ? (
+              <Image
+                source={{ uri: settingsUser.avatarUrl }}
+                className="h-full w-full rounded-[12px]"
+                resizeMode="cover"
+                accessibilityLabel="Foto do profissional"
+              />
+            ) : (
+              <Ionicons name="person" size={32} color="#b94b50" />
+            )}
           </View>
           <View className="flex-1">
-            <Text className="text-lg font-bold text-foreground">Jhon Souza</Text>
+            <Text className="text-lg font-bold text-foreground">
+              {settingsUser.name || "Profissional"}
+            </Text>
             <Text className="mt-0.5 text-sm text-muted-foreground">
-              jhon.souza@email.com
+              {settingsUser.email || "E-mail nao informado"}
             </Text>
           </View>
           <Ionicons name="chevron-forward" size={18} color="#8a8490" />

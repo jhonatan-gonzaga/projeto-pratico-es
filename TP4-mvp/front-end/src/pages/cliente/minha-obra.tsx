@@ -5,7 +5,7 @@ import { Image, Pressable, ScrollView, Text, TextInput, View } from "react-nativ
 import { ClientBottomNav, type ClientNavKey } from "../../components/cliente";
 import { EmptyState, ErrorState, LoadingState } from "../../components/feedback-state";
 import { ProjectHeader } from "../../components/profissional/components";
-import { ApiError, Contract, ContractStatus, api, formatDate } from "../../services/api";
+import { ApiError, Contract, ContractStatus, api, formatDate, formatMoney } from "../../services/api";
 import { ClientMessageScreen } from "./mensagem-profissional";
 
 export type ClientWorkStatusKey =
@@ -13,7 +13,7 @@ export type ClientWorkStatusKey =
   | "aguardando_aprovacao"
   | "concluido"
   | "reabrir_servico";
-type FilterKey = "em_andamento" | "aguardando_aprovacao";
+type FilterKey = "em_andamento" | "aguardando_aprovacao" | "concluido";
 
 type StatusOption = {
   key: ClientWorkStatusKey;
@@ -34,6 +34,17 @@ export type ClientWorkService = {
   status: ClientWorkStatusKey;
   statusOptions: StatusOption[];
   hasReview?: boolean;
+  review?: {
+    rating: number;
+    comment?: string | null;
+  } | null;
+  description?: string;
+  categoryLabel?: string;
+  imageUrls?: string[];
+  price?: string;
+  time?: string;
+  deadline?: string;
+  address?: string;
 };
 
 const STATUS_BADGE: Record<ClientWorkStatusKey, { label: string; bg: string; text: string }> = {
@@ -48,6 +59,14 @@ const STATUS_OPTIONS: StatusOption[] = [
   { key: "em_andamento", label: "Em andamento" },
   { key: "concluido", label: "Concluído" },
   { key: "reabrir_servico", label: "Reabrir Serviço" },
+];
+
+const WAITING_CLIENT_OPTIONS: StatusOption[] = [
+  { key: "concluido", label: "Concluir serviço" },
+];
+
+const COMPLETED_WITHOUT_REVIEW_OPTIONS: StatusOption[] = [
+  { key: "reabrir_servico", label: "Reabrir serviço" },
 ];
 
 const contractStatusToClientStatus: Record<ContractStatus, ClientWorkStatusKey> = {
@@ -67,6 +86,15 @@ const clientStatusToContractStatus: Record<ClientWorkStatusKey, ContractStatus> 
 };
 
 function mapContract(contract: Contract): ClientWorkService {
+  const source = contract.ad ?? contract.directRequest;
+  const status = contractStatusToClientStatus[contract.status];
+  const hasReview = Boolean(contract.review);
+  const sourceCategories =
+    contract.ad?.categories?.map((item) => item.category.name).join(", ") ||
+    contract.ad?.category?.name ||
+    contract.professional.specialties?.map((item) => item.category.name).join(", ") ||
+    "Servico";
+
   return {
     id: contract.id,
     title: contract.title,
@@ -82,9 +110,29 @@ function mapContract(contract: Contract): ClientWorkService {
     unreadMessages: contract.conversations?.[0]?.messages?.filter(
       (message) => !message.readAt && message.sender.id !== contract.client.user.id,
     ).length,
-    status: contractStatusToClientStatus[contract.status],
-    statusOptions: STATUS_OPTIONS,
-    hasReview: Boolean(contract.review),
+    status,
+    statusOptions:
+      contract.status === "IN_PROGRESS" || contract.status === "WAITING_CLIENT_APPROVAL"
+        ? hasReview
+          ? []
+          : WAITING_CLIENT_OPTIONS
+        : contract.status === "COMPLETED" && !hasReview
+          ? COMPLETED_WITHOUT_REVIEW_OPTIONS
+        : [],
+    hasReview,
+    review: contract.review
+      ? {
+          rating: contract.review.rating,
+          comment: contract.review.comment,
+        }
+      : null,
+    description: contract.description,
+    categoryLabel: sourceCategories,
+    imageUrls: source?.images?.map((image) => image.url) ?? [],
+    price: formatMoney(contract.agreedValue),
+    time: source?.startTime ?? "A combinar",
+    deadline: source?.deadlineDays ? `${source.deadlineDays} dias` : "A combinar",
+    address: source?.location,
   };
 }
 
@@ -104,7 +152,7 @@ function ServiceCard({
   onReview: (service: ClientWorkService, rating: number, comment: string) => void;
 }) {
   const [review, setReview] = useState("");
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState(service.review?.rating ?? 0);
   const badge = STATUS_BADGE[service.status];
 
   return (
@@ -163,9 +211,11 @@ function ServiceCard({
         </Pressable>
       </View>
 
-      <Text className="mb-2 text-xs font-bold tracking-wide text-muted-foreground">ATUALIZAR STATUS</Text>
-      <View className="mb-4 flex-row flex-wrap gap-2">
-        {service.statusOptions.map((option) => {
+      {service.statusOptions.length ? (
+        <>
+          <Text className="mb-2 text-xs font-bold tracking-wide text-muted-foreground">ATUALIZAR STATUS</Text>
+          <View className="mb-4 flex-row flex-wrap gap-2">
+            {service.statusOptions.map((option) => {
           const isActive = service.status === option.key;
           const activeBadge = STATUS_BADGE[option.key];
 
@@ -183,23 +233,26 @@ function ServiceCard({
               </Text>
             </Pressable>
           );
-        })}
-      </View>
+            })}
+          </View>
+        </>
+      ) : null}
 
-      {service.status === "concluido" ? (
+      {service.status === "concluido" && !service.hasReview ? (
         <View className="mb-4">
-          <Text className="mb-2 text-sm font-semibold text-foreground">Avaliar o serviço</Text>
+          <Text className="mb-2 text-sm font-semibold text-foreground">
+            Avaliar o serviço
+          </Text>
           <View className="mb-3 flex-row gap-1">
             {[1, 2, 3, 4, 5].map((value) => (
               <Pressable
                 key={value}
                 onPress={() => setRating(value)}
-                disabled={service.hasReview}
                 accessibilityRole="button"
                 accessibilityLabel={`${value} estrela(s)`}
               >
                 <Ionicons
-                  name={value <= rating || service.hasReview ? "star" : "star-outline"}
+                  name={value <= rating ? "star" : "star-outline"}
                   size={26}
                   color="#f59e0b"
                 />
@@ -209,7 +262,6 @@ function ServiceCard({
           <TextInput
             value={review}
             onChangeText={setReview}
-            editable={!service.hasReview}
             placeholder="Escreva um comentário sobre o atendimento, prazo e qualidade do serviço."
             placeholderTextColor="#9e8e8f"
             multiline
@@ -218,17 +270,17 @@ function ServiceCard({
           />
           <Pressable
             onPress={() => {
-              if (rating > 0 && !service.hasReview) {
+              if (rating > 0) {
                 onReview(service, rating, review);
               }
             }}
-            disabled={rating === 0 || service.hasReview}
+            disabled={rating === 0}
             className="w-full items-center rounded-xl bg-primary py-3"
             accessibilityRole="button"
             accessibilityLabel="Enviar avaliação"
           >
             <Text className="text-sm font-semibold text-primary-foreground">
-              {service.hasReview ? "Avaliação enviada" : "Enviar avaliação"}
+              Enviar avaliação
             </Text>
           </Pressable>
         </View>
@@ -274,8 +326,15 @@ export function ClientMyWorkPage({
     setLoadError(null);
 
     try {
-      const contracts = await api.myContracts();
-      setServices(contracts.map(mapContract));
+      const [user, contracts] = await Promise.all([
+        api.me(),
+        api.myContracts(),
+      ]);
+      setServices(
+        contracts
+          .filter((contract) => contract.client.user.id === user.id)
+          .map(mapContract),
+      );
     } catch (error) {
       setLoadError(
         error instanceof ApiError
@@ -328,7 +387,17 @@ export function ClientMyWorkPage({
       });
       setServices((current) =>
         current.map((item) =>
-          item.id === service.id ? { ...item, hasReview: true } : item,
+          item.id === service.id
+            ? {
+                ...item,
+                hasReview: true,
+                review: {
+                  rating,
+                  comment: comment.trim() || null,
+                },
+                status: "concluido",
+              }
+            : item,
         ),
       );
     } catch (error) {
@@ -342,11 +411,13 @@ export function ClientMyWorkPage({
     setFilter((current) => (current === key ? null : key));
   };
 
-  const allServices = [...extraServices, ...services];
+  const allServices = services;
 
   const countByStatus = (key: FilterKey) => allServices.filter((service) => service.status === key).length;
 
-  const visibleServices = filter ? allServices.filter((service) => service.status === filter) : allServices;
+  const visibleServices = filter
+    ? allServices.filter((service) => service.status === filter)
+    : allServices.filter((service) => service.status !== "concluido");
 
   if (activeMessageService) {
     return (
@@ -400,6 +471,18 @@ export function ClientMyWorkPage({
             }`}
           >
             Aguardando aprovação ({countByStatus("aguardando_aprovacao")})
+          </Text>
+        </Pressable>
+
+        <Pressable
+          onPress={() => handleToggleFilter("concluido")}
+          className={`rounded-xl px-4 py-2 ${filter === "concluido" ? "bg-foreground" : "bg-card shadow-sm shadow-black/5"}`}
+          accessibilityRole="button"
+          accessibilityState={{ selected: filter === "concluido" }}
+          accessibilityLabel="Filtrar serviços concluídos"
+        >
+          <Text className={`text-sm font-semibold ${filter === "concluido" ? "text-white" : "text-muted-foreground"}`}>
+            Concluídos ({countByStatus("concluido")})
           </Text>
         </Pressable>
       </View>

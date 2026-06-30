@@ -6,7 +6,7 @@ import { Image, Pressable, ScrollView, Text, TextInput, View } from "react-nativ
 import { professionalServices, projectItems, serviceRequests } from "../../components/profissional/data";
 import { formatBRPhone } from "../../components/profissional/utils";
 import type { ProfessionalArea, ProfessionalTab, ProjectItem } from "../../components/profissional/types";
-import { pickAndUploadImage } from "../../services/image-upload";
+import { captureAndUploadImage, pickAndUploadImage } from "../../services/image-upload";
 import { getProjectFormErrors, isRequiredText } from "../../services/validators";
 import {
   ChoiceChip,
@@ -117,25 +117,32 @@ export function EditProjectScreen({
       return;
     }
 
+    const cleanImages = images.map(({ url, type, altText }) => ({
+      url,
+      type,
+      altText,
+    }));
+
     onSave({
       ...project,
       title: title.trim(),
       location: neighborhood.trim(),
       description: details.trim(),
       image:
-        images.find((image) => image.type === "COVER")?.url ??
-        images[0]?.url ??
+        cleanImages.find((image) => image.type === "COVER")?.url ??
+        cleanImages[0]?.url ??
         "",
-      imageType: images.find((image) => image.type === "COVER")?.type ?? images[0]?.type,
-      images,
+      imageType: cleanImages.find((image) => image.type === "COVER")?.type ?? cleanImages[0]?.type,
+      images: cleanImages,
     });
   };
-  const handlePickImage = async () => {
+  const handleAddImage = async (source: "camera" | "library") => {
     setIsUploadingImage(true);
     setUploadError(null);
 
     try {
-      const uploadedUrl = await pickAndUploadImage();
+      const uploadedUrl =
+        source === "camera" ? await captureAndUploadImage() : await pickAndUploadImage();
 
       if (uploadedUrl) {
         const nextIndex = images.length;
@@ -295,7 +302,8 @@ export function EditProjectScreen({
           </Text>
           <EditProjectPhotoGrid
             images={images}
-            onAddPhoto={handlePickImage}
+            onAddPhoto={() => handleAddImage("library")}
+            onTakePhoto={() => handleAddImage("camera")}
             onEditPhoto={(index) => {
               setEditingPhotoIndex(index);
               setIsEditingPhotoDetails(true);

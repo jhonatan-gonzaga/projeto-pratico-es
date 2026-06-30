@@ -47,3 +47,30 @@ export async function pickAndUploadImage() {
 
   return uploaded.url;
 }
+
+export async function captureAndUploadImage() {
+  const permission = await ImagePicker.requestCameraPermissionsAsync();
+
+  if (!permission.granted) {
+    throw new Error("Permissao para usar a camera negada.");
+  }
+
+  const result = await ImagePicker.launchCameraAsync({
+    allowsEditing: true,
+    quality: 0.85,
+  });
+
+  if (result.canceled || !result.assets[0]) {
+    return null;
+  }
+
+  const asset = result.assets[0];
+  const name = asset.fileName ?? getFileName(asset.uri);
+  const uploaded = await api.uploadImage({
+    uri: asset.uri,
+    name,
+    type: asset.mimeType ?? getMimeType(name),
+  });
+
+  return uploaded.url;
+}

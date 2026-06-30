@@ -155,6 +155,7 @@ export type ServiceAd = {
   categories?: { category: Category }[];
   images: { id: string; url: string }[];
   applications?: Application[];
+  client?: { user: AuthUser };
 };
 
 export type ApplicationStatus =
@@ -391,6 +392,8 @@ export const api = {
       method: "PATCH",
       body: JSON.stringify({ status }),
     }),
+  dismissServiceAd: (id: string) =>
+    request<{ dismissed: true }>(`/service-ads/${id}/dismiss`, { method: "POST" }),
   deleteServiceAd: (id: string) =>
     request<{ deleted: true }>(`/service-ads/${id}`, { method: "DELETE" }),
 
@@ -420,6 +423,7 @@ export const api = {
     request<DirectRequest>(`/direct-requests/${id}/reject`, { method: "POST" }),
 
   myContracts: () => request<Contract[]>("/contracts/my"),
+  contract: (id: string) => request<Contract>(`/contracts/${id}`),
   updateContractStatus: (id: string, status: ContractStatus, note?: string) =>
     request<Contract>(`/contracts/${id}/status`, {
       method: "PATCH",

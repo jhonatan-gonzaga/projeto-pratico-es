@@ -67,12 +67,12 @@ export function ProjectResultScreen({
           {cover ? (
             <Image
               source={{ uri: cover.url }}
-              className="h-[190px] w-full"
+              className="h-[260px] w-full"
               resizeMode="cover"
               accessibilityLabel={project?.title ?? "Foto do projeto"}
             />
           ) : (
-            <View className="h-[190px] w-full items-center justify-center bg-[#f5e8e9]">
+            <View className="h-[260px] w-full items-center justify-center bg-[#f5e8e9]">
               <Ionicons name="image-outline" size={42} color="#b94b50" />
             </View>
           )}
@@ -125,7 +125,7 @@ export function ProjectResultScreen({
                 <View className="relative overflow-hidden rounded-[12px]">
                   <Image
                     source={{ uri: cover.url }}
-                    className="h-[175px] w-full"
+                    className="h-[240px] w-full"
                     resizeMode="cover"
                     accessibilityLabel="Foto capa do projeto"
                   />

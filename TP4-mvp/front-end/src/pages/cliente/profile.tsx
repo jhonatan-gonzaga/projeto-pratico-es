@@ -13,7 +13,7 @@ import {
   api,
   formatMoney,
 } from "../../services/api";
-import { pickAndUploadImage } from "../../services/image-upload";
+import { captureAndUploadImage, pickAndUploadImage } from "../../services/image-upload";
 import { MyProjectsScreen } from "../profissional/meus-projetos";
 import { ProjectResultScreen } from "../profissional/resultado-projeto";
 import { ClientMessageScreen } from "./mensagem-profissional";
@@ -88,10 +88,13 @@ export function ClientProfilePage({
   const [selectedPortfolioProject, setSelectedPortfolioProject] =
     useState<ProjectItem | null>(null);
   const [isShowingMessages, setIsShowingMessages] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
   const resolvedProfessional = apiProfessional
     ? toClientProfile(apiProfessional)
     : professional;
+  const isOwnProfessionalProfile =
+    Boolean(currentUserId && apiProfessional?.user.id === currentUserId);
 
   const specializations =
     apiProfessional?.specialties.map((item) => item.category.name) ?? [];
@@ -169,6 +172,12 @@ export function ClientProfilePage({
     void loadProfessional();
   }, [professionalId]);
 
+  useEffect(() => {
+    api.me()
+      .then((user) => setCurrentUserId(user.id))
+      .catch(() => setCurrentUserId(null));
+  }, []);
+
   const handleOpenWhatsApp = async () => {
     const phoneNumber = apiProfessional?.user.phone;
 
@@ -192,6 +201,11 @@ export function ClientProfilePage({
 
   const handleHire = async () => {
     if (!apiProfessional || isHiring) {
+      return;
+    }
+
+    if (isOwnProfessionalProfile) {
+      setHireError("Voce nao pode contratar seu proprio perfil profissional.");
       return;
     }
 
@@ -264,12 +278,13 @@ export function ClientProfilePage({
     }
   };
 
-  const handlePickDirectImage = async () => {
+  const handleAddDirectImage = async (source: "camera" | "library") => {
     setIsUploadingImage(true);
     setHireError(null);
 
     try {
-      const uploadedUrl = await pickAndUploadImage();
+      const uploadedUrl =
+        source === "camera" ? await captureAndUploadImage() : await pickAndUploadImage();
 
       if (uploadedUrl) {
         setDirectAdForm((current) => ({
@@ -430,7 +445,7 @@ export function ClientProfilePage({
 
                   setIsShowingHireForm((current) => !current);
                 }}
-                disabled={!apiProfessional || isHiring}
+                disabled={!apiProfessional || isHiring || isOwnProfessionalProfile}
                 className="mt-3 w-full flex-row items-center justify-center gap-2 rounded-xl bg-primary py-4"
                 accessibilityRole="button"
               >
@@ -438,6 +453,8 @@ export function ClientProfilePage({
                 <Text className="text-base font-bold text-primary-foreground">
                   {isHiring
                     ? "Enviando..."
+                    : isOwnProfessionalProfile
+                      ? "Seu perfil profissional"
                     : contractMode === "application"
                       ? "Contratar candidato"
                       : "Contratar Profissional"}
@@ -499,18 +516,43 @@ export function ClientProfilePage({
                       className="flex-1 rounded-xl bg-background px-4 py-3 text-sm text-foreground"
                     />
                   </View>
-                  <Pressable
-                    onPress={handlePickDirectImage}
-                    className="items-center rounded-xl border border-dashed border-input-border bg-background py-3"
-                  >
-                    <Text className="text-sm font-semibold text-primary">
-                      {isUploadingImage ? "Enviando imagem..." : `${directAdForm.imageUrls.length} imagem(ns)`}
-                    </Text>
-                  </Pressable>
+                  <View className="flex-row gap-2">
+                    <Pressable
+                      onPress={() => handleAddDirectImage("camera")}
+                      className="min-h-[48px] flex-1 items-center justify-center rounded-xl bg-primary px-3"
+                    >
+                      <Text className="text-sm font-semibold text-white">
+                        Tirar foto
+                      </Text>
+                    </Pressable>
+                    <Pressable
+                      onPress={() => handleAddDirectImage("library")}
+                      className="min-h-[48px] flex-1 items-center justify-center rounded-xl border border-dashed border-input-border bg-background px-3"
+                    >
+                      <Text className="text-sm font-semibold text-primary">
+                        {isUploadingImage ? "Enviando..." : "Galeria"}
+                      </Text>
+                    </Pressable>
+                  </View>
                   {directAdForm.imageUrls.length ? (
-                    <ScrollView horizontal contentContainerClassName="gap-2">
+                    <ScrollView horizontal contentContainerClassName="gap-3">
                       {directAdForm.imageUrls.map((url) => (
-                        <Image key={url} source={{ uri: url }} className="h-16 w-16 rounded-lg" />
+                        <View key={url} className="relative">
+                          <Image source={{ uri: url }} className="h-28 w-36 rounded-xl" resizeMode="cover" />
+                          <Pressable
+                            onPress={() =>
+                              setDirectAdForm((current) => ({
+                                ...current,
+                                imageUrls: current.imageUrls.filter((item) => item !== url),
+                              }))
+                            }
+                            className="absolute right-2 top-2 h-8 w-8 items-center justify-center rounded-full bg-black/60"
+                            accessibilityRole="button"
+                            accessibilityLabel="Remover imagem"
+                          >
+                            <Ionicons name="close" size={16} color="#ffffff" />
+                          </Pressable>
+                        </View>
                       ))}
                     </ScrollView>
                   ) : null}
@@ -621,7 +663,13 @@ export function ClientProfilePage({
                   {portfolioItems.map((item) => (
                     <Pressable
                       key={item.label}
-                      onPress={() => setIsViewingProjectResult(true)}
+                      onPress={() => {
+                        const selectedProject = portfolioProjects.find(
+                          (project) => project.title === item.label,
+                        );
+                        setSelectedPortfolioProject(selectedProject ?? null);
+                        setIsViewingProjectResult(true);
+                      }}
                       className="w-[48%] overflow-hidden rounded-xl shadow-sm shadow-black/10"
                       accessibilityRole="button"
                     >

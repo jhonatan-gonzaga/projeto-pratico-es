@@ -22,7 +22,7 @@ export function OportunidadeMeusServicosScreen({
   const [activeFilter, setActiveFilter] = useState<ServiceListFilter>("all");
   const counts = useMemo(
     () => ({
-      all: services.length,
+      all: services.filter((service) => service.status !== "completed").length,
       active: services.filter((service) => service.status !== "completed").length,
       completed: services.filter((service) => service.status === "completed").length,
     }),
@@ -33,7 +33,7 @@ export function OportunidadeMeusServicosScreen({
       ? services.filter((service) => service.status === "completed")
       : activeFilter === "active"
         ? services.filter((service) => service.status !== "completed")
-        : services;
+        : services.filter((service) => service.status !== "completed");
 
   return (
     <View className="pb-2">

@@ -6,7 +6,7 @@ import { Image, Pressable, ScrollView, Text, TextInput, View } from "react-nativ
 import { professionalServices, projectItems, serviceRequests } from "../../components/profissional/data";
 import { formatBRPhone } from "../../components/profissional/utils";
 import type { ProfessionalArea, ProfessionalTab, ProjectItem } from "../../components/profissional/types";
-import { pickAndUploadImage } from "../../services/image-upload";
+import { captureAndUploadImage, pickAndUploadImage } from "../../services/image-upload";
 import { getProjectFormErrors, isRequiredText } from "../../services/validators";
 import {
   ChoiceChip,
@@ -118,12 +118,13 @@ export function AddProjectScreen({
       images,
     });
   };
-  const handlePickImage = async () => {
+  const handleAddImage = async (source: "camera" | "library") => {
     setIsUploadingImage(true);
     setUploadError(null);
 
     try {
-      const uploadedUrl = await pickAndUploadImage();
+      const uploadedUrl =
+        source === "camera" ? await captureAndUploadImage() : await pickAndUploadImage();
 
       if (uploadedUrl) {
         const nextIndex = images.length;
@@ -275,7 +276,8 @@ export function AddProjectScreen({
           </Text>
           <ProjectPhotoGrid
             images={images}
-            onAddPhoto={handlePickImage}
+            onAddPhoto={() => handleAddImage("library")}
+            onTakePhoto={() => handleAddImage("camera")}
             onEditPhoto={(index) => {
               setEditingPhotoIndex(index);
               setIsEditingPhotoDetails(true);

@@ -8,6 +8,13 @@ import { EmptyState, ErrorState, LoadingState } from "../../components/feedback-
 import { AudioRecordingState, startAudioRecording, stopAndUploadAudio } from "../../services/audio-upload";
 import { ApiError, MessageItem, api } from "../../services/api";
 
+function formatAudioDuration(durationMs?: number | null) {
+  const totalSeconds = Math.max(0, Math.round((durationMs ?? 0) / 1000));
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = String(totalSeconds % 60).padStart(2, "0");
+  return `${minutes}:${seconds}`;
+}
+
 export function ClientMessageScreen({
   onBack,
   onHire,
@@ -30,6 +37,11 @@ export function ClientMessageScreen({
     recording: null,
     startedAt: null,
   });
+  const [playingAudio, setPlayingAudio] = useState<{
+    id: string;
+    isPlaying: boolean;
+    sound: Audio.Sound;
+  } | null>(null);
 
   const loadMessages = async () => {
     if (!conversationId) {
@@ -58,6 +70,12 @@ export function ClientMessageScreen({
   useEffect(() => {
     void loadMessages();
   }, [conversationId]);
+
+  useEffect(() => {
+    return () => {
+      void playingAudio?.sound.unloadAsync();
+    };
+  }, [playingAudio?.sound]);
 
   const sendMessage = async () => {
     const trimmed = message.trim();
@@ -103,9 +121,43 @@ export function ClientMessageScreen({
     }
   };
 
-  const playAudio = async (url: string) => {
-    const { sound } = await Audio.Sound.createAsync({ uri: url });
-    await sound.playAsync();
+  const togglePlayAudio = async (item: MessageItem) => {
+    if (!item.audioUrl) {
+      return;
+    }
+
+    if (playingAudio?.id === item.id) {
+      const status = await playingAudio.sound.getStatusAsync();
+
+      if (status.isLoaded && status.isPlaying) {
+        await playingAudio.sound.pauseAsync();
+        setPlayingAudio((current) =>
+          current?.id === item.id ? { ...current, isPlaying: false } : current,
+        );
+        return;
+      }
+
+      await playingAudio.sound.playAsync();
+      setPlayingAudio((current) =>
+        current?.id === item.id ? { ...current, isPlaying: true } : current,
+      );
+      return;
+    }
+
+    if (playingAudio) {
+      await playingAudio.sound.unloadAsync();
+    }
+
+    const { sound } = await Audio.Sound.createAsync(
+      { uri: item.audioUrl },
+      { shouldPlay: true },
+    );
+    sound.setOnPlaybackStatusUpdate((status) => {
+      if (status.isLoaded && status.didJustFinish) {
+        setPlayingAudio((current) => (current?.id === item.id ? null : current));
+      }
+    });
+    setPlayingAudio({ id: item.id, isPlaying: true, sound });
   };
 
   return (
@@ -158,10 +210,18 @@ export function ClientMessageScreen({
               }`}
             >
               {item.type === "AUDIO" && item.audioUrl ? (
-                <Pressable onPress={() => void playAudio(item.audioUrl ?? "")} className="flex-row items-center gap-2">
-                  <Ionicons name="play-circle" size={20} color={isMine ? "#ffffff" : "#b94b50"} />
+                <Pressable onPress={() => void togglePlayAudio(item)} className="flex-row items-center gap-2">
+                  <Ionicons
+                    name={
+                      playingAudio?.id === item.id && playingAudio.isPlaying
+                        ? "pause-circle"
+                        : "play-circle"
+                    }
+                    size={20}
+                    color={isMine ? "#ffffff" : "#b94b50"}
+                  />
                   <Text className={`text-sm ${isMine ? "text-white" : "text-foreground"}`}>
-                    Audio
+                    Audio {formatAudioDuration(item.durationMs)}
                   </Text>
                 </Pressable>
               ) : (
