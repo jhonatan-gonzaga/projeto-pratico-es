@@ -60,7 +60,6 @@ export function ProfessionalSetupScreen({
   const [street, setStreet] = useState("");
   const [number, setNumber] = useState("");
   const [about, setAbout] = useState("");
-  const [hasProfilePhoto, setHasProfilePhoto] = useState(false);
   const [profilePhotoUrl, setProfilePhotoUrl] = useState<string | null>(null);
   const [photoError, setPhotoError] = useState<string | null>(null);
   const [startTime, setStartTime] = useState("");
@@ -164,7 +163,7 @@ export function ProfessionalSetupScreen({
       const selectedCategoryIds = categories
         .filter((category) => specialties.includes(category.name))
         .map((category) => category.id);
-      const dayMap: Record<string, string> = {
+      const dayIdToWeekday: Record<string, string> = {
         S: "MONDAY",
         T: "TUESDAY",
         Q1: "WEDNESDAY",
@@ -187,7 +186,7 @@ export function ProfessionalSetupScreen({
         },
         categoryIds: selectedCategoryIds,
         availability: availableDays.map((day) => ({
-          dayOfWeek: dayMap[day],
+          dayOfWeek: dayIdToWeekday[day],
           startTime,
           endTime,
         })),
@@ -211,7 +210,6 @@ export function ProfessionalSetupScreen({
 
       if (uploadedUrl) {
         setProfilePhotoUrl(uploadedUrl);
-        setHasProfilePhoto(true);
       }
     } catch (error) {
       setPhotoError(
@@ -239,8 +237,6 @@ export function ProfessionalSetupScreen({
                   className="h-full w-full rounded-full"
                   resizeMode="cover"
                 />
-              ) : hasProfilePhoto ? (
-                <Text className="text-2xl font-bold text-primary">JN</Text>
               ) : (
                 <Ionicons name="person" size={46} color="#b94b50" />
               )}

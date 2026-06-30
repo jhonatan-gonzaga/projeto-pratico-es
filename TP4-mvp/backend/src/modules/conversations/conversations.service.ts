@@ -65,6 +65,7 @@ export class ConversationsService {
         ? conversation.professionalUserId
         : conversation.clientUserId;
 
+    const messageText = dto.text ?? '';
     await this.prisma.$transaction([
       this.prisma.conversation.update({
         where: { id },
@@ -78,9 +79,9 @@ export class ConversationsService {
           body:
             dto.type === MessageType.AUDIO
               ? 'Mensagem de audio'
-              : (dto.text ?? '').length > 120
-                ? `${(dto.text ?? '').slice(0, 117)}...`
-                : (dto.text ?? ''),
+              : messageText.length > 120
+                ? `${messageText.slice(0, 117)}...`
+                : messageText,
           data: { conversationId: id, messageId: message.id },
         },
       }),
