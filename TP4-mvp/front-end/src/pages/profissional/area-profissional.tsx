@@ -16,6 +16,7 @@ import {
 } from "../../components/profissional/components";
 import {
   ApiError,
+  Application,
   Contract,
   ContractStatus,
   DirectRequest,
@@ -92,6 +93,7 @@ function mapContract(item: Contract): ProfessionalService {
     title: item.title,
     status: contractStatusToServiceStatus[item.status],
     order: item.id,
+    source: "contract",
     customer: item.client.user.name,
     price: formatMoney(item.agreedValue),
     date: formatDate(item.startDate),
@@ -102,7 +104,34 @@ function mapContract(item: Contract): ProfessionalService {
       ? String(item.conversations[0].messages.length)
       : undefined,
     action:
-      item.status === "PENDING_START" ? "Iniciar Servico" : "Finalizar Servico",
+      item.status === "PENDING_START" ? "Iniciar Servico" : "Em andamento",
+    canStart: item.status === "PENDING_START" || item.status === "REOPENED",
+  };
+}
+
+function mapApplication(item: Application): ProfessionalService | null {
+  if (!item.ad || !["SENT", "COUNTER_OFFERED"].includes(item.status)) {
+    return null;
+  }
+
+  return {
+    title: item.ad.title,
+    status: "pending",
+    order: `application-${item.id}`,
+    source: "application",
+    customer: item.ad.client?.user?.name ?? "Cliente do servico",
+    price: formatMoney(item.proposedValue ?? item.ad.budget),
+    date: formatDate(item.ad.startDate),
+    time: item.ad.startTime ?? "A combinar",
+    deadline: item.ad.deadlineDays ? `${item.ad.deadlineDays} dias` : "A combinar",
+    address: item.ad.location,
+    category:
+      item.ad.categories?.map((adCategory) => adCategory.category.name).join(", ") ||
+      item.ad.category.name,
+    description: item.ad.description,
+    imageUrls: item.ad.images?.map((image) => image.url) ?? [],
+    action: "Aguardando aprovacao",
+    canStart: false,
   };
 }
 
@@ -175,10 +204,11 @@ export function ProfessionalHomeScreen({
     setLoadError(null);
 
     try {
-      const [directRequests, openAds, contracts, portfolio] = await Promise.all([
+      const [directRequests, openAds, contracts, applications, portfolio] = await Promise.all([
         api.inboxDirectRequests(),
         api.openServiceAds(),
         api.myContracts(),
+        api.myApplications(),
         api.myPortfolio(),
       ]);
       setRequests([
@@ -187,7 +217,10 @@ export function ProfessionalHomeScreen({
           .map(mapDirectRequest),
         ...openAds.items.map(mapServiceAd),
       ]);
-      setServices(contracts.map(mapContract));
+      setServices([
+        ...applications.map(mapApplication).filter(Boolean),
+        ...contracts.map(mapContract),
+      ] as ProfessionalService[]);
       setProjects(portfolio.map(mapPortfolioProject));
     } catch (error) {
       setLoadError(
@@ -245,7 +278,12 @@ export function ProfessionalHomeScreen({
         const contract = await api.acceptDirectRequest(request.id);
         setServices((current) => [mapContract(contract), ...current]);
       } else if (request.source === "ad" && request.id) {
-        await api.createApplication(request.id, {});
+        const application = await api.createApplication(request.id, {});
+        const pendingService = mapApplication(application);
+
+        if (pendingService) {
+          setServices((current) => [pendingService, ...current]);
+        }
       }
 
       setRequests((current) => current.filter((item) => item.id !== request.id));
@@ -260,6 +298,10 @@ export function ProfessionalHomeScreen({
   };
 
   const runServicePrimaryAction = async (service: ProfessionalService) => {
+    if (service.source === "application" || service.canStart === false) {
+      return;
+    }
+
     try {
       const updated = await api.updateContractStatus(
         service.order,

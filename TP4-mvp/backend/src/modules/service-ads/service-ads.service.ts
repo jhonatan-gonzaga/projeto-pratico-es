@@ -75,8 +75,34 @@ export class ServiceAdsService {
     return { openAds, receivedApplications };
   }
 
-  findOpen(query: ServiceAdQueryDto) {
-    return this.findMany({ ...query, status: ServiceAdStatus.OPEN });
+  async findOpen(userId: string, query: ServiceAdQueryDto) {
+    const professional = await this.prisma.professionalProfile.findUnique({
+      where: { userId },
+      select: {
+        id: true,
+        specialties: { select: { categoryId: true } },
+      },
+    });
+
+    const categoryIds = professional?.specialties.map((specialty) => specialty.categoryId) ?? [];
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 20;
+
+    if (!professional || categoryIds.length === 0) {
+      return { items: [], total: 0, page, limit };
+    }
+
+    return this.findMany(
+      { ...query, status: ServiceAdStatus.OPEN },
+      {
+        client: { userId: { not: userId } },
+        applications: { none: { professionalId: professional.id } },
+        OR: [
+          { categoryId: { in: categoryIds } },
+          { categories: { some: { categoryId: { in: categoryIds } } } },
+        ],
+      },
+    );
   }
 
   async findOne(id: string) {
@@ -145,6 +171,46 @@ export class ServiceAdsService {
       data: { status: ServiceAdStatus.CANCELED },
     });
     return { deleted: true };
+  }
+
+  async dismiss(userId: string, id: string) {
+    const professional = await this.prisma.professionalProfile.findUnique({
+      where: { userId },
+    });
+
+    if (!professional) {
+      throw new ForbiddenException('Perfil profissional nao cadastrado.');
+    }
+
+    const ad = await this.prisma.serviceAd.findUnique({
+      where: { id },
+      include: { client: true },
+    });
+
+    if (!ad || ad.status !== ServiceAdStatus.OPEN) {
+      throw new NotFoundException('Anuncio aberto nao encontrado.');
+    }
+
+    if (ad.client.userId === userId) {
+      throw new BadRequestException('Voce nao pode recusar seu proprio anuncio.');
+    }
+
+    await this.prisma.application.upsert({
+      where: {
+        adId_professionalId: {
+          adId: id,
+          professionalId: professional.id,
+        },
+      },
+      create: {
+        adId: id,
+        professionalId: professional.id,
+        status: ApplicationStatus.CANCELED,
+      },
+      update: { status: ApplicationStatus.CANCELED },
+    });
+
+    return { dismissed: true };
   }
 
   private async findMany(query: ServiceAdQueryDto, extraWhere: Prisma.ServiceAdWhereInput = {}) {

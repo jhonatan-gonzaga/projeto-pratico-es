@@ -69,12 +69,17 @@ function toServiceDetailsItem(service: ClientWorkService): ProfessionalService {
   return {
     title: service.title,
     status: clientStatusToProfessionalStatus[service.status],
-    order: `CLI-${service.id.padStart(4, "0")}`,
+    order: service.id,
     customer: service.professionalName,
-    price: "A combinar",
+    price: service.price ?? "A combinar",
     date: service.dateValue,
-    time: "08:00 - 17:00",
-    deadline: "5 dias",
+    time: service.time ?? "A combinar",
+    deadline: service.deadline ?? "A combinar",
+    address: service.address,
+    category: service.categoryLabel,
+    description: service.description,
+    imageUrls: service.imageUrls,
+    hasReview: service.hasReview,
     messageCount: service.unreadMessages
       ? String(service.unreadMessages)
       : undefined,

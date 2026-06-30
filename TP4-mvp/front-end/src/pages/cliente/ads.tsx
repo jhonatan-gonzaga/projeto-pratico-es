@@ -28,7 +28,7 @@ import {
   formatDate,
   formatMoney,
 } from "../../services/api";
-import { pickAndUploadImage } from "../../services/image-upload";
+import { captureAndUploadImage, pickAndUploadImage } from "../../services/image-upload";
 import { ClientProfilePage, type ClientProfessionalProfile } from "./profile";
 import type { ClientWorkService } from "./minha-obra";
 
@@ -760,12 +760,13 @@ function ClientAdFormScreen({
         : [...current, categoryId],
     );
   };
-  const handlePickImage = async () => {
+  const handleAddImage = async (source: "camera" | "library") => {
     setIsUploadingImage(true);
     setUploadError(null);
 
     try {
-      const uploadedUrl = await pickAndUploadImage();
+      const uploadedUrl =
+        source === "camera" ? await captureAndUploadImage() : await pickAndUploadImage();
 
       if (uploadedUrl) {
         setImageUrls((current) => [...current, uploadedUrl]);
@@ -953,45 +954,66 @@ function ClientAdFormScreen({
 
           <SetupSection label="Imagens do servico">
             <Text className="px-1 text-xs text-muted-foreground">Opcional</Text>
-            <Pressable
-              onPress={handlePickImage}
-              className={`items-center justify-center gap-2 rounded-[16px] border-[1.5px] border-dashed px-5 py-8 shadow-sm shadow-black/5 ${
-                imageUrls.length > 0
-                  ? "border-primary bg-[#fff7f7]"
-                  : "border-black/10 bg-card"
-              }`}
-              accessibilityRole="button"
-              accessibilityLabel="Adicionar imagens"
-            >
-              <View className="h-12 w-12 items-center justify-center rounded-full bg-[#fceaea]">
+            <View className="flex-row gap-2">
+              <Pressable
+                onPress={() => handleAddImage("camera")}
+                className="min-h-[56px] flex-1 items-center justify-center gap-1 rounded-[14px] bg-primary px-3"
+                accessibilityRole="button"
+                accessibilityLabel="Tirar foto do servico"
+              >
+                <Ionicons name="camera-outline" size={20} color="#ffffff" />
+                <Text className="text-sm font-semibold text-white">Tirar foto</Text>
+              </Pressable>
+              <Pressable
+                onPress={() => handleAddImage("library")}
+                className="min-h-[56px] flex-1 items-center justify-center gap-1 rounded-[14px] border-[1.5px] border-dashed border-input-border bg-card px-3"
+                accessibilityRole="button"
+                accessibilityLabel="Adicionar imagens da galeria"
+              >
                 <Ionicons
                   name={imageUrls.length > 0 ? "checkmark-circle" : "image-outline"}
-                  size={22}
+                  size={20}
                   color="#b94b50"
                 />
-              </View>
-              <Text className="text-sm font-medium text-muted-foreground">
-                {isUploadingImage
-                  ? "Enviando imagem..."
-                  : imageUrls.length > 0
-                    ? `${imageUrls.length} imagem(ns) adicionada(s)`
-                    : "Adicionar imagens"}
-              </Text>
-            </Pressable>
+                <Text className="text-sm font-semibold text-primary">
+                  {isUploadingImage ? "Enviando..." : "Galeria"}
+                </Text>
+              </Pressable>
+            </View>
+            <Text className="px-1 text-xs text-muted-foreground">
+              {imageUrls.length > 0
+                ? `${imageUrls.length} imagem(ns) adicionada(s)`
+                : "Nenhuma imagem adicionada."}
+            </Text>
             {uploadError ? (
               <Text className="px-1 text-xs leading-4 text-[#dc2626]">
                 {uploadError}
               </Text>
             ) : null}
             {imageUrls.length > 0 ? (
-              <ScrollView horizontal contentContainerClassName="gap-2">
+              <ScrollView horizontal contentContainerClassName="gap-3">
                 {imageUrls.map((url) => (
-                  <Image
-                    key={url}
-                    source={{ uri: url }}
-                    className="h-20 w-20 rounded-lg"
-                    resizeMode="cover"
-                  />
+                  <View key={url} className="relative">
+                    <Image
+                      source={{ uri: url }}
+                      className="h-32 w-44 rounded-xl"
+                      resizeMode="cover"
+                    />
+                    <Pressable
+                      onPress={() => {
+                        setImageUrls((current) => {
+                          const next = current.filter((item) => item !== url);
+                          setHasImages(next.length > 0);
+                          return next;
+                        });
+                      }}
+                      className="absolute right-2 top-2 h-8 w-8 items-center justify-center rounded-full bg-black/60"
+                      accessibilityRole="button"
+                      accessibilityLabel="Remover imagem"
+                    >
+                      <Ionicons name="close" size={16} color="#ffffff" />
+                    </Pressable>
+                  </View>
                 ))}
               </ScrollView>
             ) : null}
@@ -1107,23 +1129,6 @@ export function ClientAdsPage({
           item.id === ad.id ? { ...item, status: "contracted" } : item,
         ),
       );
-      onContractService?.({
-        avatarUri: candidate.avatarUrl,
-        dateLabel: "Início:",
-        dateValue: "Hoje",
-        id: `contract-${ad.id}-${candidate.id}`,
-        professionalName: candidate.name,
-        professionalId: candidate.professionalId,
-        professionalRole: candidate.role,
-        status: "em_andamento",
-        statusOptions: [
-          { key: "aguardando_aprovacao", label: "Aguardando aprovação" },
-          { key: "em_andamento", label: "Em andamento" },
-          { key: "concluido", label: "Concluído" },
-          { key: "reabrir_servico", label: "Reabrir Serviço" },
-        ],
-        title: ad.title,
-      });
       setSelectedCandidatesAd(null);
       onNavigate?.("work");
     } catch (error) {

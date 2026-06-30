@@ -10,7 +10,7 @@ import {
   type ClientNavKey,
 } from "../../components/cliente";
 import { ProjectHeader } from "../../components/profissional/components";
-import { ApiError, ProfessionalProfile, api, formatMoney } from "../../services/api";
+import { ApiError, Category, ProfessionalProfile, api, formatMoney } from "../../services/api";
 
 type ClientSearchPageProps = {
   onNavigate?: (key: ClientNavKey) => void;
@@ -19,12 +19,23 @@ type ClientSearchPageProps = {
   onProfilePress?: () => void;
 };
 
+function normalizeCategoryText(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/\bpintura\b/g, "pintor")
+    .replace(/\beletrica\b/g, "eletricista")
+    .replace(/\bencanamento\b/g, "encanador");
+}
+
 export function ClientSearchPage({
   onBack,
   onNavigate,
   onOpenProfessional,
   onProfilePress,
 }: ClientSearchPageProps) {
+  const [categories, setCategories] = useState<Category[]>([]);
   const [professionals, setProfessionals] = useState<ProfessionalProfile[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -40,7 +51,11 @@ export function ClientSearchPage({
     setLoadError(null);
 
     try {
-      const response = await api.professionals();
+      const [categoryItems, response] = await Promise.all([
+        api.categories(),
+        api.professionals(),
+      ]);
+      setCategories(categoryItems);
       setProfessionals(response.items);
     } catch (error) {
       setLoadError(
@@ -89,6 +104,7 @@ export function ClientSearchPage({
   const minPriceNumber = Number(minPrice || 0);
   const maxPriceNumber = Number(maxPrice || 9999);
   const normalizedQuery = query.trim().toLowerCase();
+  const normalizedSearchQuery = normalizeCategoryText(normalizedQuery);
   const visibleProfessionals = useMemo(
     () =>
       professionals.filter((professional) => {
@@ -99,13 +115,20 @@ export function ClientSearchPage({
           item.category.id,
           item.category.name,
         ]);
+        const normalizedCategories = professional.specialties.flatMap((item) => [
+          normalizeCategoryText(item.category.id),
+          normalizeCategoryText(item.category.name),
+        ]);
         const matchesCategory =
           selectedCategories.includes("Todos") ||
           categories.some((category) => selectedCategories.includes(category));
         const matchesQuery =
           !normalizedQuery ||
           professional.user.name.toLowerCase().includes(normalizedQuery) ||
-          role.toLowerCase().includes(normalizedQuery);
+          role.toLowerCase().includes(normalizedQuery) ||
+          normalizedCategories.some((category) =>
+            category.includes(normalizedSearchQuery),
+          );
         const priceValue = Number(professional.dailyRate ?? 0);
         const ratingValue = Number(professional.ratingAvg ?? 0);
 
@@ -121,6 +144,7 @@ export function ClientSearchPage({
       maxPriceNumber,
       minPriceNumber,
       normalizedQuery,
+      normalizedSearchQuery,
       professionals,
       ratingMinimum,
       selectedCategories,
@@ -169,6 +193,10 @@ export function ClientSearchPage({
         showsVerticalScrollIndicator={false}
       >
         <ClientSearchFilters
+          categories={categories.map((category) => ({
+            key: category.id,
+            label: category.name,
+          }))}
           values={{
             selectedCategories,
             sortBy,

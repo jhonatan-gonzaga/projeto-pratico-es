@@ -192,6 +192,10 @@ export function ClientHomePage({
         {showFilters ? (
           <View className="mb-6 gap-7 rounded-[16px] bg-background">
             <ClientSearchFilters
+              categories={categories.map((category) => ({
+                key: category.id,
+                label: category.name,
+              }))}
               values={{
                 selectedCategories,
                 sortBy,

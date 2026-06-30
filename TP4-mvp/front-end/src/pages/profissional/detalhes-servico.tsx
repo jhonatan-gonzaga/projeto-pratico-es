@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import { useEffect, useMemo, useState } from "react";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
 
 import type { ProfessionalService } from "../../components/profissional/types";
@@ -9,6 +10,23 @@ import {
   ProjectHeader,
   StatusBadge,
 } from "../../components/profissional/components";
+import { ApiError, Contract, api, formatDate, formatMoney } from "../../services/api";
+
+function getContractImages(contract?: Contract | null) {
+  return [
+    ...(contract?.ad?.images?.map((image) => image.url) ?? []),
+    ...(contract?.directRequest?.images?.map((image) => image.url) ?? []),
+  ];
+}
+
+function getContractCategory(contract?: Contract | null) {
+  return (
+    contract?.ad?.categories?.map((item) => item.category.name).join(", ") ||
+    contract?.ad?.category?.name ||
+    contract?.professional.specialties?.map((item) => item.category.name).join(", ") ||
+    ""
+  );
+}
 
 export function ServiceDetailsScreen({
   onBack,
@@ -25,9 +43,52 @@ export function ServiceDetailsScreen({
   participantLabel?: string;
   service: ProfessionalService;
 }) {
+  const [contract, setContract] = useState<Contract | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const canFetchContract = Boolean(service.order && !service.order.startsWith("CLI-"));
+
+  useEffect(() => {
+    if (!canFetchContract) {
+      return;
+    }
+
+    api.contract(service.order)
+      .then((item) => {
+        setContract(item);
+        setLoadError(null);
+      })
+      .catch((error) => {
+        setLoadError(
+          error instanceof ApiError
+            ? error.message
+            : "Nao foi possivel carregar detalhes atualizados.",
+        );
+      });
+  }, [canFetchContract, service.order]);
+
+  const imageUrls = useMemo(() => {
+    const contractImages = getContractImages(contract);
+    return contractImages.length ? contractImages : service.imageUrls ?? [];
+  }, [contract, service.imageUrls]);
+  const description = contract?.description ?? service.description ?? "";
+  const categoryText = getContractCategory(contract) || service.category || "Servico";
+  const categories = categoryText.split(",").map((item) => item.trim()).filter(Boolean);
+  const displayDate = contract?.startDate ? formatDate(contract.startDate) : service.date;
+  const displayTime = contract?.ad?.startTime ?? contract?.directRequest?.startTime ?? service.time;
+  const displayDeadline =
+    contract?.ad?.deadlineDays
+      ? `${contract.ad.deadlineDays} dias`
+      : contract?.directRequest?.deadlineDays
+        ? `${contract.directRequest.deadlineDays} dias`
+        : service.deadline;
+  const displayPrice = contract ? formatMoney(contract.agreedValue) : service.price;
+  const displayAddress = contract?.ad?.location ?? contract?.directRequest?.location ?? service.address;
+  const hasReview = Boolean(contract?.review ?? service.hasReview);
   const actionLabel =
     service.status === "completed"
-      ? "Reabrir Servico"
+      ? hasReview
+        ? "Servico avaliado"
+        : "Servico finalizado"
       : service.status === "pending"
         ? "Iniciar Servico"
         : "Enviar mensagem";
@@ -70,9 +131,15 @@ export function ServiceDetailsScreen({
             </Text>
           </View>
           <Text className="text-lg font-bold text-foreground">
-            {service.price}
+            {displayPrice}
           </Text>
         </View>
+
+        {loadError ? (
+          <Text className="mb-3 rounded-[8px] bg-[#fff7f7] px-3 py-2 text-xs font-semibold text-primary">
+            {loadError}
+          </Text>
+        ) : null}
 
         <View className="mb-4 rounded-[8px] bg-card p-4 shadow-sm shadow-black/5">
           <View className="mb-3 flex-row items-center gap-2">
@@ -82,11 +149,11 @@ export function ServiceDetailsScreen({
             </Text>
           </View>
           <View className="flex-row flex-wrap gap-2">
-            {["Pedreiro", "Eletricista", "Pintor", "Encanador"].map((category) => (
+            {categories.map((category, index) => (
               <DetailTag
-                key={category}
+                key={`${category}-${index}`}
                 label={category}
-                active={category === "Pintor"}
+                active={index === 0}
               />
             ))}
           </View>
@@ -100,9 +167,7 @@ export function ServiceDetailsScreen({
             </Text>
           </View>
           <Text className="text-sm leading-6 text-muted-foreground">
-            Pintura completa de casa de 3 quartos, incluindo teto e paredes
-            internas. Necessario preparar as paredes, proteger os moveis e
-            entregar acabamento limpo.
+            {description || "Descricao nao informada."}
           </Text>
         </View>
 
@@ -111,13 +176,13 @@ export function ServiceDetailsScreen({
             <DetailInfoCard
               icon="calendar-outline"
               label="Data"
-              value={service.date}
+              value={displayDate}
               subtitle="Agendado"
             />
             <DetailInfoCard
               icon="time-outline"
               label="Horario"
-              value={service.time}
+              value={displayTime}
               subtitle="Previsto"
             />
           </View>
@@ -125,13 +190,13 @@ export function ServiceDetailsScreen({
             <DetailInfoCard
               icon="hourglass-outline"
               label="Prazo"
-              value={service.deadline}
-              subtitle={`Prazo: ${service.deadline}`}
+              value={displayDeadline}
+              subtitle={`Prazo: ${displayDeadline}`}
             />
           </View>
         </View>
 
-        {service.address ? (
+        {displayAddress ? (
           <View className="mb-4 rounded-[8px] bg-card p-4 shadow-sm shadow-black/5">
             <View className="mb-2 flex-row items-center gap-2">
               <Ionicons name="location" size={18} color="#b94b50" />
@@ -140,7 +205,7 @@ export function ServiceDetailsScreen({
               </Text>
             </View>
             <Text className="text-sm font-semibold leading-5 text-foreground">
-              {service.address}
+              {displayAddress}
             </Text>
           </View>
         ) : null}
@@ -152,18 +217,47 @@ export function ServiceDetailsScreen({
               Imagens do servico
             </Text>
           </View>
-          <Image
-            source={{
-              uri: "https://storage.googleapis.com/banani-generated-images/generated-images/115f5264-00fb-47c5-8131-0b9c0c0cc1f9.jpg",
-            }}
-            className="h-[170px] w-full rounded-[12px]"
-            resizeMode="cover"
-            accessibilityLabel="Imagem do servico"
-          />
+          {imageUrls.length ? (
+            <View className="gap-3">
+              <Image
+                source={{ uri: imageUrls[0] }}
+                className="h-[220px] w-full rounded-[12px]"
+                resizeMode="cover"
+                accessibilityLabel="Imagem principal do servico"
+              />
+              {imageUrls.length > 1 ? (
+                <ScrollView horizontal contentContainerClassName="gap-2">
+                  {imageUrls.slice(1).map((url, index) => (
+                    <Image
+                      key={`${url}-${index}`}
+                      source={{ uri: url }}
+                      className="h-24 w-32 rounded-[10px]"
+                      resizeMode="cover"
+                      accessibilityLabel="Imagem adicional do servico"
+                    />
+                  ))}
+                </ScrollView>
+              ) : null}
+            </View>
+          ) : (
+            <View className="h-[170px] w-full items-center justify-center rounded-[12px] bg-[#f5e8e9]">
+              <Ionicons name="image-outline" size={34} color="#b94b50" />
+              <Text className="mt-2 text-sm font-semibold text-primary">
+                Nenhuma imagem cadastrada
+              </Text>
+            </View>
+          )}
         </View>
 
         <Pressable
-          onPress={service.status === "inProgress" ? onMessage : onStatusAction}
+          onPress={
+            service.status === "completed"
+              ? undefined
+              : service.status === "inProgress"
+                ? onMessage
+                : onStatusAction
+          }
+          disabled={service.status === "completed"}
           className="min-h-[52px] flex-row items-center justify-center gap-2 rounded-[12px] bg-primary px-4"
           accessibilityRole="button"
         >
