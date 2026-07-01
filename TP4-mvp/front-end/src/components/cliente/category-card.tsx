@@ -18,7 +18,7 @@ export function CategoryCard({
   return (
     <Wrapper
       onPress={onPress}
-      className={`relative h-[100px] w-[106px] overflow-hidden rounded-[20px] ${
+      className={`relative h-[100px] w-[112px] overflow-hidden rounded-[18px] ${
         selected ? "border-[3px] border-primary" : ""
       }`}
       accessibilityRole={onPress ? "button" : undefined}
@@ -31,8 +31,11 @@ export function CategoryCard({
         resizeMode="cover"
         accessibilityLabel={title}
       />
-      <View className="absolute inset-0 rounded-[20px] bg-foreground opacity-30" />
-      <Text className="absolute bottom-2 left-2 text-sm font-semibold text-primary-foreground">
+      <View className="absolute inset-0 rounded-[18px] bg-foreground opacity-35" />
+      <Text
+        className="absolute bottom-2 left-2 right-2 text-sm font-semibold leading-4 text-primary-foreground"
+        numberOfLines={2}
+      >
         {title}
       </Text>
     </Wrapper>

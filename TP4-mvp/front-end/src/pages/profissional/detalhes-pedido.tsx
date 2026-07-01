@@ -174,7 +174,7 @@ export function RequestDetailsScreen({
                   keyboardType="numeric"
                   className="flex-1 p-0 text-sm text-foreground"
                   placeholder="Ex: 1.500,00"
-                  placeholderTextColor="#8a8a96"
+                  placeholderTextColor="#b0b8c1"
                   accessibilityLabel="Propor novo valor"
                 />
                 {proposalTouched || proposalSubmitted ? (
@@ -245,7 +245,7 @@ export function RequestDetailsScreen({
         <View className="flex-row gap-3">
           <Pressable
             onPress={() => setConfirmingReject(true)}
-            className="min-h-[56px] flex-1 items-center justify-center rounded-[12px] bg-card shadow-sm"
+            className="min-h-[56px] flex-1 items-center justify-center rounded-[12px] bg-muted shadow-sm"
             accessibilityRole="button"
           >
             <Text className="font-semibold text-foreground">Recusar</Text>
@@ -267,7 +267,7 @@ export function RequestDetailsScreen({
             <View className="flex-row gap-2">
               <Pressable
                 onPress={() => setConfirmingReject(false)}
-                className="min-h-[44px] flex-1 items-center justify-center rounded-[12px] border border-input-border bg-card"
+                className="min-h-[44px] flex-1 items-center justify-center rounded-[12px] border border-input-border bg-muted"
                 accessibilityRole="button"
               >
                 <Text className="text-sm font-semibold text-foreground">Voltar</Text>

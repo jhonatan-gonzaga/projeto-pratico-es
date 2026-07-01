@@ -231,6 +231,17 @@ export type NotificationItem = {
   createdAt: string;
 };
 
+export type SupportTicket = {
+  id: string;
+  userId: string;
+  subject: string;
+  message: string;
+  context?: string | null;
+  status: "OPEN" | "IN_REVIEW" | "RESOLVED";
+  createdAt: string;
+  updatedAt: string;
+};
+
 export type PortfolioProject = ProfessionalProfile["portfolio"][number];
 
 export type UploadedImage = {
@@ -245,9 +256,10 @@ export type UploadedAudio = UploadedImage;
 
 export type MessageItem = {
   id: string;
-  type: "TEXT" | "AUDIO";
+  type: "TEXT" | "AUDIO" | "IMAGE";
   text?: string | null;
   audioUrl?: string | null;
+  imageUrl?: string | null;
   durationMs?: number | null;
   readAt?: string | null;
   createdAt: string;
@@ -315,6 +327,11 @@ export const api = {
       auth: false,
       body: JSON.stringify({ email }),
     }),
+  changePassword: (input: { currentPassword: string; newPassword: string }) =>
+    request<{ message: string }>("/auth/change-password", {
+      method: "POST",
+      body: JSON.stringify(input),
+    }),
 
   me: () => request<AuthUser>("/auth/me"),
   updateMe: (input: Partial<Pick<AuthUser, "name" | "email" | "phone" | "avatarUrl">>) =>
@@ -322,6 +339,13 @@ export const api = {
       method: "PATCH",
       body: JSON.stringify(input),
     }),
+  deleteMe: async () => {
+    const response = await request<{ deleted: true }>("/users/me", {
+      method: "DELETE",
+    });
+    setAccessToken(null);
+    return response;
+  },
   uploadImage: async (file: { uri: string; name: string; type: string }) => {
     const formData = new FormData();
     formData.append("file", file as unknown as Blob);
@@ -453,7 +477,8 @@ export const api = {
     id: string,
     input:
       | { type?: "TEXT"; text: string }
-      | { type: "AUDIO"; audioUrl: string; durationMs?: number },
+      | { type: "AUDIO"; audioUrl: string; durationMs?: number }
+      | { type: "IMAGE"; imageUrl: string },
   ) =>
     request<MessageItem>(`/conversations/${id}/messages`, {
       method: "POST",
@@ -462,6 +487,12 @@ export const api = {
 
   notifications: () => request<NotificationItem[]>("/notifications"),
   unreadNotifications: () => request<{ count: number }>("/notifications/unread-count"),
+  createSupportTicket: (input: { subject: string; message: string; context?: string }) =>
+    request<SupportTicket>("/support-tickets", {
+      method: "POST",
+      body: JSON.stringify(input),
+    }),
+  mySupportTickets: () => request<SupportTicket[]>("/support-tickets/my"),
 };
 
 export function formatMoney(value?: string | number | null) {

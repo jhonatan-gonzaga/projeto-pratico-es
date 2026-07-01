@@ -1,7 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { useState } from "react";
+import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
 import { ProjectHeader } from "../../components/profissional/components";
+import { ApiError, api } from "../../services/api";
 
 function HelpCard({
   description,
@@ -35,6 +37,38 @@ export function HelpCenterScreen({
   onBack: () => void;
   onProfilePress: () => void;
 }) {
+  const [subject, setSubject] = useState("");
+  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const sendSupportMessage = async () => {
+    if (subject.trim().length < 3 || message.trim().length < 10) {
+      setStatus("Informe um assunto e uma mensagem com pelo menos 10 caracteres.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setStatus(null);
+
+    try {
+      await api.createSupportTicket({
+        subject,
+        message,
+        context: "PROFISSIONAL",
+      });
+      setSubject("");
+      setMessage("");
+      setStatus("Mensagem enviada ao suporte e salva com sucesso.");
+    } catch (error) {
+      setStatus(
+        error instanceof ApiError ? error.message : "Nao foi possivel enviar a mensagem.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <View className="h-full w-full max-w-[480px] self-center bg-background">
       <ProjectHeader onBack={onBack} onProfilePress={onProfilePress} />
@@ -77,15 +111,37 @@ export function HelpCenterScreen({
             Entre em contato pelo atendimento do Conecta Obras para tirar
             duvidas sobre conta, servicos ou seguranca.
           </Text>
-          <Pressable
-            className="mt-4 min-h-[46px] flex-row items-center justify-center gap-2 rounded-[12px] bg-primary px-4"
-            accessibilityRole="button"
-          >
-            <Ionicons name="chatbubble-ellipses-outline" size={17} color="#ffffff" />
-            <Text className="text-sm font-semibold text-white">
-              Falar com suporte
-            </Text>
-          </Pressable>
+          <View className="mt-4 gap-3">
+            <TextInput
+              value={subject}
+              onChangeText={setSubject}
+              placeholder="Assunto"
+              placeholderTextColor="#b0b8c1"
+              className="min-h-[44px] rounded-[12px] bg-card px-4 text-sm text-foreground"
+            />
+            <TextInput
+              value={message}
+              onChangeText={setMessage}
+              multiline
+              placeholder="Descreva sua duvida ou problema"
+              placeholderTextColor="#b0b8c1"
+              className="min-h-[96px] rounded-[12px] bg-card px-4 py-3 text-sm leading-5 text-foreground"
+            />
+            <Pressable
+              onPress={sendSupportMessage}
+              disabled={isSubmitting}
+              className="min-h-[46px] flex-row items-center justify-center gap-2 rounded-[12px] bg-primary px-4"
+              accessibilityRole="button"
+            >
+              <Ionicons name="chatbubble-ellipses-outline" size={17} color="#ffffff" />
+              <Text className="text-sm font-semibold text-white">
+                {isSubmitting ? "Enviando..." : "Enviar para suporte"}
+              </Text>
+            </Pressable>
+            {status ? (
+              <Text className="text-xs font-semibold text-primary">{status}</Text>
+            ) : null}
+          </View>
         </View>
       </ScrollView>
     </View>

@@ -80,6 +80,13 @@ enum PortfolioImageType {
 enum MessageType {
   TEXT
   AUDIO
+  IMAGE
+}
+
+enum SupportTicketStatus {
+  OPEN
+  IN_REVIEW
+  RESOLVED
 }
 
 model User {
@@ -95,6 +102,7 @@ model User {
   notifications             Notification[]
   deviceTokens              DeviceToken[]
   sentMessages              Message[]
+  supportTickets            SupportTicket[]
   clientConversations       Conversation[]       @relation("ClientConversationUser")
   professionalConversations Conversation[]       @relation("ProfessionalConversationUser")
   createdAt                 DateTime             @default(now())
@@ -433,6 +441,7 @@ model Message {
   type           MessageType  @default(TEXT)
   text           String?      @db.Text
   audioUrl       String?
+  imageUrl       String?
   durationMs     Int?
   readAt         DateTime?
   conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
@@ -470,4 +479,20 @@ model DeviceToken {
 
   @@index([userId])
   @@map("device_tokens")
+}
+
+model SupportTicket {
+  id        String              @id @default(cuid())
+  userId    String
+  subject   String
+  message   String              @db.Text
+  context   String?
+  status    SupportTicketStatus @default(OPEN)
+  user      User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@map("support_tickets")
 }

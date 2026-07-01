@@ -19,8 +19,8 @@ type NativeDateTimeFieldProps = {
 
 const statusClass = {
   default: "border-input-border bg-card",
-  valid: "border-[#16a34a] bg-[#f7fff9]",
-  error: "border-[#dc2626] bg-[#fff7f7]",
+  valid: "border-[#16a34a] bg-card",
+  error: "border-[#dc2626] bg-card",
 };
 
 function toPickerDate(value: string, mode: "date" | "time") {

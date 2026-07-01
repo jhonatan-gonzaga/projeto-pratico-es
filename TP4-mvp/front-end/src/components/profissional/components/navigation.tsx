@@ -28,11 +28,11 @@ export function ProfessionalHeader({
       <View className="flex-row items-center justify-between bg-background px-4 pb-4 pt-11">
         <Pressable
           onPress={onBack}
-          className="h-10 w-10 items-center justify-center rounded-full bg-card shadow-sm"
+          className="h-10 w-10 items-center justify-center rounded-full bg-muted shadow-sm"
           accessibilityRole="button"
           accessibilityLabel="Voltar"
         >
-          <Ionicons name="arrow-back" size={18} color="#0f1720" />
+          <Ionicons name="arrow-back" size={18} color="#b94b50" />
         </Pressable>
 
         <View className="h-11 flex-1 items-center justify-center px-3">
@@ -98,16 +98,17 @@ export function ProfessionalTabToggle({
     <View className="mx-4 my-4 flex-row rounded-[16px] border border-input-border bg-card p-1">
       <Pressable
         onPress={() => onChangeTab("requests")}
-        className={`min-h-[38px] flex-1 flex-row items-center justify-center gap-2 rounded-[12px] px-3 ${
+        className={`min-h-[40px] min-w-0 flex-1 flex-row items-center justify-center gap-2 rounded-[12px] px-2 ${
           activeTab === "requests" ? "bg-primary" : "bg-transparent"
         }`}
         accessibilityRole="tab"
         accessibilityState={{ selected: activeTab === "requests" }}
       >
         <Text
-          className={`text-sm font-semibold ${
+          className={`text-center text-[13px] font-semibold leading-4 ${
             activeTab === "requests" ? "text-white" : "text-muted-foreground"
           }`}
+          numberOfLines={1}
         >
           Novos Pedidos
         </Text>
@@ -121,16 +122,17 @@ export function ProfessionalTabToggle({
       </Pressable>
       <Pressable
         onPress={() => onChangeTab("services")}
-        className={`min-h-[38px] flex-1 items-center justify-center rounded-[12px] px-3 ${
+        className={`min-h-[40px] min-w-0 flex-1 items-center justify-center rounded-[12px] px-2 ${
           activeTab === "services" ? "bg-primary" : "bg-transparent"
         }`}
         accessibilityRole="tab"
         accessibilityState={{ selected: activeTab === "services" }}
       >
         <Text
-          className={`text-sm font-semibold ${
+          className={`text-center text-[13px] font-semibold leading-4 ${
             activeTab === "services" ? "text-white" : "text-muted-foreground"
           }`}
+          numberOfLines={1}
         >
           Meus Servicos
         </Text>
@@ -185,13 +187,13 @@ export function ProfessionalBottomTab({
   ];
 
   return (
-    <View className="border-t border-input-border bg-card px-2 py-3">
-      <View className="flex-row items-center justify-around">
+    <View className="rounded-t-[22px] border-t border-input-border bg-card px-2 py-3 shadow-lg shadow-black/10">
+      <View className="flex-row items-center justify-between">
         {items.map((item) => (
           <Pressable
             key={item.label}
             onPress={() => onSelectArea(item.area)}
-            className="items-center gap-1 px-3"
+            className="min-w-0 flex-1 items-center gap-1 px-1"
             accessibilityRole="button"
             accessibilityState={{ selected: activeArea === item.area }}
           >
@@ -210,11 +212,12 @@ export function ProfessionalBottomTab({
               ) : null}
             </View>
             <Text
-              className={`text-xs ${
+              className={`text-center text-[10px] leading-3 ${
                 activeArea === item.area
                   ? "font-semibold text-primary"
                   : "text-muted-foreground"
               }`}
+              numberOfLines={1}
             >
               {item.label}
             </Text>

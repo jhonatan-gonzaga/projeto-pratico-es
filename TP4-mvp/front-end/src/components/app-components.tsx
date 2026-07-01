@@ -23,17 +23,17 @@ type FieldProps = {
 const logo = require("../../assets/logotipo.png");
 
 const statusClasses: Record<ValidationStatus, string> = {
-  default: "border-input-border bg-background",
-  valid: "border-[#16a34a] bg-[#f7fff9]",
-  error: "border-[#dc2626] bg-[#fff7f7]",
+  default: "border-input-border bg-card",
+  valid: "border-[#16a34a] bg-card",
+  error: "border-[#dc2626] bg-card",
 };
 
 export function BrandLogo() {
   return (
-    <View className="h-[76px] w-[284px] items-center justify-center rounded-[24px] bg-card px-4 shadow-lg shadow-primary/20">
+    <View className="h-[76px] w-full max-w-[284px] items-center justify-center rounded-[22px] bg-card px-4 shadow-lg shadow-primary/20">
       <Image
         source={logo}
-        className="h-[58px] w-[217px]"
+        className="h-[58px] w-full max-w-[217px]"
         resizeMode="contain"
         accessibilityLabel="Conecta Obras Itacoatiara"
       />
@@ -81,9 +81,9 @@ export function Field({
             autoCapitalize="none"
             autoComplete={autoComplete}
             secureTextEntry={secureTextEntry}
-            className="min-h-[24px] flex-1 p-0 text-[15px] font-medium text-foreground"
+            className="min-h-[26px] min-w-0 flex-1 p-0 text-[15px] font-medium text-foreground"
             placeholder={placeholder}
-            placeholderTextColor="#c5adaf"
+            placeholderTextColor="#b0b8c1"
             accessibilityLabel={label}
           />
           {rightAction}
@@ -233,7 +233,7 @@ export function ProfileCard({
   return (
     <Pressable
       onPress={onPress}
-      className={`relative rounded-[24px] px-6 pb-8 pt-6 ${
+      className={`relative rounded-[20px] px-5 pb-6 pt-6 ${
         selected ? "border-2 border-primary bg-card" : "border border-input-border bg-card"
       }`}
       accessibilityRole="radio"
@@ -251,15 +251,15 @@ export function ProfileCard({
       </View>
 
       <View className="mb-4 items-center">
-        <View className="h-16 w-16 items-center justify-center rounded-full bg-[#f7e8e9]">
+        <View className="h-14 w-14 items-center justify-center rounded-full bg-[#f7e8e9]">
           <Ionicons name={icon} size={28} color="#b94b50" />
         </View>
       </View>
 
-      <Text className="mb-2 text-center text-xl font-bold text-foreground">
+      <Text className="mb-2 text-center text-lg font-bold text-foreground">
         {label}
       </Text>
-      <Text className="text-center text-base leading-7 text-muted-foreground">
+      <Text className="text-center text-sm leading-6 text-muted-foreground">
         {description}
       </Text>
     </Pressable>
@@ -297,12 +297,12 @@ export function ProfileInfoField({
       <View
         className={`rounded-[16px] border px-4 pb-3 pt-3 ${
           isError
-            ? "border-[#dc2626] bg-[#fff7f7]"
+            ? "border-[#dc2626] bg-card"
             : isValid
-              ? "border-[#16a34a] bg-[#f7fff9]"
+              ? "border-[#16a34a] bg-card"
               : active
-                ? "border-primary"
-                : "border-input-border"
+                ? "border-primary bg-card"
+                : "border-input-border bg-card"
         }`}
       >
         <Text className="mb-1 text-xs font-bold uppercase tracking-[1.6px] text-primary">
@@ -320,7 +320,7 @@ export function ProfileInfoField({
             className={`min-h-[28px] flex-1 p-0 text-base ${
               active ? "font-medium text-foreground" : "text-muted-foreground"
             }`}
-            placeholderTextColor="#c5adaf"
+            placeholderTextColor="#b0b8c1"
             accessibilityLabel={label}
           />
           {isError || isValid ? (

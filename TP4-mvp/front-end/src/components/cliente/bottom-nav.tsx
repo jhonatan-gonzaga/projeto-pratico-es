@@ -20,10 +20,10 @@ type ClientBottomNavProps = {
 
 const navItems: NavItem[] = [
   { key: "home", label: "Inicio", icon: "home-outline" },
-  { key: "work", label: "minha obra", icon: "hammer-outline" },
+  { key: "work", label: "Obra", icon: "hammer-outline" },
   { key: "search", label: "Buscar", icon: "search-outline" },
   { key: "ads", label: "Anunciar", icon: "megaphone-outline" },
-  { key: "settings", label: "Configuracoes", icon: "settings-outline" },
+  { key: "settings", label: "Ajustes", icon: "settings-outline" },
 ];
 
 export function ClientBottomNav({ active = "home", onSelect }: ClientBottomNavProps) {
@@ -51,8 +51,8 @@ export function ClientBottomNav({ active = "home", onSelect }: ClientBottomNavPr
   }, [active]);
 
   return (
-    <View className="border-t border-input-border bg-card px-2 py-3 shadow-lg shadow-black/10">
-      <View className="flex-row items-center justify-around">
+    <View className="rounded-t-[22px] border-t border-input-border bg-card px-2 py-3 shadow-lg shadow-black/10">
+      <View className="flex-row items-center justify-between">
         {navItems.map((item) => {
           const isActive = active === item.key;
           const badge = badges[item.key];
@@ -61,7 +61,7 @@ export function ClientBottomNav({ active = "home", onSelect }: ClientBottomNavPr
             <Pressable
               key={item.key}
               onPress={() => onSelect?.(item.key)}
-              className="items-center gap-1 px-1"
+              className="min-w-0 flex-1 items-center gap-1 px-1"
               accessibilityRole="button"
               accessibilityLabel={item.label}
             >
@@ -79,7 +79,12 @@ export function ClientBottomNav({ active = "home", onSelect }: ClientBottomNavPr
                   </View>
                 ) : null}
               </View>
-              <Text className={`text-xs font-medium ${isActive ? "text-primary" : "text-muted-foreground"}`}>
+              <Text
+                className={`text-center text-[10px] font-semibold leading-3 ${
+                  isActive ? "text-primary" : "text-muted-foreground"
+                }`}
+                numberOfLines={1}
+              >
                 {item.label}
               </Text>
             </Pressable>

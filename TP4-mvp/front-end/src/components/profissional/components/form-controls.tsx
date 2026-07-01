@@ -8,8 +8,8 @@ export type FieldValidationStatus = "default" | "valid" | "error";
 
 const validationClasses: Record<FieldValidationStatus, string> = {
   default: "border-input-border bg-card",
-  valid: "border-[#16a34a] bg-[#f7fff9]",
-  error: "border-[#dc2626] bg-[#fff7f7]",
+  valid: "border-[#16a34a] bg-card",
+  error: "border-[#dc2626] bg-card",
 };
 
 function ValidationHelper({
@@ -209,7 +209,7 @@ export function ProjectInput({
       <Text className="mb-1.5 text-xs text-muted-foreground">{label}</Text>
       <View
         className={`min-h-[46px] flex-row items-center rounded-[12px] border-[1.5px] px-4 py-3 ${
-          status === "default" ? "border-transparent bg-[#f5e8e9]" : validationClasses[status]
+          status === "default" ? "border-input-border bg-card" : validationClasses[status]
         }`}
       >
         <TextInput
@@ -218,7 +218,7 @@ export function ProjectInput({
           onChangeText={onChangeText}
           className="min-h-[20px] flex-1 p-0 text-sm text-foreground"
           placeholder={placeholder}
-          placeholderTextColor="#8a8a96"
+          placeholderTextColor="#b0b8c1"
           accessibilityLabel={label}
         />
         {isValidated ? (
@@ -246,8 +246,8 @@ export function ProjectCategoryChip({
   return (
     <Pressable
       onPress={onPress}
-      className={`rounded-full px-4 py-2 ${
-        selected ? "bg-primary" : "bg-[#f5e8e9]"
+      className={`rounded-full border px-4 py-2 ${
+        selected ? "border-primary bg-primary" : "border-input-border bg-card"
       }`}
       accessibilityRole="button"
       accessibilityState={{ selected }}
@@ -277,8 +277,8 @@ export function PhotoTypeOption({
   return (
     <Pressable
       onPress={onPress}
-      className={`flex-row items-center justify-between gap-3 rounded-[12px] px-4 py-3 ${
-        selected ? "border-[1.5px] border-primary bg-card" : "bg-[#fdf5f5]"
+      className={`flex-row items-center justify-between gap-3 rounded-[12px] border px-4 py-3 ${
+        selected ? "border-primary bg-card" : "border-input-border bg-card"
       }`}
       accessibilityRole="radio"
       accessibilityState={{ selected }}
@@ -310,7 +310,7 @@ export function DetailTag({ label, active }: { label: string; active?: boolean }
   return (
     <View
       className={`rounded-[12px] px-3 py-1 ${
-        active ? "bg-primary" : "bg-[#f7eced]"
+        active ? "bg-primary" : "bg-muted"
       }`}
     >
       <Text
@@ -361,7 +361,7 @@ export function ServiceInfoBox({
   value: string;
 }) {
   return (
-    <View className="flex-1 flex-row items-center gap-2 rounded-[8px] bg-[#f7eced] px-3 py-2">
+    <View className="flex-1 flex-row items-center gap-2 rounded-[8px] bg-muted px-3 py-2">
       <Ionicons name={icon} size={14} color="#b94b50" />
       <View className="flex-1">
         <Text className="mb-0.5 text-xs uppercase leading-3 tracking-[0.4px] text-muted-foreground">

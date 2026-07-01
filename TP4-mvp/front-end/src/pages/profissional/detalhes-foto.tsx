@@ -6,6 +6,7 @@ import { Image, Pressable, ScrollView, Text, TextInput, View } from "react-nativ
 import { professionalServices, projectItems, serviceRequests } from "../../components/profissional/data";
 import { formatBRPhone } from "../../components/profissional/utils";
 import type { ProjectItem } from "../../components/profissional/types";
+import { pickAndUploadImage } from "../../services/image-upload";
 import {
   ChoiceChip,
   CustomerAvatar,
@@ -34,20 +35,37 @@ import {
   SetupTextField,
 } from "../../components/profissional/components";
 
+export type PhotoDetailsResult = {
+  deleted?: boolean;
+  type: NonNullable<ProjectItem["imageType"]>;
+  url: string;
+};
+
 export function PhotoDetailsScreen({
   imageUri,
+  initialType = "COVER",
   onBack,
   onProfilePress,
   onSave,
 }: {
   imageUri: string;
+  initialType?: NonNullable<ProjectItem["imageType"]>;
   onBack: () => void;
   onProfilePress: () => void;
-  onSave: (type: NonNullable<ProjectItem["imageType"]>) => void;
+  onSave: (result: PhotoDetailsResult) => void;
 }) {
-  const [selectedType, setSelectedType] = useState("Capa do projeto");
+  const labelByType: Record<NonNullable<ProjectItem["imageType"]>, string> = {
+    COVER: "Capa do projeto",
+    BEFORE: "Antes",
+    AFTER: "Depois",
+    GENERAL: "Imagem adicional",
+  };
+  const [selectedType, setSelectedType] = useState(labelByType[initialType]);
+  const [currentImageUri, setCurrentImageUri] = useState(imageUri);
   const [isDeleted, setIsDeleted] = useState(false);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [isReplacing, setIsReplacing] = useState(false);
+  const [replaceError, setReplaceError] = useState<string | null>(null);
   const photoTypes = [
     {
       label: "Capa do projeto",
@@ -72,7 +90,31 @@ export function PhotoDetailsScreen({
     Depois: "AFTER",
     "Imagem adicional": "GENERAL",
   };
-  const handleSave = () => onSave(typeMap[selectedType]);
+  const handleSave = () =>
+    onSave({
+      deleted: isDeleted,
+      type: typeMap[selectedType],
+      url: currentImageUri,
+    });
+  const handleReplacePhoto = async () => {
+    setIsReplacing(true);
+    setReplaceError(null);
+
+    try {
+      const uploadedUrl = await pickAndUploadImage();
+
+      if (uploadedUrl) {
+        setCurrentImageUri(uploadedUrl);
+        setIsDeleted(false);
+      }
+    } catch (error) {
+      setReplaceError(
+        error instanceof Error ? error.message : "Nao foi possivel trocar a foto.",
+      );
+    } finally {
+      setIsReplacing(false);
+    }
+  };
 
   return (
     <View className="h-full w-full max-w-[480px] self-center bg-background">
@@ -102,23 +144,33 @@ export function PhotoDetailsScreen({
             </View>
           ) : (
             <Image
-              source={{ uri: imageUri }}
+              source={{ uri: currentImageUri }}
               className="h-full w-full"
               resizeMode="cover"
               accessibilityLabel="Foto do projeto"
             />
           )}
           <Pressable
-            onPress={onBack}
+            onPress={handleReplacePhoto}
             className="absolute bottom-3 right-3 flex-row items-center gap-1.5 rounded-full bg-card px-4 py-2 shadow-md shadow-black/10"
             accessibilityRole="button"
+            accessibilityLabel="Trocar foto pela galeria"
           >
-            <Ionicons name="refresh-outline" size={14} color="#0f1720" />
+            <Ionicons
+              name={isReplacing ? "hourglass-outline" : "refresh-outline"}
+              size={14}
+              color="#0f1720"
+            />
             <Text className="text-sm font-semibold text-foreground">
-              Trocar foto
+              {isReplacing ? "Trocando..." : "Trocar foto"}
             </Text>
           </Pressable>
         </View>
+        {replaceError ? (
+          <Text className="px-1 text-xs leading-4 text-[#dc2626]">
+            {replaceError}
+          </Text>
+        ) : null}
 
         <View className="gap-3 rounded-[8px] bg-card p-4 shadow-sm shadow-black/5">
           <View className="mb-1 flex-row items-center gap-2">
@@ -171,7 +223,7 @@ export function PhotoDetailsScreen({
             <View className="flex-row gap-2">
               <Pressable
                 onPress={() => setConfirmingDelete(false)}
-                className="min-h-[42px] flex-1 items-center justify-center rounded-[10px] border border-input-border bg-card"
+                className="min-h-[42px] flex-1 items-center justify-center rounded-[10px] border border-input-border bg-muted"
                 accessibilityRole="button"
               >
                 <Text className="text-sm font-semibold text-foreground">Voltar</Text>
