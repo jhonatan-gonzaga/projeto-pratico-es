@@ -223,7 +223,7 @@ export function PhotoDetailsScreen({
             <View className="flex-row gap-2">
               <Pressable
                 onPress={() => setConfirmingDelete(false)}
-                className="min-h-[42px] flex-1 items-center justify-center rounded-[10px] border border-input-border bg-card"
+                className="min-h-[42px] flex-1 items-center justify-center rounded-[10px] border border-input-border bg-muted"
                 accessibilityRole="button"
               >
                 <Text className="text-sm font-semibold text-foreground">Voltar</Text>

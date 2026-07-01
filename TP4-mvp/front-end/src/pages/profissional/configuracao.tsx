@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useMemo, useState } from "react";
-import { Image, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { Image, Pressable, ScrollView, Switch, Text, TextInput, View } from "react-native";
 
 import { professionalServices, projectItems, serviceRequests } from "../../components/profissional/data";
 import { formatBRPhone } from "../../components/profissional/utils";
@@ -880,15 +880,19 @@ function ProfessionalProfileSettingsScreen({
 }
 
 export function SettingsScreen({
+  isDarkMode,
   onBack,
   onProfilePress,
   onSelectArea,
   onSignOut,
+  onToggleDarkMode,
 }: {
+  isDarkMode: boolean;
   onBack: () => void;
   onProfilePress: () => void;
   onSelectArea: (area: ProfessionalArea) => void;
   onSignOut: () => void;
+  onToggleDarkMode: (value: boolean) => void;
 }) {
   const [settingsPage, setSettingsPage] = useState<SettingsPage>("home");
   const [settingsUser, setSettingsUser] = useState({
@@ -995,6 +999,26 @@ export function SettingsScreen({
         </Pressable>
 
         <SettingsSection title="Preferencias">
+          <View className="flex-row items-center gap-4 px-4 py-4">
+            <View className="h-10 w-10 items-center justify-center rounded-[12px] bg-[#fceaea]">
+              <Ionicons name="moon-outline" size={18} color="#b94b50" />
+            </View>
+            <View className="flex-1">
+              <Text className="text-[15px] font-medium text-foreground">
+                Modo escuro
+              </Text>
+              <Text className="mt-0.5 text-xs leading-4 text-muted-foreground">
+                Ajusta cores do aplicativo para ambientes com pouca luz.
+              </Text>
+            </View>
+            <Switch
+              value={isDarkMode}
+              onValueChange={onToggleDarkMode}
+              thumbColor={isDarkMode ? "#eb747a" : "#f4f4f5"}
+              trackColor={{ false: "#e4dada", true: "#4b2528" }}
+            />
+          </View>
+          <SettingsDivider />
           <SettingsOption
             icon="notifications-outline"
             label="Notificacoes"
@@ -1022,7 +1046,7 @@ export function SettingsScreen({
           />
         </SettingsSection>
 
-        <View className="overflow-hidden rounded-[16px] bg-card shadow-sm shadow-black/5">
+        <View className="overflow-hidden rounded-[16px] bg-muted shadow-sm shadow-black/5">
           <Pressable
             onPress={onSignOut}
             className="flex-row items-center justify-center gap-2 px-4 py-4"

@@ -263,7 +263,7 @@ function ServiceCard({
             value={review}
             onChangeText={setReview}
             placeholder="Escreva um comentário sobre o atendimento, prazo e qualidade do serviço."
-            placeholderTextColor="#9e8e8f"
+            placeholderTextColor="#b0b8c1"
             multiline
             className="mb-3 min-h-[64px] rounded-xl bg-background px-4 py-3 text-sm text-foreground"
             accessibilityLabel="Avaliação do serviço"

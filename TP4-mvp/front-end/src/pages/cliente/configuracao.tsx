@@ -14,10 +14,12 @@ import { ApiError, api } from "../../services/api";
 type ClientSettingsPage = "home" | "notifications" | "privacy" | "help" | "terms";
 
 type ClientSettingsScreenProps = {
+  isDarkMode: boolean;
   onBack: () => void;
   onNavigate?: (key: ClientNavKey) => void;
   onProfilePress?: () => void;
   onSignOut?: () => void;
+  onToggleDarkMode: (value: boolean) => void;
 };
 
 function NotificationRow({
@@ -235,7 +237,7 @@ function ClientPrivacyScreen({
               onChangeText={setCurrentPassword}
               secureTextEntry
               placeholder="Senha atual"
-              placeholderTextColor="#9e8e8f"
+              placeholderTextColor="#b0b8c1"
               className="min-h-[44px] rounded-[12px] bg-background px-4 text-sm text-foreground"
             />
             <TextInput
@@ -243,7 +245,7 @@ function ClientPrivacyScreen({
               onChangeText={setNewPassword}
               secureTextEntry
               placeholder="Nova senha"
-              placeholderTextColor="#9e8e8f"
+              placeholderTextColor="#b0b8c1"
               className="min-h-[44px] rounded-[12px] bg-background px-4 text-sm text-foreground"
             />
             <TextInput
@@ -251,7 +253,7 @@ function ClientPrivacyScreen({
               onChangeText={setConfirmPassword}
               secureTextEntry
               placeholder="Confirmar nova senha"
-              placeholderTextColor="#9e8e8f"
+              placeholderTextColor="#b0b8c1"
               className="min-h-[44px] rounded-[12px] bg-background px-4 text-sm text-foreground"
             />
             <Pressable
@@ -433,7 +435,7 @@ function ClientHelpScreen({
               value={subject}
               onChangeText={setSubject}
               placeholder="Assunto"
-              placeholderTextColor="#9e8e8f"
+              placeholderTextColor="#b0b8c1"
               className="min-h-[44px] rounded-[12px] bg-card px-4 text-sm text-foreground"
             />
             <TextInput
@@ -441,7 +443,7 @@ function ClientHelpScreen({
               onChangeText={setMessage}
               multiline
               placeholder="Descreva sua duvida ou problema"
-              placeholderTextColor="#9e8e8f"
+              placeholderTextColor="#b0b8c1"
               className="min-h-[96px] rounded-[12px] bg-card px-4 py-3 text-sm leading-5 text-foreground"
             />
             <Pressable
@@ -526,10 +528,12 @@ function ClientTermsScreen({
 }
 
 export function ClientSettingsScreen({
+  isDarkMode,
   onBack,
   onNavigate,
   onProfilePress,
   onSignOut,
+  onToggleDarkMode,
 }: ClientSettingsScreenProps) {
   const [settingsPage, setSettingsPage] = useState<ClientSettingsPage>("home");
 
@@ -584,6 +588,26 @@ export function ClientSettingsScreen({
         </Text>
 
         <SettingsSection title="Preferencias">
+          <View className="flex-row items-center gap-4 px-4 py-4">
+            <View className="h-10 w-10 items-center justify-center rounded-[12px] bg-[#fceaea]">
+              <Ionicons name="moon-outline" size={18} color="#b94b50" />
+            </View>
+            <View className="flex-1">
+              <Text className="text-[15px] font-medium text-foreground">
+                Modo escuro
+              </Text>
+              <Text className="mt-0.5 text-xs leading-4 text-muted-foreground">
+                Ajusta cores do aplicativo para ambientes com pouca luz.
+              </Text>
+            </View>
+            <Switch
+              value={isDarkMode}
+              onValueChange={onToggleDarkMode}
+              thumbColor={isDarkMode ? "#eb747a" : "#f4f4f5"}
+              trackColor={{ false: "#e4dada", true: "#4b2528" }}
+            />
+          </View>
+          <SettingsDivider />
           <SettingsOption
             icon="notifications-outline"
             label="Notificacoes"
@@ -611,7 +635,7 @@ export function ClientSettingsScreen({
           />
         </SettingsSection>
 
-        <View className="overflow-hidden rounded-[16px] bg-card shadow-sm shadow-black/5">
+        <View className="overflow-hidden rounded-[16px] bg-muted shadow-sm shadow-black/5">
           <Pressable
             onPress={onSignOut}
             className="flex-row items-center justify-center gap-2 px-4 py-4"

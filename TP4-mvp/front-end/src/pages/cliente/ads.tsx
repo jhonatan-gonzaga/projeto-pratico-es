@@ -466,9 +466,7 @@ function CandidateCard({
         <Pressable
           onPress={() => onViewProfile(item)}
           disabled={disabled}
-          className={`min-h-[44px] flex-1 items-center justify-center rounded-lg border border-border px-3 shadow-sm shadow-black/5 ${
-            disabled ? "bg-[#eee4e4]" : "bg-card"
-          }`}
+          className="min-h-[44px] flex-1 items-center justify-center rounded-lg border border-border bg-muted px-3 shadow-sm shadow-black/5"
           accessibilityRole="button"
           accessibilityLabel={`Ver perfil de ${item.name}`}
         >

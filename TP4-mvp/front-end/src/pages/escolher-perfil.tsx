@@ -13,10 +13,12 @@ export function ProfileChoiceScreen({
   onBack,
   onContinue,
   onProfilePress,
+  isDarkMode = false,
 }: {
   onBack: () => void;
   onContinue: (profile: ProfileType) => void;
   onProfilePress: () => void;
+  isDarkMode?: boolean;
 }) {
   const { height } = useWindowDimensions();
   const [selectedProfile, setSelectedProfile] = useState<ProfileType>("cliente");
@@ -42,7 +44,11 @@ export function ProfileChoiceScreen({
           accessibilityRole="button"
           accessibilityLabel="Sair da escolha de perfil"
         >
-          <Ionicons name="log-out-outline" size={22} color="#0f1720" />
+          <Ionicons
+            name="log-out-outline"
+            size={22}
+            color={isDarkMode ? "#eb747a" : "#0f1720"}
+          />
         </Pressable>
 
         <Image

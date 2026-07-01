@@ -272,10 +272,10 @@ export function EditProjectScreen({
           title="Detalhes (se quiser escrever)"
         >
           <View
-            className={`relative min-h-[100px] rounded-[12px] border-[1.5px] px-4 py-3 ${
+            className={`relative min-h-[100px] rounded-[16px] border-[1.5px] px-4 py-3 shadow-sm ${
               fieldError("details")
-                ? "border-[#dc2626] bg-[#fff7f7]"
-                : "border-transparent bg-[#f5e8e9]"
+                ? "border-[#dc2626] bg-card"
+                : "border-input-border bg-card"
             }`}
           >
             <TextInput
@@ -286,7 +286,7 @@ export function EditProjectScreen({
               onChangeText={setDetails}
               multiline
               className="min-h-[74px] pr-10 text-sm text-foreground"
-              placeholderTextColor="#8a8a96"
+              placeholderTextColor="#b0b8c1"
               accessibilityLabel="Detalhes do projeto"
             />
           </View>
@@ -304,7 +304,7 @@ export function EditProjectScreen({
                 ? "1 foto adicionada"
                 : `${images.length} fotos adicionadas`}
             </Text>
-            <View className="rounded-full bg-[#f5e8e9] px-2 py-0.5">
+            <View className="rounded-full bg-muted px-2 py-0.5">
               <Text className="text-xs font-semibold text-primary">
                 {images.length}/10
               </Text>
@@ -341,7 +341,7 @@ export function EditProjectScreen({
           </View>
           <Pressable
             onPress={() => setConfirmingDelete(true)}
-            className="min-h-[48px] flex-row items-center justify-center gap-2 rounded-[12px] bg-[#f5e8e9]"
+            className="min-h-[48px] flex-row items-center justify-center gap-2 rounded-[12px] bg-muted"
             accessibilityRole="button"
           >
             <Ionicons name="trash-outline" size={16} color="#b94b50" />
@@ -350,7 +350,7 @@ export function EditProjectScreen({
             </Text>
           </Pressable>
           {confirmingDelete ? (
-            <View className="mt-3 gap-3 rounded-[12px] border border-[#f2cdd0] bg-[#fff7f7] p-3">
+            <View className="mt-3 gap-3 rounded-[12px] border border-input-border bg-card p-3">
               <Text className="text-sm leading-5 text-muted-foreground">
                 Este projeto sera removido do seu portfolio e os clientes nao verao
                 mais esse resultado no seu perfil.
@@ -358,7 +358,7 @@ export function EditProjectScreen({
               <View className="flex-row gap-2">
                 <Pressable
                   onPress={() => setConfirmingDelete(false)}
-                  className="min-h-[42px] flex-1 items-center justify-center rounded-[10px] border border-input-border bg-card"
+                  className="min-h-[42px] flex-1 items-center justify-center rounded-[10px] border border-input-border bg-muted"
                   accessibilityRole="button"
                 >
                   <Text className="text-sm font-semibold text-foreground">Voltar</Text>
@@ -381,7 +381,7 @@ export function EditProjectScreen({
       <View className="flex-row gap-3 border-t border-black/5 bg-background px-4 pb-8 pt-2">
         <Pressable
           onPress={onBack}
-          className="min-h-[56px] flex-1 items-center justify-center rounded-[12px] bg-card shadow-sm"
+          className="min-h-[56px] flex-1 items-center justify-center rounded-[12px] bg-muted shadow-sm"
           accessibilityRole="button"
         >
           <Text className="text-base font-semibold text-foreground">

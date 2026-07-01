@@ -14,7 +14,7 @@ export function RequestMetaPill({
   label: string;
 }) {
   return (
-    <View className="flex-row items-center gap-1 rounded-full bg-[#f7eced] px-3 py-1.5">
+    <View className="flex-row items-center gap-1 rounded-full bg-muted px-3 py-1.5">
       <Ionicons name={icon} size={13} color="#b94b50" />
       <Text className="text-xs font-semibold text-foreground">{label}</Text>
     </View>
@@ -60,7 +60,7 @@ export function NewRequestCard({
         {request.description}
       </Text>
 
-      <View className="mb-4 flex-row items-center justify-between rounded-[8px] bg-[#f7eced] p-3">
+      <View className="mb-4 flex-row items-center justify-between rounded-[8px] bg-muted p-3">
         <View className="flex-row items-center gap-3">
           <View className="h-9 w-9 items-center justify-center rounded-[8px] bg-primary/10">
             <Ionicons name="wallet-outline" size={18} color="#b94b50" />
@@ -85,7 +85,7 @@ export function NewRequestCard({
       <View className="flex-row flex-wrap gap-2">
         <Pressable
           onPress={() => setConfirmingReject(true)}
-          className="min-h-[44px] min-w-[124px] flex-1 items-center justify-center rounded-[12px] border border-input-border bg-card px-4"
+          className="min-h-[44px] min-w-[124px] flex-1 items-center justify-center rounded-[12px] border border-input-border bg-muted px-4"
           accessibilityRole="button"
         >
           <Text className="text-sm font-semibold text-muted-foreground">
@@ -106,7 +106,7 @@ export function NewRequestCard({
 
       <Pressable
         onPress={onDetails}
-        className="mt-2 min-h-[44px] flex-row items-center justify-center gap-2 rounded-[12px] bg-[#f7eced] px-4"
+        className="mt-2 min-h-[44px] flex-row items-center justify-center gap-2 rounded-[12px] bg-muted px-4"
         accessibilityRole="button"
       >
         <Ionicons name="document-text-outline" size={15} color="#b94b50" />
@@ -120,7 +120,7 @@ export function NewRequestCard({
           <View className="flex-row gap-2">
             <Pressable
               onPress={() => setConfirmingReject(false)}
-              className="min-h-[42px] flex-1 items-center justify-center rounded-[10px] border border-input-border bg-card"
+              className="min-h-[42px] flex-1 items-center justify-center rounded-[10px] border border-input-border bg-muted"
               accessibilityRole="button"
             >
               <Text className="text-sm font-semibold text-foreground">Voltar</Text>
@@ -264,7 +264,7 @@ export function ServiceOrderCard({
       </View>
 
       {service.address ? (
-        <View className="mb-4 flex-row items-start gap-2 rounded-[8px] bg-[#f7eced] px-3 py-2">
+        <View className="mb-4 flex-row items-start gap-2 rounded-[8px] bg-muted px-3 py-2">
           <Ionicons name="location" size={14} color="#b94b50" />
           <View className="flex-1">
             <Text className="mb-0.5 text-xs uppercase leading-3 tracking-[0.4px] text-muted-foreground">
@@ -281,10 +281,10 @@ export function ServiceOrderCard({
         {!compact ? (
           <Pressable
             onPress={onMessage}
-            className="relative min-h-[44px] min-w-[130px] flex-1 flex-row items-center justify-center gap-2 rounded-[12px] border border-input-border bg-card px-4"
+            className="relative min-h-[44px] min-w-[130px] flex-1 flex-row items-center justify-center gap-2 rounded-[12px] border border-input-border bg-muted px-4"
             accessibilityRole="button"
           >
-            <Ionicons name="chatbubble-outline" size={18} color="#0f1720" />
+            <Ionicons name="chatbubble-outline" size={18} color="#b94b50" />
             <Text className="text-sm font-semibold text-foreground">
               Mensagem
             </Text>
@@ -298,8 +298,8 @@ export function ServiceOrderCard({
           </Pressable>
         ) : null}
         {compact ? (
-          <View className="min-h-[44px] flex-1 items-center justify-center rounded-[12px] bg-[#d1fae5] px-4">
-            <Text className="text-sm font-bold text-[#065f46]">
+          <View className="min-h-[44px] flex-1 items-center justify-center rounded-[12px] bg-muted px-4">
+            <Text className="text-sm font-bold text-primary">
               Finalizado
             </Text>
           </View>
@@ -314,7 +314,7 @@ export function ServiceOrderCard({
             </Text>
           </Pressable>
         ) : (
-          <View className="min-h-[44px] flex-1 items-center justify-center rounded-[12px] bg-[#f3eced] px-4">
+          <View className="min-h-[44px] flex-1 items-center justify-center rounded-[12px] bg-muted px-4">
             <Text className="text-sm font-bold text-primary">
               {service.status === "pending" ? "Aguardando aprovacao" : "Em andamento"}
             </Text>
@@ -324,7 +324,7 @@ export function ServiceOrderCard({
 
       <Pressable
         onPress={onDetails}
-        className="min-h-[44px] flex-row items-center justify-center gap-2 rounded-[12px] bg-[#f7eced] px-4"
+        className="min-h-[44px] flex-row items-center justify-center gap-2 rounded-[12px] bg-muted px-4"
         accessibilityRole="button"
       >
         <Ionicons name="document-text-outline" size={16} color="#b94b50" />
@@ -525,7 +525,7 @@ export function ProjectListCard({
           <View className="flex-row gap-2">
             <Pressable
               onPress={() => setConfirmingDelete(false)}
-              className="min-h-[36px] flex-1 items-center justify-center rounded-[10px] border border-input-border bg-card"
+              className="min-h-[36px] flex-1 items-center justify-center rounded-[10px] border border-input-border bg-muted"
             >
               <Text className="text-xs font-semibold text-foreground">Voltar</Text>
             </Pressable>

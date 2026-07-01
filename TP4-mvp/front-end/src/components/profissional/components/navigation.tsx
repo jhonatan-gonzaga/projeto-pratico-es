@@ -28,11 +28,11 @@ export function ProfessionalHeader({
       <View className="flex-row items-center justify-between bg-background px-4 pb-4 pt-11">
         <Pressable
           onPress={onBack}
-          className="h-10 w-10 items-center justify-center rounded-full bg-card shadow-sm"
+          className="h-10 w-10 items-center justify-center rounded-full bg-muted shadow-sm"
           accessibilityRole="button"
           accessibilityLabel="Voltar"
         >
-          <Ionicons name="arrow-back" size={18} color="#0f1720" />
+          <Ionicons name="arrow-back" size={18} color="#b94b50" />
         </Pressable>
 
         <View className="h-11 flex-1 items-center justify-center px-3">

@@ -244,10 +244,10 @@ export function AddProjectScreen({
           title="Detalhes (se quiser escrever)"
         >
           <View
-            className={`relative min-h-[100px] rounded-[12px] border-[1.5px] px-4 py-3 ${
+            className={`relative min-h-[100px] rounded-[16px] border-[1.5px] px-4 py-3 shadow-sm ${
               fieldError("details")
-                ? "border-[#dc2626] bg-[#fff7f7]"
-                : "border-transparent bg-[#f5e8e9]"
+                ? "border-[#dc2626] bg-card"
+                : "border-input-border bg-card"
             }`}
           >
             <TextInput
@@ -259,7 +259,7 @@ export function AddProjectScreen({
               multiline
               className="min-h-[74px] pr-10 text-sm text-foreground"
               placeholder="Escreva Mais detalhes do projeto...."
-              placeholderTextColor="#8a8a96"
+              placeholderTextColor="#b0b8c1"
               accessibilityLabel="Detalhes do projeto"
             />
           </View>
@@ -277,7 +277,7 @@ export function AddProjectScreen({
                 ? "1 foto adicionada"
                 : `${images.length} fotos adicionadas`}
             </Text>
-            <View className="rounded-full bg-[#f5e8e9] px-2 py-0.5">
+            <View className="rounded-full bg-muted px-2 py-0.5">
               <Text className="text-xs font-semibold text-primary">
                 {images.length}/10
               </Text>
@@ -310,7 +310,7 @@ export function AddProjectScreen({
       <View className="flex-row gap-3 border-t border-black/5 bg-background px-4 pb-6 pt-2">
         <Pressable
           onPress={onBack}
-          className="min-h-[56px] flex-1 items-center justify-center rounded-[12px] bg-card shadow-sm"
+          className="min-h-[56px] flex-1 items-center justify-center rounded-[12px] bg-muted shadow-sm"
           accessibilityRole="button"
         >
           <Text className="text-base font-semibold text-foreground">

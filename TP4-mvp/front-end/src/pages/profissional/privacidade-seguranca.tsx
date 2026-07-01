@@ -131,7 +131,7 @@ export function PrivacySecurityScreen({
               onChangeText={setCurrentPassword}
               secureTextEntry
               placeholder="Senha atual"
-              placeholderTextColor="#9e8e8f"
+              placeholderTextColor="#b0b8c1"
               className="min-h-[44px] rounded-[12px] bg-background px-4 text-sm text-foreground"
             />
             <TextInput
@@ -139,7 +139,7 @@ export function PrivacySecurityScreen({
               onChangeText={setNewPassword}
               secureTextEntry
               placeholder="Nova senha"
-              placeholderTextColor="#9e8e8f"
+              placeholderTextColor="#b0b8c1"
               className="min-h-[44px] rounded-[12px] bg-background px-4 text-sm text-foreground"
             />
             <TextInput
@@ -147,7 +147,7 @@ export function PrivacySecurityScreen({
               onChangeText={setConfirmPassword}
               secureTextEntry
               placeholder="Confirmar nova senha"
-              placeholderTextColor="#9e8e8f"
+              placeholderTextColor="#b0b8c1"
               className="min-h-[44px] rounded-[12px] bg-background px-4 text-sm text-foreground"
             />
             <Pressable

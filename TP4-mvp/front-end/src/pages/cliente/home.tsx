@@ -167,7 +167,7 @@ export function ClientHomePage({
               onChangeText={setQuery}
               className="h-[28px] flex-1 p-0 text-sm text-foreground"
               placeholder="Buscar Servicos ou Profissionais"
-              placeholderTextColor="#9e8e8f"
+              placeholderTextColor="#b0b8c1"
               returnKeyType="search"
               accessibilityLabel="Buscar servicos ou profissionais"
             />

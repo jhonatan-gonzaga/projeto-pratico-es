@@ -326,7 +326,7 @@ export function ServiceMessageScreen({
             onChangeText={setMessage}
             className="min-h-[44px] flex-1 rounded-[12px] bg-background px-4 text-sm text-foreground"
             placeholder="Digite uma mensagem..."
-            placeholderTextColor="#8a8a96"
+            placeholderTextColor="#b0b8c1"
             accessibilityLabel="Mensagem"
           />
           <Pressable
