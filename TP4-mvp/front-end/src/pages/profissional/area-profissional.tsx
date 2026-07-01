@@ -173,9 +173,11 @@ function nextContractStatus(service: ProfessionalService): ContractStatus {
 export function ProfessionalHomeScreen({
   onBack,
   onProfilePress,
+  onSignOut,
 }: {
   onBack: () => void;
   onProfilePress: () => void;
+  onSignOut: () => void;
 }) {
   const [activeTab, setActiveTab] = useState<ProfessionalTab>("requests");
   const [activeArea, setActiveArea] =
@@ -445,6 +447,7 @@ export function ProfessionalHomeScreen({
         onBack={() => setActiveArea("opportunities")}
         onProfilePress={onProfilePress}
         onSelectArea={selectArea}
+        onSignOut={onSignOut}
       />
     );
   }

@@ -82,10 +82,10 @@ export function NewRequestCard({
         ) : null}
       </View>
 
-      <View className="flex-row gap-2">
+      <View className="flex-row flex-wrap gap-2">
         <Pressable
           onPress={() => setConfirmingReject(true)}
-          className="min-h-[44px] flex-1 items-center justify-center rounded-[12px] border border-input-border bg-card px-4"
+          className="min-h-[44px] min-w-[124px] flex-1 items-center justify-center rounded-[12px] border border-input-border bg-card px-4"
           accessibilityRole="button"
         >
           <Text className="text-sm font-semibold text-muted-foreground">
@@ -95,7 +95,7 @@ export function NewRequestCard({
         <Pressable
           onPress={handleAccept}
           disabled={isAwaitingApproval}
-          className="min-h-[44px] flex-1 items-center justify-center rounded-[12px] bg-primary px-4"
+          className="min-h-[44px] min-w-[124px] flex-1 items-center justify-center rounded-[12px] bg-primary px-4"
           accessibilityRole="button"
         >
           <Text className="text-sm font-bold text-white">
@@ -157,7 +157,7 @@ export function ServiceFilterChips({
   ];
 
   return (
-    <View className="flex-row gap-2 px-4 pb-4">
+    <View className="flex-row flex-wrap gap-2 px-4 pb-4">
       {filters.map((filter) => {
         const selected = activeFilter === filter.key;
 
@@ -165,16 +165,17 @@ export function ServiceFilterChips({
         <Pressable
           key={filter.key}
           onPress={() => onChangeFilter?.(filter.key)}
-          className={`rounded-[12px] px-4 py-2 shadow-sm ${
+          className={`min-h-[38px] justify-center rounded-[12px] px-4 py-2 shadow-sm ${
             selected ? "bg-primary" : "bg-card"
           }`}
           accessibilityRole="button"
           accessibilityState={{ selected }}
         >
           <Text
-            className={`text-sm font-semibold ${
+            className={`text-sm font-semibold leading-4 ${
               selected ? "text-white" : "text-foreground"
             }`}
+            numberOfLines={1}
           >
             {filter.label}
           </Text>
@@ -257,7 +258,7 @@ export function ServiceOrderCard({
         </Text>
       </View>
 
-      <View className={`flex-row gap-2 ${compact ? "mb-3" : "mb-2"}`}>
+      <View className={`flex-row flex-wrap gap-2 ${compact ? "mb-3" : "mb-2"}`}>
         <ServiceInfoBox icon="calendar" label="DATA" value={service.date} />
         <ServiceInfoBox icon="time-outline" label="HORARIO" value={service.time} />
       </View>
@@ -276,11 +277,11 @@ export function ServiceOrderCard({
         </View>
       ) : null}
 
-      <View className="mb-3 mt-1 flex-row gap-2">
+      <View className="mb-3 mt-1 flex-row flex-wrap gap-2">
         {!compact ? (
           <Pressable
             onPress={onMessage}
-            className="relative min-h-[44px] flex-row items-center justify-center gap-2 rounded-[12px] border border-input-border bg-card px-4"
+            className="relative min-h-[44px] min-w-[130px] flex-1 flex-row items-center justify-center gap-2 rounded-[12px] border border-input-border bg-card px-4"
             accessibilityRole="button"
           >
             <Ionicons name="chatbubble-outline" size={18} color="#0f1720" />
@@ -305,7 +306,7 @@ export function ServiceOrderCard({
         ) : canStartService ? (
           <Pressable
             onPress={onPrimaryAction}
-            className="min-h-[44px] flex-1 items-center justify-center rounded-[12px] bg-primary px-4"
+            className="min-h-[44px] min-w-[130px] flex-1 items-center justify-center rounded-[12px] bg-primary px-4"
             accessibilityRole="button"
           >
             <Text className="text-sm font-bold text-white">

@@ -443,32 +443,49 @@ export function ClientMyWorkPage({
         </Text>
       </View>
 
-      <View className="mb-5 flex-row gap-2 px-5">
+      <ScrollView
+        horizontal
+        className="mb-5 max-h-8"
+        contentContainerStyle={{ gap: 8, paddingHorizontal: 20 }}
+        showsHorizontalScrollIndicator={false}
+      >
         <Pressable
           onPress={() => handleToggleFilter("em_andamento")}
-          className={`rounded-xl px-4 py-2 ${filter === "em_andamento" ? "bg-foreground" : "bg-card shadow-sm shadow-black/5"}`}
+          className={`h-8 justify-center rounded-full px-3 ${
+            filter === "em_andamento"
+              ? "bg-foreground"
+              : "bg-card shadow-sm shadow-black/5"
+          }`}
           accessibilityRole="button"
           accessibilityState={{ selected: filter === "em_andamento" }}
           accessibilityLabel="Filtrar serviços em andamento"
         >
-          <Text className={`text-sm font-semibold ${filter === "em_andamento" ? "text-white" : "text-muted-foreground"}`}>
+          <Text
+            className={`text-xs font-semibold ${
+              filter === "em_andamento" ? "text-white" : "text-muted-foreground"
+            }`}
+            numberOfLines={1}
+          >
             Em andamento ({countByStatus("em_andamento")})
           </Text>
         </Pressable>
 
         <Pressable
           onPress={() => handleToggleFilter("aguardando_aprovacao")}
-          className={`rounded-xl px-4 py-2 ${
-            filter === "aguardando_aprovacao" ? "bg-foreground" : "bg-card shadow-sm shadow-black/5"
+          className={`h-8 justify-center rounded-full px-3 ${
+            filter === "aguardando_aprovacao"
+              ? "bg-foreground"
+              : "bg-card shadow-sm shadow-black/5"
           }`}
           accessibilityRole="button"
           accessibilityState={{ selected: filter === "aguardando_aprovacao" }}
           accessibilityLabel="Filtrar serviços aguardando aprovação"
         >
           <Text
-            className={`text-sm font-semibold ${
+            className={`text-xs font-semibold ${
               filter === "aguardando_aprovacao" ? "text-white" : "text-muted-foreground"
             }`}
+            numberOfLines={1}
           >
             Aguardando aprovação ({countByStatus("aguardando_aprovacao")})
           </Text>
@@ -476,16 +493,25 @@ export function ClientMyWorkPage({
 
         <Pressable
           onPress={() => handleToggleFilter("concluido")}
-          className={`rounded-xl px-4 py-2 ${filter === "concluido" ? "bg-foreground" : "bg-card shadow-sm shadow-black/5"}`}
+          className={`h-8 justify-center rounded-full px-3 ${
+            filter === "concluido"
+              ? "bg-foreground"
+              : "bg-card shadow-sm shadow-black/5"
+          }`}
           accessibilityRole="button"
           accessibilityState={{ selected: filter === "concluido" }}
           accessibilityLabel="Filtrar serviços concluídos"
         >
-          <Text className={`text-sm font-semibold ${filter === "concluido" ? "text-white" : "text-muted-foreground"}`}>
+          <Text
+            className={`text-xs font-semibold ${
+              filter === "concluido" ? "text-white" : "text-muted-foreground"
+            }`}
+            numberOfLines={1}
+          >
             Concluídos ({countByStatus("concluido")})
           </Text>
         </Pressable>
-      </View>
+      </ScrollView>
 
       <ScrollView className="flex-1 px-5" contentContainerClassName="gap-4 pb-32" showsVerticalScrollIndicator={false}>
         {isLoading ? (

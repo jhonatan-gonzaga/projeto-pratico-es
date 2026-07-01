@@ -292,6 +292,7 @@ export default function App() {
             <ProfessionalHomeScreen
               onBack={() => setScreen("profileChoice")}
               onProfilePress={() => openAccountProfile("professionalHome")}
+              onSignOut={() => setScreen("login")}
             />
           ) : screen === "accountProfile" ? (
             <AccountProfileScreen
@@ -309,11 +310,13 @@ export default function App() {
         behavior={Platform.OS === "ios" ? "padding" : undefined}
         className="flex-1"
       >
-        {isProfessionalScreen ? (
-          currentScreen
-        ) : (
-          <View className="flex-1 items-center">{currentScreen}</View>
-        )}
+        <View
+          className={`flex-1 w-full bg-background ${
+            isProfessionalScreen ? "" : "items-center"
+          }`}
+        >
+          {currentScreen}
+        </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

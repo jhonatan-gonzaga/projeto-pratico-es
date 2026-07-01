@@ -883,10 +883,12 @@ export function SettingsScreen({
   onBack,
   onProfilePress,
   onSelectArea,
+  onSignOut,
 }: {
   onBack: () => void;
   onProfilePress: () => void;
   onSelectArea: (area: ProfessionalArea) => void;
+  onSignOut: () => void;
 }) {
   const [settingsPage, setSettingsPage] = useState<SettingsPage>("home");
   const [settingsUser, setSettingsUser] = useState({
@@ -1021,8 +1023,10 @@ export function SettingsScreen({
 
         <View className="overflow-hidden rounded-[16px] bg-card shadow-sm shadow-black/5">
           <Pressable
+            onPress={onSignOut}
             className="flex-row items-center justify-center gap-2 px-4 py-4"
             accessibilityRole="button"
+            accessibilityLabel="Sair da conta"
           >
             <Ionicons name="log-out-outline" size={18} color="#b94b50" />
             <Text className="text-[15px] font-semibold text-primary">

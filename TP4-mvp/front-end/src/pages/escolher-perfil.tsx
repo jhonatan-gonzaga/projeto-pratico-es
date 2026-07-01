@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-import { Image, Pressable, Text, View } from "react-native";
+import { Image, Pressable, ScrollView, Text, useWindowDimensions, View } from "react-native";
 
 import { ProfileCard } from "../components/app-components";
 import { api } from "../services/api";
@@ -18,6 +18,7 @@ export function ProfileChoiceScreen({
   onContinue: (profile: ProfileType) => void;
   onProfilePress: () => void;
 }) {
+  const { height } = useWindowDimensions();
   const [selectedProfile, setSelectedProfile] = useState<ProfileType>("cliente");
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
@@ -28,7 +29,12 @@ export function ProfileChoiceScreen({
   }, []);
 
   return (
-    <View className="min-h-[812px] w-full max-w-[480px] bg-background">
+    <ScrollView
+      className="w-full max-w-[480px] bg-background"
+      contentContainerStyle={{ minHeight: height }}
+      showsVerticalScrollIndicator={false}
+    >
+      <View className="w-full bg-background" style={{ minHeight: height }}>
       <View className="flex-row items-center justify-between px-5 pb-4 pt-12">
         <Pressable
           onPress={onBack}
@@ -67,7 +73,7 @@ export function ProfileChoiceScreen({
 
       <View className="h-px bg-muted" />
 
-      <View className="items-center px-5 pb-6 pt-8">
+      <View className="items-center px-5 pb-6 pt-7">
         <View className="mb-5 rounded-full bg-[#f7e8e9] px-5 py-2">
           <Text className="text-sm font-bold uppercase tracking-[1.6px] text-primary">
             Ola, bem-vindo(a)!
@@ -103,7 +109,7 @@ export function ProfileChoiceScreen({
         </View>
       </View>
 
-      <View className="mt-auto px-5 pb-10">
+      <View className="mt-auto px-5 pb-8 pt-2">
         <Pressable
           onPress={() => onContinue(selectedProfile)}
           className="min-h-[56px] items-center justify-center rounded-[24px] bg-primary px-6"
@@ -113,6 +119,7 @@ export function ProfileChoiceScreen({
           <Text className="text-base font-semibold text-white">Continuar</Text>
         </Pressable>
       </View>
-    </View>
+      </View>
+    </ScrollView>
   );
 }

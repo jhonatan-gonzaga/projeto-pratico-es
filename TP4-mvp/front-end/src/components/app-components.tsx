@@ -30,10 +30,10 @@ const statusClasses: Record<ValidationStatus, string> = {
 
 export function BrandLogo() {
   return (
-    <View className="h-[76px] w-[284px] items-center justify-center rounded-[24px] bg-card px-4 shadow-lg shadow-primary/20">
+    <View className="h-[76px] w-full max-w-[284px] items-center justify-center rounded-[22px] bg-card px-4 shadow-lg shadow-primary/20">
       <Image
         source={logo}
-        className="h-[58px] w-[217px]"
+        className="h-[58px] w-full max-w-[217px]"
         resizeMode="contain"
         accessibilityLabel="Conecta Obras Itacoatiara"
       />
@@ -81,7 +81,7 @@ export function Field({
             autoCapitalize="none"
             autoComplete={autoComplete}
             secureTextEntry={secureTextEntry}
-            className="min-h-[24px] flex-1 p-0 text-[15px] font-medium text-foreground"
+            className="min-h-[26px] min-w-0 flex-1 p-0 text-[15px] font-medium text-foreground"
             placeholder={placeholder}
             placeholderTextColor="#c5adaf"
             accessibilityLabel={label}
@@ -233,7 +233,7 @@ export function ProfileCard({
   return (
     <Pressable
       onPress={onPress}
-      className={`relative rounded-[24px] px-6 pb-8 pt-6 ${
+      className={`relative rounded-[20px] px-5 pb-6 pt-6 ${
         selected ? "border-2 border-primary bg-card" : "border border-input-border bg-card"
       }`}
       accessibilityRole="radio"
@@ -251,15 +251,15 @@ export function ProfileCard({
       </View>
 
       <View className="mb-4 items-center">
-        <View className="h-16 w-16 items-center justify-center rounded-full bg-[#f7e8e9]">
+        <View className="h-14 w-14 items-center justify-center rounded-full bg-[#f7e8e9]">
           <Ionicons name={icon} size={28} color="#b94b50" />
         </View>
       </View>
 
-      <Text className="mb-2 text-center text-xl font-bold text-foreground">
+      <Text className="mb-2 text-center text-lg font-bold text-foreground">
         {label}
       </Text>
-      <Text className="text-center text-base leading-7 text-muted-foreground">
+      <Text className="text-center text-sm leading-6 text-muted-foreground">
         {description}
       </Text>
     </Pressable>
