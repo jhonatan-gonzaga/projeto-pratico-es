@@ -6,6 +6,8 @@
     *   [Backend](#backend)
     *   [Frontend](#frontend)
     *   [Documentação](#documentação)
+    *   [Prints](#prints)
+    *   [Vídeos](#vídeos)
 3.  [Backend](#3-backend)
     *   [Tecnologias](#tecnologias)
     *   [Scripts](#scripts)
@@ -17,16 +19,19 @@
 5.  [Documentação](#5-documentação)
 6.  [Banco de Dados (Prisma Schema)](#6-banco-de-dados-prisma-schema)
 7.  [Rastreabilidade](#7-rastreabilidade)
+8.  [Ferramentas de IA Utilizadas](#8-ferramentas-de-ia-utilizadas)
 
 ## 1. Visão Geral
 Este diretório, `TP4-mvp`, contém o Minimum Viable Product (MVP) do projeto **Conecta Obras**. O Conecta Obras é uma plataforma que visa conectar clientes que necessitam de serviços de construção e reforma com profissionais qualificados. O MVP inclui tanto o backend da aplicação (API REST) quanto o frontend (aplicativo móvel).
 
 ## 2. Estrutura do Projeto
-A pasta `TP4-mvp` está organizada em três subdiretórios principais:
+A pasta `TP4-mvp` está organizada em subdiretórios principais:
 
 *   `backend`: Contém a implementação da API REST utilizando NestJS.
 *   `front-end`: Contém o aplicativo móvel desenvolvido com Expo e React Native.
 *   `docs`: Armazena a documentação do projeto, incluindo termos de uso, política de privacidade e documentos de rastreabilidade.
+*   `prints`: Contém capturas de tela e outros materiais visuais do projeto.
+*   `video`: Contém vídeos de demonstração do MVP.
 
 ### Backend
 O diretório `backend` é a base da API REST do Conecta Obras. Ele gerencia a lógica de negócios, a interação com o banco de dados e a autenticação de usuários.
@@ -36,6 +41,12 @@ O diretório `front-end` abriga o código-fonte do aplicativo móvel. Este aplic
 
 ### Documentação
 A pasta `docs` contém informações cruciais sobre o projeto, incluindo detalhes sobre os requisitos, políticas e rastreabilidade das funcionalidades.
+
+### Prints
+A pasta `prints` contém arquivos Markdown que descrevem e exibem capturas de tela de funcionalidades específicas do aplicativo, como telas de cadastro e login.
+
+### Vídeos
+A pasta `video` contém arquivos Markdown que podem referenciar vídeos de demonstração do MVP, como o `demonstracao-mvp.md`.
 
 ## 3. Backend
 
@@ -114,3 +125,10 @@ O arquivo `prisma/schema.prisma` define o esquema do banco de dados, incluindo a
 
 ## 7. Rastreabilidade
 Os documentos de rastreabilidade (`rastreabilidade-cliente.md`, `rastreabilidade-profissional.md`, `rastreabilidade-resumo.md`) são cruciais para entender a ligação entre os requisitos do projeto (User Stories) e as telas implementadas no frontend. Eles fornecem um mapeamento detalhado das funcionalidades para cada persona, garantindo que todas as necessidades foram abordadas no MVP.
+
+## 8. Ferramentas de IA Utilizadas
+Durante o desenvolvimento e organização deste projeto, as seguintes ferramentas de Inteligência Artificial foram utilizadas:
+
+*   **Frontend**: Codex e Figma Maker
+*   **Backend e Banco de Dados**: Codex
+*   **Organização do Repositório**: Manus
