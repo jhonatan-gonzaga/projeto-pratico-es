@@ -307,7 +307,7 @@ export default function App() {
     <SafeAreaView className="flex-1 bg-background">
       <StatusBar style="dark" />
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         className="flex-1"
       >
         <View

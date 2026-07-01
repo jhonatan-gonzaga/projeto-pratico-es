@@ -1,0 +1,1 @@
+-- Dismissed service ads are represented by applications with status CANCELED.

@@ -933,6 +933,7 @@ export function SettingsScreen({
       <PrivacySecurityScreen
         onBack={() => setSettingsPage("home")}
         onProfilePress={onProfilePress}
+        onSignOut={onSignOut}
       />
     );
   }

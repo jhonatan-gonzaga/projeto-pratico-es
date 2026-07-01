@@ -643,9 +643,9 @@ export function EditProjectPhotoGrid({
 
   return (
     <>
-      <View className="mb-2 flex-row gap-2">
-        {sourcePhotos.slice(0, 3).map((photo, index) => (
-          <View key={`${photo.url}-${index}`} className="relative flex-1">
+      <View className="mb-2 flex-row flex-wrap gap-2">
+        {sourcePhotos.map((photo, index) => (
+          <View key={`${photo.url}-${index}`} className="relative w-[31%] min-w-[96px] flex-1">
             {photo.url ? (
               <Image
                 source={{ uri: photo.url }}

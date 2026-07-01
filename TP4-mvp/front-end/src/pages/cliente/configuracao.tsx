@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
-import { Pressable, ScrollView, Switch, Text, View } from "react-native";
+import { Pressable, ScrollView, Switch, Text, TextInput, View } from "react-native";
 
 import { ClientBottomNav, type ClientNavKey } from "../../components/cliente";
 import {
@@ -9,6 +9,7 @@ import {
   SettingsOption,
   SettingsSection,
 } from "../../components/profissional/components";
+import { ApiError, api } from "../../services/api";
 
 type ClientSettingsPage = "home" | "notifications" | "privacy" | "help" | "terms";
 
@@ -112,13 +113,16 @@ function SecurityOption({
   description,
   icon,
   label,
+  onPress,
 }: {
   description: string;
   icon: keyof typeof Ionicons.glyphMap;
   label: string;
+  onPress?: () => void;
 }) {
   return (
     <Pressable
+      onPress={onPress}
       className="flex-row items-center gap-3 rounded-[12px] bg-card p-4 shadow-sm shadow-black/5"
       accessibilityRole="button"
     >
@@ -139,10 +143,67 @@ function SecurityOption({
 function ClientPrivacyScreen({
   onBack,
   onProfilePress,
+  onSignOut,
 }: {
   onBack: () => void;
   onProfilePress?: () => void;
+  onSignOut?: () => void;
 }) {
+  const [activePanel, setActivePanel] = useState<
+    "password" | "visibility" | "delete" | "twoFactor" | null
+  >(null);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordStatus, setPasswordStatus] = useState<string | null>(null);
+  const [deleteStatus, setDeleteStatus] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const changePassword = async () => {
+    if (newPassword.length < 6) {
+      setPasswordStatus("A nova senha deve ter pelo menos 6 caracteres.");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setPasswordStatus("A confirmacao precisa ser igual a nova senha.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setPasswordStatus(null);
+
+    try {
+      const response = await api.changePassword({ currentPassword, newPassword });
+      setPasswordStatus(response.message);
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (error) {
+      setPasswordStatus(
+        error instanceof ApiError ? error.message : "Nao foi possivel alterar a senha.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const deleteAccount = async () => {
+    setIsSubmitting(true);
+    setDeleteStatus(null);
+
+    try {
+      await api.deleteMe();
+      onSignOut?.();
+    } catch (error) {
+      setDeleteStatus(
+        error instanceof ApiError ? error.message : "Nao foi possivel excluir a conta.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <View className="h-full w-full max-w-[480px] self-center bg-background">
       <ProjectHeader onBack={onBack} onProfilePress={onProfilePress} />
@@ -165,22 +226,97 @@ function ClientPrivacyScreen({
           icon="key-outline"
           label="Alterar senha"
           description="Atualize sua senha de acesso ao aplicativo."
+          onPress={() => setActivePanel(activePanel === "password" ? null : "password")}
         />
+        {activePanel === "password" ? (
+          <View className="gap-3 rounded-[12px] bg-card p-4 shadow-sm shadow-black/5">
+            <TextInput
+              value={currentPassword}
+              onChangeText={setCurrentPassword}
+              secureTextEntry
+              placeholder="Senha atual"
+              placeholderTextColor="#9e8e8f"
+              className="min-h-[44px] rounded-[12px] bg-background px-4 text-sm text-foreground"
+            />
+            <TextInput
+              value={newPassword}
+              onChangeText={setNewPassword}
+              secureTextEntry
+              placeholder="Nova senha"
+              placeholderTextColor="#9e8e8f"
+              className="min-h-[44px] rounded-[12px] bg-background px-4 text-sm text-foreground"
+            />
+            <TextInput
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              secureTextEntry
+              placeholder="Confirmar nova senha"
+              placeholderTextColor="#9e8e8f"
+              className="min-h-[44px] rounded-[12px] bg-background px-4 text-sm text-foreground"
+            />
+            <Pressable
+              onPress={changePassword}
+              disabled={isSubmitting}
+              className="min-h-[44px] items-center justify-center rounded-[12px] bg-primary px-4"
+              accessibilityRole="button"
+            >
+              <Text className="text-sm font-semibold text-white">
+                {isSubmitting ? "Salvando..." : "Salvar nova senha"}
+              </Text>
+            </Pressable>
+            {passwordStatus ? (
+              <Text className="text-xs font-semibold text-primary">{passwordStatus}</Text>
+            ) : null}
+          </View>
+        ) : null}
         <SecurityOption
           icon="shield-checkmark-outline"
           label="Verificacao em duas etapas"
           description="Adicione uma protecao extra para entrar na conta."
+          onPress={() => setActivePanel(activePanel === "twoFactor" ? null : "twoFactor")}
         />
+        {activePanel === "twoFactor" ? (
+          <Text className="rounded-[12px] bg-[#f7eced] p-4 text-sm leading-5 text-muted-foreground">
+            A verificacao em duas etapas esta prevista para uma proxima versao. Por enquanto, mantenha sua senha atualizada e nao compartilhe seu acesso.
+          </Text>
+        ) : null}
         <SecurityOption
           icon="eye-outline"
           label="Visibilidade dos dados"
           description="Defina quais dados podem aparecer para profissionais."
+          onPress={() => setActivePanel(activePanel === "visibility" ? null : "visibility")}
         />
+        {activePanel === "visibility" ? (
+          <Text className="rounded-[12px] bg-[#f7eced] p-4 text-sm leading-5 text-muted-foreground">
+            Seus dados de contato aparecem apenas em interacoes relacionadas a anuncios, contratos e conversas dentro da plataforma.
+          </Text>
+        ) : null}
         <SecurityOption
           icon="trash-outline"
           label="Excluir dados da conta"
           description="Solicite a remocao dos seus dados do Conecta Obras."
+          onPress={() => setActivePanel(activePanel === "delete" ? null : "delete")}
         />
+        {activePanel === "delete" ? (
+          <View className="gap-3 rounded-[12px] border border-[#f2cdd0] bg-[#fff7f7] p-4">
+            <Text className="text-sm leading-5 text-muted-foreground">
+              Esta acao remove sua conta e os dados vinculados. Ela nao pode ser desfeita.
+            </Text>
+            <Pressable
+              onPress={deleteAccount}
+              disabled={isSubmitting}
+              className="min-h-[44px] items-center justify-center rounded-[12px] bg-primary px-4"
+              accessibilityRole="button"
+            >
+              <Text className="text-sm font-semibold text-white">
+                {isSubmitting ? "Excluindo..." : "Excluir minha conta"}
+              </Text>
+            </Pressable>
+            {deleteStatus ? (
+              <Text className="text-xs font-semibold text-primary">{deleteStatus}</Text>
+            ) : null}
+          </View>
+        ) : null}
       </ScrollView>
     </View>
   );
@@ -218,6 +354,38 @@ function ClientHelpScreen({
   onBack: () => void;
   onProfilePress?: () => void;
 }) {
+  const [subject, setSubject] = useState("");
+  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const sendSupportMessage = async () => {
+    if (subject.trim().length < 3 || message.trim().length < 10) {
+      setStatus("Informe um assunto e uma mensagem com pelo menos 10 caracteres.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setStatus(null);
+
+    try {
+      await api.createSupportTicket({
+        subject,
+        message,
+        context: "CLIENTE",
+      });
+      setSubject("");
+      setMessage("");
+      setStatus("Mensagem enviada ao suporte e salva com sucesso.");
+    } catch (error) {
+      setStatus(
+        error instanceof ApiError ? error.message : "Nao foi possivel enviar a mensagem.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <View className="h-full w-full max-w-[480px] self-center bg-background">
       <ProjectHeader onBack={onBack} onProfilePress={onProfilePress} />
@@ -260,15 +428,37 @@ function ClientHelpScreen({
             Entre em contato pelo atendimento do Conecta Obras para tirar
             duvidas sobre conta, anuncios ou seguranca.
           </Text>
-          <Pressable
-            className="mt-4 min-h-[46px] flex-row items-center justify-center gap-2 rounded-[12px] bg-primary px-4"
-            accessibilityRole="button"
-          >
-            <Ionicons name="chatbubble-ellipses-outline" size={17} color="#ffffff" />
-            <Text className="text-sm font-semibold text-white">
-              Falar com suporte
-            </Text>
-          </Pressable>
+          <View className="mt-4 gap-3">
+            <TextInput
+              value={subject}
+              onChangeText={setSubject}
+              placeholder="Assunto"
+              placeholderTextColor="#9e8e8f"
+              className="min-h-[44px] rounded-[12px] bg-card px-4 text-sm text-foreground"
+            />
+            <TextInput
+              value={message}
+              onChangeText={setMessage}
+              multiline
+              placeholder="Descreva sua duvida ou problema"
+              placeholderTextColor="#9e8e8f"
+              className="min-h-[96px] rounded-[12px] bg-card px-4 py-3 text-sm leading-5 text-foreground"
+            />
+            <Pressable
+              onPress={sendSupportMessage}
+              disabled={isSubmitting}
+              className="min-h-[46px] flex-row items-center justify-center gap-2 rounded-[12px] bg-primary px-4"
+              accessibilityRole="button"
+            >
+              <Ionicons name="chatbubble-ellipses-outline" size={17} color="#ffffff" />
+              <Text className="text-sm font-semibold text-white">
+                {isSubmitting ? "Enviando..." : "Enviar para suporte"}
+              </Text>
+            </Pressable>
+            {status ? (
+              <Text className="text-xs font-semibold text-primary">{status}</Text>
+            ) : null}
+          </View>
         </View>
       </ScrollView>
     </View>
@@ -354,10 +544,11 @@ export function ClientSettingsScreen({
 
   if (settingsPage === "privacy") {
     return (
-      <ClientPrivacyScreen
-        onBack={() => setSettingsPage("home")}
-        onProfilePress={onProfilePress}
-      />
+        <ClientPrivacyScreen
+          onBack={() => setSettingsPage("home")}
+          onProfilePress={onProfilePress}
+          onSignOut={onSignOut}
+        />
     );
   }
 

@@ -172,18 +172,31 @@ export function EditProjectScreen({
     return (
       <PhotoDetailsScreen
         imageUri={editingImage.url}
+        initialType={editingImage.type}
         onBack={() => setIsEditingPhotoDetails(false)}
         onProfilePress={onProfilePress}
-        onSave={(type) => {
-          setImages((current) =>
-            current.map((image, index) => {
+        onSave={({ deleted, type, url }) => {
+          setImages((current) => {
+            if (deleted) {
+              const nextImages = current.filter((_, index) => index !== editingPhotoIndex);
+
+              if (!nextImages.some((image) => image.type === "COVER") && nextImages[0]) {
+                return nextImages.map((image, index) =>
+                  index === 0 ? { ...image, type: "COVER" } : image,
+                );
+              }
+
+              return nextImages;
+            }
+
+            return current.map((image, index) => {
               if (type === "COVER" && index !== editingPhotoIndex) {
                 return image.type === "COVER" ? { ...image, type: "GENERAL" } : image;
               }
 
-              return index === editingPhotoIndex ? { ...image, type } : image;
-            }),
-          );
+              return index === editingPhotoIndex ? { ...image, type, url } : image;
+            });
+          });
           setIsEditingPhotoDetails(false);
           setEditingPhotoIndex(null);
         }}

@@ -1,12 +1,13 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Audio } from "expo-av";
 import { useEffect, useState } from "react";
-import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { Image, Modal, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
 import { CustomerAvatar, ProjectHeader } from "../../components/profissional/components";
 import { EmptyState, ErrorState, LoadingState } from "../../components/feedback-state";
 import { AudioRecordingState, startAudioRecording, stopAndUploadAudio } from "../../services/audio-upload";
 import { ApiError, MessageItem, api } from "../../services/api";
+import { pickAndUploadImage } from "../../services/image-upload";
 
 function formatAudioDuration(durationMs?: number | null) {
   const totalSeconds = Math.max(0, Math.round((durationMs ?? 0) / 1000));
@@ -33,6 +34,8 @@ export function ClientMessageScreen({
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(Boolean(conversationId));
   const [error, setError] = useState<string | null>(null);
+  const [isSendingImage, setIsSendingImage] = useState(false);
+  const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
   const [recordingState, setRecordingState] = useState<AudioRecordingState>({
     recording: null,
     startedAt: null,
@@ -118,6 +121,35 @@ export function ClientMessageScreen({
     } catch (audioError) {
       setRecordingState({ recording: null, startedAt: null });
       setError(audioError instanceof Error ? audioError.message : "Nao foi possivel gravar audio.");
+    }
+  };
+
+  const sendImage = async () => {
+    if (!conversationId || isSendingImage) {
+      return;
+    }
+
+    setIsSendingImage(true);
+    setError(null);
+
+    try {
+      const imageUrl = await pickAndUploadImage();
+
+      if (imageUrl) {
+        const sent = await api.sendMessage(conversationId, {
+          type: "IMAGE",
+          imageUrl,
+        });
+        setMessages((current) => [...current, sent]);
+      }
+    } catch (imageError) {
+      setError(
+        imageError instanceof Error
+          ? imageError.message
+          : "Nao foi possivel enviar a imagem.",
+      );
+    } finally {
+      setIsSendingImage(false);
     }
   };
 
@@ -224,6 +256,19 @@ export function ClientMessageScreen({
                     Audio {formatAudioDuration(item.durationMs)}
                   </Text>
                 </Pressable>
+              ) : item.type === "IMAGE" && item.imageUrl ? (
+                <Pressable
+                  onPress={() => setPreviewImageUrl(item.imageUrl ?? null)}
+                  accessibilityRole="imagebutton"
+                  accessibilityLabel="Abrir imagem em tela cheia"
+                >
+                  <Image
+                    source={{ uri: item.imageUrl }}
+                    className="h-[150px] w-[190px] rounded-[12px]"
+                    resizeMode="cover"
+                    accessibilityLabel="Imagem enviada no chat"
+                  />
+                </Pressable>
               ) : (
                 <Text
                   className={`text-sm leading-5 ${
@@ -249,6 +294,19 @@ export function ClientMessageScreen({
       </ScrollView>
 
       <View className="flex-row items-center gap-2 border-t border-input-border bg-card px-4 py-3">
+        <Pressable
+          onPress={sendImage}
+          disabled={isSendingImage}
+          className="h-11 w-11 items-center justify-center rounded-full bg-background"
+          accessibilityRole="button"
+          accessibilityLabel="Enviar imagem da galeria"
+        >
+          <Ionicons
+            name={isSendingImage ? "hourglass-outline" : "image-outline"}
+            size={18}
+            color="#b94b50"
+          />
+        </Pressable>
         <TextInput
           value={message}
           onChangeText={setMessage}
@@ -280,6 +338,32 @@ export function ClientMessageScreen({
           <Ionicons name="send" size={17} color="#ffffff" />
         </Pressable>
       </View>
+
+      <Modal
+        visible={Boolean(previewImageUrl)}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setPreviewImageUrl(null)}
+      >
+        <View className="flex-1 bg-black">
+          <Pressable
+            onPress={() => setPreviewImageUrl(null)}
+            className="absolute right-4 top-12 z-10 h-11 w-11 items-center justify-center rounded-full bg-white/20"
+            accessibilityRole="button"
+            accessibilityLabel="Fechar imagem"
+          >
+            <Ionicons name="close" size={24} color="#ffffff" />
+          </Pressable>
+          {previewImageUrl ? (
+            <Image
+              source={{ uri: previewImageUrl }}
+              className="h-full w-full"
+              resizeMode="contain"
+              accessibilityLabel="Imagem em tela cheia"
+            />
+          ) : null}
+        </View>
+      </Modal>
     </View>
   );
 }

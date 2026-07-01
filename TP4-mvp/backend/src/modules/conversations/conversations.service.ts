@@ -55,6 +55,7 @@ export class ConversationsService {
         type: dto.type ?? MessageType.TEXT,
         text: dto.text,
         audioUrl: dto.audioUrl,
+        imageUrl: dto.imageUrl,
         durationMs: dto.durationMs,
       },
       include: { sender: { select: { id: true, name: true } } },
@@ -79,6 +80,8 @@ export class ConversationsService {
           body:
             dto.type === MessageType.AUDIO
               ? 'Mensagem de audio'
+              : dto.type === MessageType.IMAGE
+                ? 'Imagem enviada'
               : messageText.length > 120
                 ? `${messageText.slice(0, 117)}...`
                 : messageText,
