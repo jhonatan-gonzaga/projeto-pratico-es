@@ -171,11 +171,17 @@ function nextContractStatus(service: ProfessionalService): ContractStatus {
 }
 
 export function ProfessionalHomeScreen({
+  isDarkMode,
   onBack,
   onProfilePress,
+  onSignOut,
+  onToggleDarkMode,
 }: {
+  isDarkMode: boolean;
   onBack: () => void;
   onProfilePress: () => void;
+  onSignOut: () => void;
+  onToggleDarkMode: (value: boolean) => void;
 }) {
   const [activeTab, setActiveTab] = useState<ProfessionalTab>("requests");
   const [activeArea, setActiveArea] =
@@ -442,9 +448,12 @@ export function ProfessionalHomeScreen({
   if (activeArea === "settings") {
     return (
       <SettingsScreen
+        isDarkMode={isDarkMode}
         onBack={() => setActiveArea("opportunities")}
         onProfilePress={onProfilePress}
         onSelectArea={selectArea}
+        onSignOut={onSignOut}
+        onToggleDarkMode={onToggleDarkMode}
       />
     );
   }

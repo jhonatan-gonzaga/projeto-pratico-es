@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, ScrollView, Text, useWindowDimensions, View } from "react-native";
 
 import {
   BrandLogo,
@@ -36,6 +36,7 @@ export function LoginScreen({
   onOpenTerms: () => void;
   onSuccess: () => void;
 }) {
+  const { height } = useWindowDimensions();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [forgotEmail, setForgotEmail] = useState("");
@@ -103,7 +104,16 @@ export function LoginScreen({
   };
 
   return (
-    <View className="relative min-h-[812px] w-full max-w-[480px] overflow-hidden bg-background">
+    <ScrollView
+      className="w-full max-w-[480px] bg-background"
+      contentContainerStyle={{ minHeight: height }}
+      keyboardShouldPersistTaps="handled"
+      showsVerticalScrollIndicator={false}
+    >
+      <View
+        className="relative w-full overflow-hidden bg-background"
+        style={{ minHeight: height }}
+      >
       <LinearGradient
         colors={["#fce8e9", "#fbd4d6", "#fbf6f7"]}
         locations={[0, 0.4, 1]}
@@ -115,7 +125,7 @@ export function LoginScreen({
       <View className="absolute -right-16 top-5 h-[200px] w-[200px] rounded-full bg-[#fbd2d4] opacity-50" />
       <View className="absolute -bottom-10 -left-10 h-[220px] w-[220px] rounded-full bg-[#fce8e9] opacity-70" />
 
-      <View className="z-10 items-center gap-4 px-6 pb-7 pt-[52px]">
+      <View className="z-10 items-center gap-4 px-6 pb-7 pt-10 sm:pt-[52px]">
         <BrandLogo />
         <View className="items-center gap-1.5">
           <Text className="text-center text-[28px] font-extrabold leading-8 text-foreground">
@@ -251,7 +261,7 @@ export function LoginScreen({
         ) : null}
       </View>
 
-      <View className="z-10 items-center gap-2.5 px-6 pb-7 pt-5">
+      <View className="z-10 items-center gap-2.5 px-6 pb-8 pt-5">
         <Pressable onPress={onCreateAccount} accessibilityRole="button">
           <Text className="text-center text-[15px] text-foreground">
             Nao tem uma conta?{" "}
@@ -277,6 +287,7 @@ export function LoginScreen({
           Versao 1.0.0
         </Text>
       </View>
-    </View>
+      </View>
+    </ScrollView>
   );
 }

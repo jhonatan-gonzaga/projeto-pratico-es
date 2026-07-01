@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Image, Pressable, Text, View } from "react-native";
+import { Image, Pressable, Text, useWindowDimensions, View } from "react-native";
 
 type ProfessionalCardProps = {
   name: string;
@@ -18,15 +18,19 @@ export function ProfessionalCard({
   avatarUri,
   onPress,
 }: ProfessionalCardProps) {
+  const { width } = useWindowDimensions();
   const CardWrapper = onPress ? Pressable : View;
+  const contentWidth = Math.min(width, 480) - 40;
+  const cardWidth = Math.max(140, (contentWidth - 12) / 2);
 
   return (
     <CardWrapper
       onPress={onPress}
-      className="w-[48%] min-w-[48%] overflow-hidden rounded-[20px] bg-card shadow-lg shadow-black/5"
+      className="overflow-hidden rounded-[18px] bg-card shadow-lg shadow-black/5"
+      style={{ width: cardWidth }}
       accessibilityRole={onPress ? "button" : undefined}
     >
-      <View className="relative h-[150px]">
+      <View className="relative aspect-square w-full">
         {avatarUri ? (
           <Image
             source={{ uri: avatarUri }}
@@ -44,9 +48,13 @@ export function ProfessionalCard({
           <Text className="text-xs font-semibold text-foreground">{rating}</Text>
         </View>
       </View>
-      <View className="px-3 py-3">
-        <Text className="font-bold text-base leading-tight text-foreground">{name}</Text>
-        <Text className="mb-2 text-sm text-muted-foreground">{role}</Text>
+      <View className="gap-1 px-3 py-3">
+        <Text className="text-base font-bold leading-tight text-foreground" numberOfLines={2}>
+          {name}
+        </Text>
+        <Text className="text-sm leading-5 text-muted-foreground" numberOfLines={2}>
+          {role}
+        </Text>
         <Text className="text-base font-bold text-primary">
           {price}
           <Text className="text-xs font-normal text-muted-foreground">/dia</Text>

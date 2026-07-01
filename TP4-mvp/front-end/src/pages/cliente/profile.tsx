@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useMemo, useState } from "react";
-import { Image, Linking, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { Image, Linking, Modal, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
 import { ClientBottomNav, type ClientNavKey } from "../../components/cliente";
 import { EmptyState, ErrorState, LoadingState } from "../../components/feedback-state";
@@ -89,6 +89,7 @@ export function ClientProfilePage({
     useState<ProjectItem | null>(null);
   const [isShowingMessages, setIsShowingMessages] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [isAvatarFullscreen, setIsAvatarFullscreen] = useState(false);
 
   const resolvedProfessional = apiProfessional
     ? toClientProfile(apiProfessional)
@@ -355,12 +356,18 @@ export function ClientProfilePage({
             <View className="items-center gap-2">
               <View className="overflow-hidden rounded-full border-[3px] border-primary">
                 {resolvedProfessional.avatarUri ? (
-                  <Image
-                    source={{ uri: resolvedProfessional.avatarUri }}
-                    className="h-24 w-24"
-                    resizeMode="cover"
-                    accessibilityLabel={`Foto de ${resolvedProfessional.name}`}
-                  />
+                  <Pressable
+                    onPress={() => setIsAvatarFullscreen(true)}
+                    accessibilityRole="imagebutton"
+                    accessibilityLabel={`Abrir foto de ${resolvedProfessional.name} em tela cheia`}
+                  >
+                    <Image
+                      source={{ uri: resolvedProfessional.avatarUri }}
+                      className="h-24 w-24"
+                      resizeMode="cover"
+                      accessibilityLabel={`Foto de ${resolvedProfessional.name}`}
+                    />
+                  </Pressable>
                 ) : (
                   <View className="h-24 w-24 items-center justify-center bg-[#f7e8e9]">
                     <Ionicons name="person" size={44} color="#b94b50" />
@@ -736,6 +743,32 @@ export function ClientProfilePage({
       <View className="absolute inset-x-0 bottom-0 px-5 pb-2">
         <ClientBottomNav active="search" onSelect={onNavigate} />
       </View>
+
+      <Modal
+        visible={isAvatarFullscreen}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setIsAvatarFullscreen(false)}
+      >
+        <View className="flex-1 bg-black">
+          <Pressable
+            onPress={() => setIsAvatarFullscreen(false)}
+            className="absolute right-4 top-12 z-10 h-11 w-11 items-center justify-center rounded-full bg-white/20"
+            accessibilityRole="button"
+            accessibilityLabel="Fechar foto"
+          >
+            <Ionicons name="close" size={24} color="#ffffff" />
+          </Pressable>
+          {resolvedProfessional.avatarUri ? (
+            <Image
+              source={{ uri: resolvedProfessional.avatarUri }}
+              className="h-full w-full"
+              resizeMode="contain"
+              accessibilityLabel={`Foto de ${resolvedProfessional.name} em tela cheia`}
+            />
+          ) : null}
+        </View>
+      </Modal>
     </View>
   );
 }

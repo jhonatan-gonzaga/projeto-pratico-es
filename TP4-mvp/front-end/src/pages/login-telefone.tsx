@@ -110,7 +110,7 @@ export function PhoneVerificationScreen({ onBack }: { onBack: () => void }) {
                 autoComplete="tel"
                 className="min-h-[24px] flex-1 p-0 text-[15px] font-medium text-foreground"
                 placeholder="(11) 99999-9999"
-                placeholderTextColor="#c5adaf"
+                placeholderTextColor="#b0b8c1"
                 accessibilityLabel="Numero de telefone"
               />
               {phoneTouched ? (

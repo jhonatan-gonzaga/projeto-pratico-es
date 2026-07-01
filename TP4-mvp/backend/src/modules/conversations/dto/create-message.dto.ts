@@ -6,7 +6,7 @@ export class CreateMessageDto {
   @IsEnum(MessageType)
   type?: MessageType;
 
-  @ValidateIf((dto: CreateMessageDto) => dto.type !== MessageType.AUDIO)
+  @ValidateIf((dto: CreateMessageDto) => !dto.type || dto.type === MessageType.TEXT)
   @IsString()
   @IsNotEmpty()
   @MaxLength(5000)
@@ -16,6 +16,11 @@ export class CreateMessageDto {
   @IsString()
   @IsNotEmpty()
   audioUrl?: string;
+
+  @ValidateIf((dto: CreateMessageDto) => dto.type === MessageType.IMAGE)
+  @IsString()
+  @IsNotEmpty()
+  imageUrl?: string;
 
   @IsOptional()
   @IsInt()

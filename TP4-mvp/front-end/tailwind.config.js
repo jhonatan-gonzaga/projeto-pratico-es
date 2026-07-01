@@ -1,17 +1,18 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   presets: [require("nativewind/preset")],
+  darkMode: "class",
   content: ["./src/**/*.{js,jsx,ts,tsx}", "./index.ts"],
   theme: {
     extend: {
       colors: {
-        background: "#fbf6f7",
-        card: "#ffffff",
-        foreground: "#0f1720",
-        primary: "#b94b50",
-        muted: "#f5eeef",
-        "muted-foreground": "#7a6568",
-        "input-border": "rgba(0, 0, 0, 0.1)",
+        background: "rgb(var(--color-background) / <alpha-value>)",
+        card: "rgb(var(--color-card) / <alpha-value>)",
+        foreground: "rgb(var(--color-foreground) / <alpha-value>)",
+        primary: "rgb(var(--color-primary) / <alpha-value>)",
+        muted: "rgb(var(--color-muted) / <alpha-value>)",
+        "muted-foreground": "rgb(var(--color-muted-foreground) / <alpha-value>)",
+        "input-border": "rgb(var(--color-input-border) / var(--color-input-border-alpha))",
       },
       fontFamily: {
         sans: ["Inter", "System"],

@@ -30,11 +30,13 @@ const validationStatus = (
 };
 
 export function AccountProfileScreen({
+  isDarkMode = false,
   onBack,
   onDeleteAccount,
   onSave,
   onSignOut,
 }: {
+  isDarkMode?: boolean;
   onBack: () => void;
   onDeleteAccount: () => void;
   onSave: () => void;
@@ -70,6 +72,10 @@ export function AccountProfileScreen({
     validationStatus(shouldShow(field), isValid);
   const fieldError = (field: keyof typeof touched) =>
     shouldShow(field) ? errors[field] : undefined;
+  const gradientColors = isDarkMode
+    ? (["#0f1218", "#1a1e26", "#0f1218"] as const)
+    : (["#f9d6d6", "#fbf6f7", "#fbf6f7"] as const);
+  const iconColor = isDarkMode ? "#eb747a" : "#0f1720";
 
   useEffect(() => {
     api.me()
@@ -126,7 +132,7 @@ export function AccountProfileScreen({
   return (
     <View className="min-h-[812px] w-full max-w-[480px] overflow-hidden bg-background">
       <LinearGradient
-        colors={["#f9d6d6", "#fbf6f7", "#fbf6f7"]}
+        colors={gradientColors}
         locations={[0, 0.4, 1]}
         start={{ x: 0.12, y: 0 }}
         end={{ x: 0.9, y: 1 }}
@@ -140,7 +146,7 @@ export function AccountProfileScreen({
           accessibilityRole="button"
           accessibilityLabel="Voltar"
         >
-          <Ionicons name="arrow-back" size={22} color="#0f1720" />
+          <Ionicons name="arrow-back" size={22} color={iconColor} />
         </Pressable>
 
         <Image
@@ -155,7 +161,7 @@ export function AccountProfileScreen({
 
       <View className="z-10 items-center pb-6 pt-4">
         <View className="relative mb-3">
-          <View className="h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-card bg-[#f7e8e9]">
+          <View className="h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-card bg-muted">
             {profilePhotoUrl ? (
               <Image
                 source={{ uri: profilePhotoUrl }}
@@ -248,14 +254,14 @@ export function AccountProfileScreen({
           className="mt-1 min-h-[48px] w-full flex-row items-center justify-center gap-2 rounded-[16px] border border-input-border bg-card px-6"
           accessibilityRole="button"
         >
-          <Ionicons name="log-out-outline" size={18} color="#0f1720" />
+          <Ionicons name="log-out-outline" size={18} color={iconColor} />
           <Text className="text-base font-semibold text-foreground">
             Sair da conta
           </Text>
         </Pressable>
 
         {confirmingDelete ? (
-          <View className="w-full gap-3 rounded-[16px] border border-[#f2cdd0] bg-[#fff7f7] p-4">
+          <View className="w-full gap-3 rounded-[16px] border border-input-border bg-muted p-4">
             <Text className="text-center text-sm leading-5 text-muted-foreground">
               Sua conta sera excluida. Para continuar usando o app, faca um novo
               cadastro.

@@ -71,7 +71,7 @@ function PriceInput({
         onChangeText={(text) => onChangeText(normalizePrice(text))}
         className="h-full flex-1 text-base font-semibold text-foreground"
         placeholder={placeholder}
-        placeholderTextColor="#7a6568"
+        placeholderTextColor="#b0b8c1"
         keyboardType="number-pad"
         returnKeyType="done"
         accessibilityLabel={label}

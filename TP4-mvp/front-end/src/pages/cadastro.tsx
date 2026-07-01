@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, ScrollView, Text, useWindowDimensions, View } from "react-native";
 
 import {
   BrandLogo,
@@ -38,6 +38,7 @@ export function SignupScreen({
   onOpenTerms: () => void;
   onSuccess: () => void;
 }) {
+  const { height } = useWindowDimensions();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
@@ -88,12 +89,21 @@ export function SignupScreen({
   };
 
   return (
-    <View className="relative min-h-[812px] w-full max-w-[480px] overflow-hidden bg-background">
+    <ScrollView
+      className="w-full max-w-[480px] bg-background"
+      contentContainerStyle={{ minHeight: height }}
+      keyboardShouldPersistTaps="handled"
+      showsVerticalScrollIndicator={false}
+    >
+      <View
+        className="relative w-full overflow-hidden bg-background"
+        style={{ minHeight: height }}
+      >
       <View className="absolute -left-16 -top-20 h-[320px] w-[320px] rounded-full bg-[#f5c0c2] opacity-50" />
       <View className="absolute -right-20 -top-10 h-[220px] w-[220px] rounded-full bg-[#fbd3d5] opacity-60" />
       <View className="absolute -bottom-16 -right-16 h-[260px] w-[260px] rounded-full bg-[#f5c0c2] opacity-30" />
 
-      <View className="z-10 items-center gap-3.5 px-6 pb-6 pt-[48px]">
+      <View className="z-10 items-center gap-3.5 px-6 pb-6 pt-10 sm:pt-[48px]">
         <BrandLogo />
         <View className="items-center gap-1.5">
           <Text className="text-center text-[30px] font-extrabold leading-9 text-foreground">
@@ -210,7 +220,7 @@ export function SignupScreen({
         ) : null}
       </View>
 
-      <View className="z-10 items-center gap-2.5 px-6 pb-6 pt-[18px]">
+      <View className="z-10 items-center gap-2.5 px-6 pb-8 pt-[18px]">
         <Pressable onPress={onLogin} accessibilityRole="button">
           <Text className="text-center text-[15px] text-muted-foreground">
             Ja tem uma conta?{" "}
@@ -236,6 +246,7 @@ export function SignupScreen({
           Versao 1.0.0
         </Text>
       </View>
-    </View>
+      </View>
+    </ScrollView>
   );
 }
